@@ -1,0 +1,47 @@
+{
+  "name": "italia-ts-commons",
+  "version": "0.0.1",
+  "description": "Shared TypeScript code for the Digital Citizenship projects",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": "https://github.com/teamdigitale/italia-ts-types",
+  "author": "https://teamdigitale.governo.it",
+  "license": "MIT",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "tsc",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.2.2",
+    "@types/node": "^8.9.4",
+    "danger": "^3.1.7",
+    "danger-plugin-digitalcitizenship": "^0.1.0",
+    "jest": "^22.4.3",
+    "ts-jest": "^22.4.2",
+    "typescript": "^2.8.0"
+  },
+  "dependencies": {
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "skipBabel": true
+      }
+    },
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}
