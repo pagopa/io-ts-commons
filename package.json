@@ -7,8 +7,11 @@
   "repository": "https://github.com/teamdigitale/italia-ts-types",
   "author": "https://teamdigitale.governo.it",
   "license": "MIT",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
-    "prepare": "npm run build",
+    "prepare": "rm -rf dist && npm run build",
     "build": "npm run lint && tsc",
     "version": "npm run build",
     "postversion": "git push && git push --tags",
