@@ -14,7 +14,8 @@
     "postversion": "git push && git push --tags",
     "test": "jest",
     "lint": "tslint --project .",
-    "typedoc": "typedoc --out docs/ --exclude '**/__tests__/*' --module commonjs --theme minimal src"
+    "typedoc": "typedoc --out docs/ --exclude '**/__tests__/*' --module commonjs --theme minimal src",
+    "docs": "rm -rf docs && npm run typedoc"
   },
   "devDependencies": {
     "@types/jest": "^22.2.2",
