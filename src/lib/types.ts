@@ -168,6 +168,7 @@ export function withDefault<T extends t.Any>(
     type.name,
     (v: any): v is T => type.is(v),
     (v: any, c: any) =>
+      // tslint:disable-next-line:no-null-keyword
       type.validate(v !== undefined && v !== null ? v : defaultValue, c),
     (v: any) => type.encode(v)
   );
