@@ -3,14 +3,11 @@ import * as validator from "validator";
 
 import { tag, Tagged } from "./types";
 
-// a generator of identifiers
-export type ObjectIdGenerator = () => NonEmptyString;
-
 /**
  * A non-empty string
  */
 
-interface INonEmptyStringTag {
+export interface INonEmptyStringTag {
   readonly kind: "INonEmptyStringTag";
 }
 
@@ -75,7 +72,7 @@ export type PatternString<P extends string> = string & IPatternStringTag<P>;
  * A string that represents a valid email address.
  */
 
-interface IEmailStringTag {
+export interface IEmailStringTag {
   readonly kind: "IEmailStringTag";
 }
 
@@ -98,7 +95,7 @@ export type EmailString = t.TypeOf<typeof EmailString>;
  * A string that represents an IP (v4 or v6).
  */
 
-interface IIPStringTag {
+export interface IIPStringTag {
   readonly kind: "IIPStringTag";
 }
 

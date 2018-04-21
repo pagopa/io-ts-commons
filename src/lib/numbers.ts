@@ -10,7 +10,7 @@ import { tag, Tagged } from "./types";
  * A number guaranteed to be within the range [L,H)
  */
 
-interface IWithinRangeNumberTag<L extends number, H extends number> {
+export interface IWithinRangeNumberTag<L extends number, H extends number> {
   readonly lower: L;
   readonly higher: H;
   readonly kind: "IWithinRangeNumberTag";
@@ -35,7 +35,7 @@ export type WithinRangeNumber<L extends number, H extends number> = number &
  * A non negative number
  */
 
-interface INonNegativeNumberTag {
+export interface INonNegativeNumberTag {
   readonly kind: "INonNegativeNumberTag";
 }
 
