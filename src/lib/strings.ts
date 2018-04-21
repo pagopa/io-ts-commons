@@ -3,23 +3,18 @@ import * as validator from "validator";
 
 import { tag, Tagged } from "./types";
 
-/**
- * A non-empty string
- */
-
 export interface INonEmptyStringTag {
   readonly kind: "INonEmptyStringTag";
 }
 
+/**
+ * A non-empty string
+ */
 export const NonEmptyString = tag<INonEmptyStringTag>()(
   t.refinement(t.string, s => s.length > 0, "non empty string")
 );
 
 export type NonEmptyString = t.TypeOf<typeof NonEmptyString>;
-
-/**
- * A string guaranteed to have a length within the range [L,H)
- */
 
 export interface IWithinRangeStringTag<L extends number, H extends number> {
   readonly lower: L;
@@ -27,6 +22,9 @@ export interface IWithinRangeStringTag<L extends number, H extends number> {
   readonly kind: "IWithinRangeStringTag";
 }
 
+/**
+ * A string guaranteed to have a length within the range [L,H)
+ */
 export const WithinRangeString = <
   L extends number,
   H extends number,
@@ -46,15 +44,14 @@ export const WithinRangeString = <
 export type WithinRangeString<L extends number, H extends number> = string &
   IWithinRangeStringTag<L, H>;
 
-/**
- * A string that matches a pattern.
- */
-
 export interface IPatternStringTag<P extends string> {
   readonly pattern: P;
   readonly kind: "IPatternStringTag";
 }
 
+/**
+ * A string that matches a pattern.
+ */
 export const PatternString = <P extends string, T extends IPatternStringTag<P>>(
   p: P
 ): Tagged<T, string, string> =>
@@ -68,14 +65,13 @@ export const PatternString = <P extends string, T extends IPatternStringTag<P>>(
 
 export type PatternString<P extends string> = string & IPatternStringTag<P>;
 
-/**
- * A string that represents a valid email address.
- */
-
 export interface IEmailStringTag {
   readonly kind: "IEmailStringTag";
 }
 
+/**
+ * A string that represents a valid email address.
+ */
 export const EmailString = tag<IEmailStringTag>()(
   t.refinement(
     t.string,
@@ -91,14 +87,13 @@ export const EmailString = tag<IEmailStringTag>()(
 
 export type EmailString = t.TypeOf<typeof EmailString>;
 
-/**
- * A string that represents an IP (v4 or v6).
- */
-
 export interface IIPStringTag {
   readonly kind: "IIPStringTag";
 }
 
+/**
+ * A string that represents an IP (v4 or v6).
+ */
 export const IPString = tag<IIPStringTag>()(
   t.refinement(t.string, validator.isIP, "string that represents an IP address")
 );

@@ -6,16 +6,15 @@ import * as t from "io-ts";
 
 import { tag, Tagged } from "./types";
 
-/**
- * A number guaranteed to be within the range [L,H)
- */
-
 export interface IWithinRangeNumberTag<L extends number, H extends number> {
   readonly lower: L;
   readonly higher: H;
   readonly kind: "IWithinRangeNumberTag";
 }
 
+/**
+ * A number guaranteed to be within the range [L,H)
+ */
 export const WithinRangeNumber = <
   L extends number,
   H extends number,
@@ -31,14 +30,13 @@ export const WithinRangeNumber = <
 export type WithinRangeNumber<L extends number, H extends number> = number &
   IWithinRangeNumberTag<L, H>;
 
-/**
- * A non negative number
- */
-
 export interface INonNegativeNumberTag {
   readonly kind: "INonNegativeNumberTag";
 }
 
+/**
+ * A non negative number
+ */
 export const NonNegativeNumber = tag<INonNegativeNumberTag>()(
   t.refinement(t.number, s => s >= 0, "number >= 0")
 );
