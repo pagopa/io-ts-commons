@@ -8,7 +8,7 @@
   "author": "https://teamdigitale.governo.it",
   "license": "MIT",
   "scripts": {
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "build": "npm run lint && tsc",
     "version": "npm run build",
     "postversion": "git push && git push --tags",
