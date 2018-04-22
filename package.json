@@ -2,23 +2,22 @@
   "name": "italia-ts-commons",
   "version": "0.0.1",
   "description": "Shared TypeScript code for the Digital Citizenship projects",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "repository": "https://github.com/teamdigitale/italia-ts-types",
   "author": "https://teamdigitale.governo.it",
   "license": "MIT",
   "files": [
-    "dist/"
+    "lib/"
   ],
   "scripts": {
-    "prepare": "rm -rf dist && npm run build",
+    "prepare": "rimraf lib && npm run build",
     "build": "npm run lint && tsc",
-    "version": "npm run build",
-    "postversion": "git push && git push --tags",
+    "postversion": "git push --tags",
     "test": "jest",
     "lint": "tslint --project .",
     "typedoc": "typedoc --out docs/ --exclude '**/__tests__/*' --module commonjs --theme minimal src",
-    "docs": "rm -rf docs && npm run typedoc"
+    "docs": "rimraf docs && npm run typedoc"
   },
   "devDependencies": {
     "@types/jest": "^22.2.2",
@@ -28,6 +27,7 @@
     "danger-plugin-digitalcitizenship": "^0.1.0",
     "jest": "^22.4.3",
     "prettier": "^1.12.1",
+    "rimraf": "^2.6.2",
     "ts-jest": "^22.4.2",
     "tslint": "^5.1.0",
     "tslint-config-prettier": "^1.6.0",
