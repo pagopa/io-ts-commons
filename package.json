@@ -17,7 +17,7 @@
     "test": "jest",
     "lint": "tslint --project .",
     "typedoc": "typedoc --out docs/ --exclude '**/__tests__/*' --module commonjs --theme minimal src",
-    "docs": "rimraf docs && npm run typedoc"
+    "docs": "rimraf docs && npm run typedoc && touch docs/.nojekyll"
   },
   "devDependencies": {
     "@types/jest": "^22.2.2",
