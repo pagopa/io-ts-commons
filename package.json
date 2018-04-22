@@ -4,7 +4,7 @@
   "description": "Shared TypeScript code for the Digital Citizenship projects",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "repository": "https://github.com/teamdigitale/italia-ts-types",
+  "repository": "https://github.com/teamdigitale/italia-ts-commons",
   "author": "https://teamdigitale.governo.it",
   "license": "MIT",
   "files": [
