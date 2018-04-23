@@ -19,3 +19,6 @@ export { tuples };
 
 import * as types from "./types";
 export { types };
+
+import * as environment from "./environment";
+export { environment };
