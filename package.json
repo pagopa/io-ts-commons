@@ -36,7 +36,7 @@
     "tslint-sonarts": "^1.6.0",
     "typedoc": "^0.11.1",
     "typescript": "^2.8.0",
-    "typestrict": "^0.0.6"
+    "typestrict": "^0.0.8"
   },
   "dependencies": {
     "io-ts": "^1.0.5",
