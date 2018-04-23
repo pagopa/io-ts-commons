@@ -1,6 +1,6 @@
 {
   "name": "italia-ts-commons",
-  "version": "0.0.1",
+  "version": "1.2.0",
   "description": "Shared TypeScript code for the Digital Citizenship projects",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -17,14 +17,14 @@
     "test": "jest",
     "lint": "tslint --project .",
     "typedoc": "typedoc --out docs/ --exclude '**/__tests__/*' --module commonjs --theme minimal src",
-    "docs": "rimraf docs && npm run typedoc"
+    "docs": "rimraf docs && npm run typedoc && touch docs/.nojekyll"
   },
   "devDependencies": {
     "@types/jest": "^22.2.2",
     "@types/node": "^9.6.6",
     "@types/validator": "^6.3.0",
     "danger": "^3.1.7",
-    "danger-plugin-digitalcitizenship": "^0.1.0",
+    "danger-plugin-digitalcitizenship": "^0.2.0",
     "jest": "^22.4.3",
     "prettier": "^1.12.1",
     "rimraf": "^2.6.2",
