@@ -1,7 +1,7 @@
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { HttpsUrlFromString, HttpUrlFromString, UrlFromString } from "../url";
 
-describe("enumType", () => {
+describe("UrlFromString", () => {
   it("should get an href with a valid http URL", () => {
     const errorOrUrl = UrlFromString.decode("http://example.com");
     expect(isRight(errorOrUrl)).toBeTruthy();
@@ -16,6 +16,14 @@ describe("enumType", () => {
   });
   it("should fail on invalid https URL", () => {
     const errorOrUrl = HttpsUrlFromString.decode("http://example.com");
+    expect(isLeft(errorOrUrl)).toBeTruthy();
+  });
+  it("should pass on valid http URL", () => {
+    const errorOrUrl = HttpUrlFromString.decode("http://example.com");
+    expect(isLeft(errorOrUrl)).toBeTruthy();
+  });
+  it("should pass on valid https URL", () => {
+    const errorOrUrl = HttpsUrlFromString.decode("https://example.com");
     expect(isLeft(errorOrUrl)).toBeTruthy();
   });
 });

@@ -4,6 +4,11 @@ import * as url from "url";
 const isUrl = (v: t.mixed): v is url.Url =>
   v !== null && typeof v === "object" && "href" in v;
 
+/**
+ * io-ts type that decodes a Url from a string
+ *
+ * ie. UrlFromString.decode("http://example.com")
+ */
 export const UrlFromString = new t.Type<url.Url, string>(
   "UrlFromString",
   isUrl,
