@@ -3,14 +3,14 @@ import { HttpsUrlFromString, HttpUrlFromString, UrlFromString } from "../url";
 
 const anHostName = "example.com";
 const anHttpUrl = "http://" + anHostName;
-const anHttpsUrl = "http://" + anHostName;
+const anHttpsUrl = "https://" + anHostName;
 
 describe("UrlFromString", () => {
   it("should get an href with a valid http URL", () => {
     const errorOrUrl = UrlFromString.decode(anHttpUrl);
     expect(isRight(errorOrUrl)).toBeTruthy();
     if (isRight(errorOrUrl)) {
-      expect(errorOrUrl.value.href).toEqual(anHttpUrl);
+      expect(errorOrUrl.value.href).toEqual(anHttpUrl + "/");
       expect(errorOrUrl.value.hostname).toEqual(anHostName);
     }
   });
@@ -24,10 +24,10 @@ describe("UrlFromString", () => {
   });
   it("should pass on valid http URL", () => {
     const errorOrUrl = HttpUrlFromString.decode(anHttpUrl);
-    expect(isLeft(errorOrUrl)).toBeTruthy();
+    expect(isRight(errorOrUrl)).toBeTruthy();
   });
   it("should pass on valid https URL", () => {
     const errorOrUrl = HttpsUrlFromString.decode(anHttpsUrl);
-    expect(isLeft(errorOrUrl)).toBeTruthy();
+    expect(isRight(errorOrUrl)).toBeTruthy();
   });
 });
