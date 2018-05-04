@@ -1,29 +1,33 @@
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { HttpsUrlFromString, HttpUrlFromString, UrlFromString } from "../url";
 
+const anHostName = "example.com";
+const anHttpUrl = "http://" + anHostName;
+const anHttpsUrl = "http://" + anHostName;
+
 describe("UrlFromString", () => {
   it("should get an href with a valid http URL", () => {
-    const errorOrUrl = UrlFromString.decode("http://example.com");
+    const errorOrUrl = UrlFromString.decode(anHttpUrl);
     expect(isRight(errorOrUrl)).toBeTruthy();
     if (isRight(errorOrUrl)) {
-      expect(errorOrUrl.value.href).toEqual("http://example.com/");
-      expect(errorOrUrl.value.hostname).toEqual("example.com");
+      expect(errorOrUrl.value.href).toEqual(anHttpUrl);
+      expect(errorOrUrl.value.hostname).toEqual(anHostName);
     }
   });
   it("should fail on invalid http URL", () => {
-    const errorOrUrl = HttpUrlFromString.decode("https://example.com");
+    const errorOrUrl = HttpUrlFromString.decode(anHttpsUrl);
     expect(isLeft(errorOrUrl)).toBeTruthy();
   });
   it("should fail on invalid https URL", () => {
-    const errorOrUrl = HttpsUrlFromString.decode("http://example.com");
+    const errorOrUrl = HttpsUrlFromString.decode(anHttpUrl);
     expect(isLeft(errorOrUrl)).toBeTruthy();
   });
   it("should pass on valid http URL", () => {
-    const errorOrUrl = HttpUrlFromString.decode("http://example.com");
+    const errorOrUrl = HttpUrlFromString.decode(anHttpUrl);
     expect(isLeft(errorOrUrl)).toBeTruthy();
   });
   it("should pass on valid https URL", () => {
-    const errorOrUrl = HttpsUrlFromString.decode("https://example.com");
+    const errorOrUrl = HttpsUrlFromString.decode(anHttpsUrl);
     expect(isLeft(errorOrUrl)).toBeTruthy();
   });
 });
