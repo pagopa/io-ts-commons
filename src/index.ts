@@ -20,5 +20,8 @@ export { tuples };
 import * as types from "./types";
 export { types };
 
+import * as url from "./url";
+export { url };
+
 import * as environment from "./environment";
 export { environment };
