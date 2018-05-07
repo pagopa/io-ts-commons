@@ -41,7 +41,7 @@
   "dependencies": {
     "io-ts": "^1.0.5",
     "json-set-map": "^1.0.2",
-    "validator": "^9.4.1"
+    "validator": "^10.1.0"
   },
   "jest": {
     "globals": {
