@@ -32,7 +32,7 @@ export const WithinRangeString = <
 >(
   l: L,
   h: H
-): Tagged<T, string, string> =>
+): Tagged<T, string> =>
   tag<T>()(
     t.refinement(
       t.string,
@@ -54,7 +54,7 @@ export interface IPatternStringTag<P extends string> {
  */
 export const PatternString = <P extends string, T extends IPatternStringTag<P>>(
   p: P
-): Tagged<T, string, string> =>
+): Tagged<T, string> =>
   tag<T>()(
     t.refinement(
       t.string,
