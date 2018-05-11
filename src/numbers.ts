@@ -22,7 +22,7 @@ export const WithinRangeNumber = <
 >(
   l: L,
   h: H
-): Tagged<T, number, number> =>
+): Tagged<T, number> =>
   tag<T>()(
     t.refinement(t.number, s => s >= l && s < h, `number >= ${l} and < ${h}`)
   );
