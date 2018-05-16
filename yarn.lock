@@ -4062,9 +4062,9 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-vm2@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.6.0.tgz#a6e6370c57e6edd77decfb7b1ad64fc87dbf2d4e"
+vm2@patriksimek/vm2#custom_files:
+  version "3.5.2"
+  resolved "https://codeload.github.com/patriksimek/vm2/tar.gz/468bc1e54e75e766b842830ea775669992a979e0"
 
 voca@^1.4.0:
   version "1.4.0"
