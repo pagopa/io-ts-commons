@@ -25,3 +25,9 @@ export { url };
 
 import * as environment from "./environment";
 export { environment };
+
+import * as requests from "./requests";
+export { requests };
+
+import * as promises from "./promises";
+export { promises };
