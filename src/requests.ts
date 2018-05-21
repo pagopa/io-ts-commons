@@ -2,7 +2,8 @@
  * Type safe wrapper around the fetch API
  */
 
-// TODO: add body type parameter to POST/PUT
+// tslint:disable:variable-name
+
 // TODO: support for optional query parameters
 // TODO: when query/headers type is "never", it should not allow any query/header to be produced
 // TODO: add etag support in responses
@@ -173,6 +174,181 @@ export type ApiRequestType<
   | IGetApiRequestType<P, KH, Q, R>
   | IPostApiRequestType<P, KH, Q, R>
   | IPutApiRequestType<P, KH, Q, R>;
+
+export type ApiRequestTypeForMethod<
+  M extends RequestMethod,
+  P,
+  KH extends RequestHeaderKey,
+  Q extends string,
+  R
+> = M extends "get"
+  ? IGetApiRequestType<P, KH, Q, R>
+  : M extends "post"
+    ? IPostApiRequestType<P, KH, Q, R>
+    : M extends "put" ? IPutApiRequestType<P, KH, Q, R> : never;
+
+//
+// builder
+//
+
+export type EmptyApiRequestBuilder<
+  M extends RequestMethod,
+  P = {},
+  KH extends RequestHeaderKey = never,
+  Q extends string = never,
+  R = never
+> = ApiRequestBuilder<M, P, KH, Q, R, ApiRequestTypeForMethod<M, P, KH, Q, R>>;
+
+const emptyBaseRequest = {
+  headers: () => ({}),
+  query: () => ({}),
+  response_decoder: () => Promise.reject({}),
+  url: () => ""
+};
+
+const emptyBasePutOrPostRequest = {
+  ...emptyBaseRequest,
+  body: () => JSON.stringify({}),
+  headers: () => ({ "Content-Type": "application/json" })
+};
+
+/**
+ * A class for building ApiRequest(s)
+ */
+export class ApiRequestBuilder<
+  M extends RequestMethod,
+  P,
+  KH extends RequestHeaderKey,
+  Q extends string,
+  R,
+  T extends ApiRequestTypeForMethod<M, P, KH, Q, R>
+> {
+  /**
+   * Creates a new empty request with the GET method.
+   */
+  public static ofGet(): EmptyApiRequestBuilder<"get"> {
+    return new ApiRequestBuilder<
+      "get",
+      {},
+      never,
+      never,
+      never,
+      ApiRequestTypeForMethod<"get", {}, never, never, never>
+    >({ ...emptyBaseRequest, method: "get" });
+  }
+
+  /**
+   * Creates a new empty request with the POST method.
+   */
+  public static ofPost(): EmptyApiRequestBuilder<"post", {}, "Content-Type"> {
+    return new ApiRequestBuilder<
+      "post",
+      {},
+      "Content-Type",
+      never,
+      never,
+      ApiRequestTypeForMethod<"post", {}, "Content-Type", never, never>
+    >({
+      ...emptyBasePutOrPostRequest,
+      method: "post"
+    });
+  }
+
+  /**
+   * Creates a new empty request with the PUT method.
+   */
+  public static ofPut(): EmptyApiRequestBuilder<"put", {}, "Content-Type"> {
+    return new ApiRequestBuilder<
+      "put",
+      {},
+      "Content-Type",
+      never,
+      never,
+      ApiRequestTypeForMethod<"put", {}, "Content-Type", never, never>
+    >({
+      ...emptyBasePutOrPostRequest,
+      method: "put"
+    });
+  }
+
+  constructor(private readonly _request: T) {}
+
+  public get(): T {
+    return this._request;
+  }
+
+  /**
+   * Adds query parameters
+   */
+  public withQuery<P1, Q1 extends string>(
+    query: (params: P1) => RequestQuery<Q1>
+  ): ApiRequestBuilder<
+    M,
+    P & P1,
+    KH,
+    Q | Q1,
+    R,
+    ApiRequestTypeForMethod<M, P & P1, KH, Q | Q1, R>
+  > {
+    const newQuery = (p: P & P1) => ({
+      // tslint:disable-next-line:no-any
+      ...(this._request.query(p) as any),
+      // tslint:disable-next-line:no-any
+      ...(query(p) as any)
+    });
+    return new ApiRequestBuilder({
+      // tslint:disable-next-line:no-any
+      ...(this._request as any),
+      query: newQuery
+    });
+  }
+
+  /**
+   * Adds headers
+   */
+  public withHeaders<P1, KH1 extends RequestHeaderKey>(
+    headers: RequestHeaderProducer<P1, KH1>
+  ): ApiRequestBuilder<
+    M,
+    P & P1,
+    KH | KH1,
+    Q,
+    R,
+    ApiRequestTypeForMethod<M, P & P1, KH | KH1, Q, R>
+  > {
+    const newHeaders = (p: P & P1) => ({
+      // tslint:disable-next-line:no-any
+      ...(this._request.headers(p) as any),
+      // tslint:disable-next-line:no-any
+      ...(headers(p) as any)
+    });
+    return new ApiRequestBuilder({
+      // tslint:disable-next-line:no-any
+      ...(this._request as any),
+      headers: newHeaders
+    });
+  }
+
+  /**
+   * Adds response decoder
+   */
+  public withResponseDecoder<R1>(
+    response_decoder: ResponseDecoder<R1>
+  ): ApiRequestBuilder<
+    M,
+    P,
+    KH,
+    Q,
+    R1,
+    ApiRequestTypeForMethod<M, P, KH, Q, R1>
+  > {
+    return new ApiRequestBuilder({
+      // tslint:disable-next-line:no-any
+      ...(this._request as any),
+      response_decoder
+    });
+  }
+}
 
 //
 // helpers

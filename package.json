@@ -16,6 +16,7 @@
     "postversion": "git push --tags",
     "test": "jest",
     "lint": "tslint --project .",
+    "check-typings": "tsc -p typings-checker",
     "typedoc": "typedoc --out docs/ --exclude '**/__tests__/*' --module commonjs --theme minimal src",
     "docs": "rimraf docs && npm run typedoc && touch docs/.nojekyll"
   },
