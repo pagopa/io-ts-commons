@@ -2,6 +2,8 @@
  * Type safe wrapper around the fetch API
  */
 
+// tslint:disable:variable-name
+
 // TODO: add body type parameter to POST/PUT
 // TODO: support for optional query parameters
 // TODO: when query/headers type is "never", it should not allow any query/header to be produced
@@ -173,6 +175,104 @@ export type ApiRequestType<
   | IGetApiRequestType<P, KH, Q, R>
   | IPostApiRequestType<P, KH, Q, R>
   | IPutApiRequestType<P, KH, Q, R>;
+
+//
+// builder
+//
+
+export type EmptyApiRequestBuilder<M extends RequestMethod> = ApiRequestBuilder<
+  M,
+  {},
+  never,
+  never,
+  never
+>;
+
+/**
+ * A class for building ApiRequest(s)
+ */
+export class ApiRequestBuilder<
+  M extends RequestMethod,
+  P,
+  KH extends RequestHeaderKey,
+  Q extends string,
+  R
+> {
+  /**
+   * Creates an empty request for the given type
+   */
+  public static of<M extends RequestMethod>(
+    method: "get" | "post" | "put"
+  ): EmptyApiRequestBuilder<M> {
+    const baseR = {
+      headers: () => ({}),
+      query: () => ({}),
+      response_decoder: () => Promise.reject({}),
+      url: () => ""
+    };
+    if (method === "get") {
+      return new ApiRequestBuilder({ ...baseR, method: "get" });
+    }
+    const putOrPostR = {
+      ...baseR,
+      body: () => JSON.stringify({}),
+      headers: () => ({ "Content-Type": "application/json" })
+    };
+    if (method === "post") {
+      return new ApiRequestBuilder({ ...putOrPostR, method: "post" });
+    }
+    return new ApiRequestBuilder({ ...putOrPostR, method: "put" });
+  }
+
+  /**
+   * Creates a new empty request with the GET method.
+   */
+  public static get(): EmptyApiRequestBuilder<"get"> {
+    return this.of("get");
+  }
+
+  /**
+   * Creates a new empty request with the POST method.
+   */
+  public static post(): EmptyApiRequestBuilder<"post"> {
+    return this.of("post");
+  }
+
+  /**
+   * Creates a new empty request with the PUT method.
+   */
+  public static put(): EmptyApiRequestBuilder<"put"> {
+    return this.of("put");
+  }
+
+  constructor(private readonly request: ApiRequestType<P, KH, Q, R>) {}
+
+  /**
+   * Adds query parameters
+   */
+  public withQuery<P1, Q1 extends string>(
+    query: (params: P1) => RequestQuery<Q1>
+  ): ApiRequestBuilder<M, P & P1, KH, Q1, R> {
+    const newQuery = (p: P & P1) => ({
+      // tslint:disable-next-line:no-any
+      ...(this.request.query(p) as any),
+      // tslint:disable-next-line:no-any
+      ...(query(p) as any)
+    });
+    return new ApiRequestBuilder<M, P & P1, KH, Q1, R>({
+      ...this.request,
+      query: newQuery
+    });
+  }
+}
+
+const r = ApiRequestBuilder.post()
+  .withQuery((params: { readonly page: number }) => ({
+    page: `${params.page}`
+  }))
+  .withQuery((params: { readonly page2: number }) => ({
+    page2: `${params.page2}`
+  }));
 
 //
 // helpers
