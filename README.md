@@ -9,3 +9,22 @@ This module provides code shared by the projects of the
 initiative.
 
 Documentation is available [here](https://teamdigitale.github.io/italia-ts-commons/)
+
+## Contributing
+
+### Updating/publishing online docs
+
+```
+$ yarn docs
+```
+
+Then git add/commit/push.
+
+### Releasing a version
+
+Make sure you update the docs first.
+
+```
+$ npm version [major|minor|patch]
+$ npm publish
+```
