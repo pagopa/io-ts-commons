@@ -165,6 +165,9 @@ export interface IPutApiRequestType<
   readonly body: (params: P) => string;
 }
 
+/**
+ * The union of the possible ApiRequest types
+ */
 export type ApiRequestType<
   P,
   KH extends RequestHeaderKey,
@@ -174,6 +177,37 @@ export type ApiRequestType<
   | IGetApiRequestType<P, KH, Q, R>
   | IPostApiRequestType<P, KH, Q, R>
   | IPutApiRequestType<P, KH, Q, R>;
+
+/**
+ * The type of the Params of an ApiRequestType
+ */
+export type TypeofApiParams<T> = T extends ApiRequestType<
+  infer P,
+  infer KH,
+  infer Q,
+  infer R
+>
+  ? P
+  : never;
+
+/**
+ * The type of the Response of an ApiRequestType
+ */
+export type TypeofApiResponse<T> = T extends ApiRequestType<
+  infer P,
+  infer KH,
+  infer Q,
+  infer R
+>
+  ? R
+  : never;
+
+/**
+ * The type of the Response of an ApiRequestType
+ */
+export type TypeofApiCall<T> = (
+  params: TypeofApiParams<T>
+) => Promise<TypeofApiResponse<T> | undefined>;
 
 export type ApiRequestTypeForMethod<
   M extends RequestMethod,

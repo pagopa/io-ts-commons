@@ -1,6 +1,11 @@
 // tslint:disable:no-duplicate-string
 
-import { ApiRequestBuilder, IPostApiRequestType } from "../src/requests";
+import {
+  ApiRequestBuilder,
+  createFetchRequestForApi,
+  IPostApiRequestType,
+  TypeofApiCall
+} from "../src/requests";
 
 // --------
 
@@ -23,6 +28,15 @@ const r1: R1 = ApiRequestBuilder.ofPost()
   }))
   .withResponseDecoder(r => Promise.resolve("string"))
   .get();
+
+const f1a: TypeofApiCall<R1> = createFetchRequestForApi(r1);
+
+const f1b: (
+  _: {
+    readonly param1: string;
+    readonly param2: string;
+  }
+) => Promise<string | undefined> = f1a;
 
 // --------
 
