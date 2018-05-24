@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`exponentialBackoff should produce an exponentially increasing delay time 1`] = `
+Array [
+  500,
+  1000,
+  2000,
+  4000,
+  8000,
+  16000,
+  32000,
+  32000,
+]
+`;

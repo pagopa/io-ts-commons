@@ -31,3 +31,12 @@ export { requests };
 
 import * as promises from "./promises";
 export { promises };
+
+import * as tasks from "./tasks";
+export { tasks };
+
+import * as backoff from "./backoff";
+export { backoff };
+
+import * as units from "./units";
+export { units };
