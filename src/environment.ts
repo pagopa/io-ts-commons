@@ -24,7 +24,7 @@ export type NodeEnvironment = t.TypeOf<typeof NodeEnvironment>;
  * @param defaultEnv The default environment (`NodeEnvironmentEnum.PRODUCTION`)
  */
 export function getNodeEnvironmentFromProcessEnv(
-  env: NodeJS.ProcessEnv = process.env,
+  env: typeof process.env = process.env,
   defaultEnv: NodeEnvironment = NodeEnvironmentEnum.PRODUCTION
 ): NodeEnvironment {
   const nodeEnv = env.NODE_ENV;

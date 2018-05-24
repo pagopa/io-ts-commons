@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@types/jest": "^22.2.2",
-    "@types/node": "^9.6.6",
+    "@types/node": "^6.0.0",
     "@types/validator": "^9.4.0",
     "danger": "^3.1.7",
     "danger-plugin-digitalcitizenship": "^0.2.0",
