@@ -21,12 +21,14 @@ export const pick = <T, K extends keyof T>(
 /**
  * An io-ts Type tagged with T
  */
-export type Tagged<T, A> = t.Type<A & T>;
+export type Tagged<T, A, O = A, I = t.mixed> = t.Type<A & T, O & T, I>;
 
 /**
  * Tags an io-ts type with an interface T
  */
-export const tag = <T>() => <A>(type: t.Type<A>): Tagged<T, A> =>
+export const tag = <T>() => <A, O = A, I = t.mixed>(
+  type: t.Type<A, O, I>
+): Tagged<T, A, O, I> =>
   // tslint:disable-next-line:no-any
   type as any;
 
