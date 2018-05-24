@@ -203,7 +203,7 @@ export type TypeofApiResponse<T> = T extends ApiRequestType<
   : never;
 
 /**
- * The type of the Response of an ApiRequestType
+ * The type of the method that runs an ApiRequestType
  */
 export type TypeofApiCall<T> = (
   params: TypeofApiParams<T>
