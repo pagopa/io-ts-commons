@@ -4,7 +4,7 @@ import * as t from "io-ts";
 import { errorsToReadableMessages } from "./reporters";
 import { NonEmptyString } from "./strings";
 import { enumType, withDefault } from "./types";
-import { HttpUrlFromString, UrlFromString } from "./url";
+import { UrlFromString } from "./url";
 
 export enum HttpStatusCodeEnum {
   HTTP_STATUS_400 = 400,
