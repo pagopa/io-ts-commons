@@ -17,14 +17,14 @@ export const HttpStatusCode = enumType<HttpStatusCodeEnum>(
 );
 export type HttpStatusCode = t.TypeOf<typeof HttpStatusCode>;
 
-const ProblemJson = t.partial({
+export const ProblemJson = t.partial({
   detail: t.string,
   instance: t.string,
   status: HttpStatusCode,
   title: t.string,
   type: withDefault(t.string, "about:blank")
 });
-type ProblemJson = t.TypeOf<typeof ProblemJson>;
+export type ProblemJson = t.TypeOf<typeof ProblemJson>;
 
 /**
  * Interface for a Response that can be returned by a middleware or
