@@ -3,6 +3,7 @@ import * as t from "io-ts";
 
 import { errorsToReadableMessages } from "./reporters";
 import { enumType, withDefault } from "./types";
+import { UrlFromString } from "./url";
 
 export enum HttpStatusCodeEnum {
   HTTP_STATUS_400 = 400,
@@ -60,6 +61,51 @@ export function ResponseSuccessJson<T>(o: T): IResponseSuccessJson<T> {
     apply: res => res.status(200).json(kindlessObject),
     kind: "IResponseSuccessJson",
     value: o
+  };
+}
+
+/**
+ * Interface for a successful response returning a xml object.
+ */
+export interface IResponseSuccessXml<T>
+  extends IResponse<"IResponseSuccessXml"> {
+  readonly value: T; // needed to discriminate from other T subtypes
+}
+
+/**
+ * Returns a successful xml response.
+ *
+ * @param o The object to return to the client
+ */
+export function ResponseSuccessXml<T>(o: T): IResponseSuccessXml<T> {
+  return {
+    apply: res =>
+      res
+        .status(200)
+        .set("Content-Type", "application/xml")
+        .send(o),
+    kind: "IResponseSuccessXml",
+    value: o
+  };
+}
+
+/**
+ * Interface for a issuing a client redirect .
+ */
+export interface IResponsePermanentRedirect
+  extends IResponse<"IResponsePermanentRedirect"> {}
+
+/**
+ * Returns a redirect response.
+ *
+ * @param o The object to return to the client
+ */
+export function ResponsePermanentRedirect(
+  location: UrlFromString
+): IResponsePermanentRedirect {
+  return {
+    apply: res => res.redirect(location.href, 301),
+    kind: "IResponsePermanentRedirect"
   };
 }
 
