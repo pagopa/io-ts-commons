@@ -488,9 +488,9 @@ export const ApiHeaderJson: RequestHeaderProducer<{}, "Content-Type"> = () => ({
  * @param status  The response status handled by this decoder
  * @param type    The response type corresponding to the status
  */
-export function ioResponseDecoder<S extends number, R>(
+export function ioResponseDecoder<S extends number, R, O = R>(
   status: S,
-  type: t.Type<R>
+  type: t.Type<R, O>
 ): ResponseDecoder<IResponseType<S, R>> {
   return async (response: Response) => {
     if (response.status !== status) {
@@ -532,8 +532,8 @@ export type BasicResponseType<R> =
 /**
  * Returns a ResponseDecoder for BasicResponseType<R>
  */
-export function basicResponseDecoder<R>(
-  type: t.Type<R>
+export function basicResponseDecoder<R, O = R>(
+  type: t.Type<R, O>
 ): ResponseDecoder<BasicResponseType<R>> {
   return composeResponseDecoders(
     composeResponseDecoders(
