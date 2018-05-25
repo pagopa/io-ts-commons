@@ -8,6 +8,8 @@ import {
   IPostApiRequestType
 } from "../requests";
 
+import { DateFromString } from "../dates";
+
 const SimpleModel = t.interface({
   id: t.number,
   name: t.string
@@ -171,5 +173,52 @@ describe("A simple POST API", () => {
       headers: { "Content-Type": "application/json" },
       method: "post"
     });
+  });
+});
+
+/////////////////////////////////
+
+const aComplexType = t.interface({
+  created_at: DateFromString
+});
+type aComplexType = t.TypeOf<typeof aComplexType>;
+
+type GetComplexT = IGetApiRequestType<
+  aComplexType,
+  never,
+  "created_at",
+  BasicResponseType<aComplexType>
+>;
+
+const getComplexT: GetComplexT = {
+  headers: () => ({}),
+  method: "get",
+  query: params => ({ created_at: `${params.created_at.toISOString()}` }),
+  response_decoder: basicResponseDecoder(aComplexType),
+  url: params => `/api/v1/complex`
+};
+
+describe("Complex types", () => {
+  it("should handle complex types (ie. DateFromString)", async () => {
+    const complexValue = {};
+
+    const fetch = mockFetch(200, complexValue);
+
+    const getComplex = createFetchRequestForApi(getComplexT, {
+      baseUrl,
+      fetch
+    });
+
+    const res = await getComplex({
+      created_at: new Date()
+    });
+
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringMatching(
+        /https\:\/\/localhost\/api\/v1\/complex\?created_at\=[0-9]{4}\-[0-9]{2}\-(.+)/
+      ),
+      { method: "get" }
+    );
   });
 });
