@@ -1,15 +1,18 @@
 import * as t from "io-ts";
 import * as url from "url";
 
-const isUrl = (v: t.mixed): v is url.Url =>
-  v !== null && typeof v === "object" && "href" in v;
+export type ValidUrl = url.Url & { readonly href: string };
+
+const isUrl = (v: t.mixed): v is ValidUrl =>
+  // tslint:disable-next-line:no-any
+  t.object.is(v) && t.string.is((v as any).href);
 
 /**
  * io-ts type that decodes a Url from a string
  *
  * ie. UrlFromString.decode("http://example.com")
  */
-export const UrlFromString = new t.Type<url.Url, string>(
+export const UrlFromString = new t.Type<ValidUrl, string>(
   "UrlFromString",
   isUrl,
   (v, c) =>
@@ -17,7 +20,8 @@ export const UrlFromString = new t.Type<url.Url, string>(
       ? t.success(v)
       : t.string.validate(v, c).chain(s => {
           const d = url.parse(s);
-          return !d.href ? t.failure(s, c) : t.success(d);
+          // we can safely use url.href in calling methods
+          return !d.href ? t.failure(s, c) : t.success(d as ValidUrl);
         }),
   a => a.toString()
 );
