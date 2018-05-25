@@ -42,7 +42,6 @@
     "typestrict": "^0.0.8"
   },
   "dependencies": {
-    "express": "^4.16.3",
     "fp-ts": "^1.6.0",
     "io-ts": "^1.0.5",
     "json-set-map": "^1.0.2",
