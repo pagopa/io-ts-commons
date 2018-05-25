@@ -2,7 +2,6 @@ import * as express from "express";
 import * as t from "io-ts";
 
 import { errorsToReadableMessages } from "./reporters";
-import { NonEmptyString } from "./strings";
 import { enumType, withDefault } from "./types";
 import { UrlFromString } from "./url";
 
