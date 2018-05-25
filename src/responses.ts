@@ -78,17 +78,14 @@ export interface IResponseSuccessXml<T>
  * @param o The object to return to the client
  */
 export function ResponseSuccessXml<T>(o: T): IResponseSuccessXml<T> {
-  const kindlessObject = Object.assign(Object.assign({}, o), {
-    kind: undefined
-  });
   return {
     apply: res =>
       res
         .status(200)
         .set("Content-Type", "application/xml")
-        .send(kindlessObject),
+        .send(o),
     kind: "IResponseSuccessXml",
-    value: kindlessObject
+    value: o
   };
 }
 
