@@ -145,7 +145,8 @@ export function ResponseSuccessRedirectToResource<T, V>(
 /**
  * Interface for a response describing a generic server error.
  */
-interface IResponseErrorGeneric extends IResponse<"IResponseErrorGeneric"> {}
+export interface IResponseErrorGeneric
+  extends IResponse<"IResponseErrorGeneric"> {}
 
 /**
  * Returns a response describing a generic error.
@@ -154,7 +155,7 @@ interface IResponseErrorGeneric extends IResponse<"IResponseErrorGeneric"> {}
  * See https://zalando.github.io/restful-api-guidelines/index.html#176
  *
  */
-function ResponseErrorGeneric(
+export function ResponseErrorGeneric(
   status: HttpStatusCode,
   title: string,
   detail: string,
