@@ -1,5 +1,5 @@
-import { isRight, isLeft } from "fp-ts/lib/Either";
-import { withTimeout } from "../promises";
+import { isLeft, isRight } from "fp-ts/lib/Either";
+import { DeferredPromise, withTimeout } from "../promises";
 
 describe("withTimeout", () => {
   it("should resolve to completion", async () => {
@@ -30,5 +30,19 @@ describe("withTimeout", () => {
     if (isLeft(r)) {
       expect(r.value).toEqual("timeout");
     }
+  });
+});
+
+describe("DeferredPromise", () => {
+  it("should resolve asyncronously", async () => {
+    const { e1: p, e2: res, e3: rej } = DeferredPromise<number>();
+    res(1);
+    expect(p).resolves.toEqual(1);
+  });
+
+  it("should reject asyncronously", async () => {
+    const { e1: p, e2: res, e3: rej } = DeferredPromise<number>();
+    rej(new Error("failed"));
+    expect(p).rejects.toEqual(new Error("failed"));
   });
 });
