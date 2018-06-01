@@ -40,3 +40,6 @@ export { backoff };
 
 import * as units from "./units";
 export { units };
+
+import * as fetch from "./fetch";
+export { fetch };

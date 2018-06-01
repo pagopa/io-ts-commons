@@ -1,4 +1,6 @@
 import { Either, left, right } from "fp-ts/lib/Either";
+import { ITuple3, Tuple3 } from "./tuples";
+import { Millisecond } from "./units";
 
 /**
  * Useful Promises combinators
@@ -7,7 +9,7 @@ import { Either, left, right } from "fp-ts/lib/Either";
 /**
  * Returns a Promise that resolves after millis milliseconds
  */
-export function timeoutPromise(millis: number): Promise<void> {
+export function timeoutPromise(millis: Millisecond): Promise<void> {
   return new Promise(resolve => {
     setTimeout(() => resolve(), millis);
   });
@@ -19,8 +21,8 @@ export function timeoutPromise(millis: number): Promise<void> {
  */
 export function withTimeout<T>(
   p: Promise<T>,
-  millis: number,
-  timeoutP: (_: number) => Promise<void> = timeoutPromise
+  millis: Millisecond,
+  timeoutP: (_: Millisecond) => Promise<void> = timeoutPromise
 ): Promise<Either<"timeout", T>> {
   const t = timeoutP(millis);
   return new Promise((resolve, reject) => {
@@ -29,4 +31,31 @@ export function withTimeout<T>(
     // on completion
     p.then(v => resolve(right<"timeout", T>(v))).catch(reject);
   });
+}
+
+/**
+ * Creates a Promise whose resolve and reject implementations are not yet
+ * provided.
+ *
+ * @return Array  A triplet with [Promise<T>, resolve(T), reject()]
+ */
+export function DeferredPromise<T>(): ITuple3<
+  Promise<T>,
+  (v: T) => void,
+  (e: Error) => void
+> {
+  // tslint:disable-next-line:no-let
+  let resolvePromise: (v: T) => void = () => {
+    throw new Error("Promise.resolve not yet initialized");
+  };
+  // tslint:disable-next-line:no-let
+  let rejectPromise: (e: Error) => void = () => {
+    throw new Error("Promise.reject not yet initialized");
+  };
+  // tslint:disable-next-line:promise-must-complete
+  const promise = new Promise<T>((resolve, reject) => {
+    resolvePromise = resolve;
+    rejectPromise = reject;
+  });
+  return Tuple3(promise, resolvePromise, rejectPromise);
 }

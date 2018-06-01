@@ -1,6 +1,6 @@
 import { right } from "fp-ts/lib/Either";
 import { Task } from "fp-ts/lib/Task";
-import { TaskEither } from "fp-ts/lib/TaskEither";
+import { fromLeft, TaskEither } from "fp-ts/lib/TaskEither";
 import { Millisecond } from "./units";
 
 /**
@@ -17,6 +17,12 @@ export type MaxRetries = "max-retries";
 export const MaxRetries: MaxRetries = "max-retries";
 
 /**
+ * A RetriableTask has been aborted.
+ */
+export type RetryAborted = "retry-aborted";
+export const RetryAborted: RetryAborted = "retry-aborted";
+
+/**
  * A Task that can be retried when it fails with a transient error
  */
 export type RetriableTask<E, T> = E extends TransientError
@@ -29,12 +35,25 @@ export type RetriableTask<E, T> = E extends TransientError
 export function withRetries<E, T>(
   maxRetries: number,
   backoff: (count: number) => Millisecond
-): (_: RetriableTask<E, T>) => TaskEither<E | MaxRetries, T> {
-  return task => {
+): (
+  _: RetriableTask<E, T>,
+  shouldAbort?: Promise<boolean>
+) => TaskEither<E | MaxRetries | RetryAborted, T> {
+  return (task, shouldAbort = Promise.resolve(false)) => {
+    // Whether we must stop retrying
+    // the abort process gets triggered when the shouldAbort promise resolves
+    // to true. Not that aborting stops the retry process, it does NOT stop
+    // the execution of the current task.
+    // tslint:disable-next-line:no-let
+    let mustAbort = false;
+    shouldAbort.then(v => {
+      mustAbort = v;
+    }, _ => void 0);
+
     const runTaskOnce = (
       count: number,
       currentTask: RetriableTask<E, T>
-    ): TaskEither<E | TransientError, T> => {
+    ): TaskEither<E | TransientError | RetryAborted, T> => {
       // on first execution, count === 0
       if (count >= maxRetries - 1) {
         // no more retries left
@@ -43,17 +62,20 @@ export function withRetries<E, T>(
       // allow one run of the task
       return currentTask.orElse(l => {
         // if the task fails...
+        if (mustAbort) {
+          return fromLeft(RetryAborted);
+        }
         if (l === TransientError) {
           // ...with a TransientError, chain it with a backoff delay
           // an then with another run.
-          const delay = new TaskEither<E | TransientError, boolean>(
-            delayTask(backoff(count), true).map(d => right(d))
-          );
+          const delay = new TaskEither<
+            E | TransientError | RetryAborted,
+            boolean
+          >(delayTask(backoff(count), true).map(d => right(d)));
           return delay.applySecond(runTaskOnce(count + 1, currentTask));
-        } else {
-          // ...with an error that is not a TransientError, we just return it
-          return currentTask;
         }
+        // ...with an error that is not a TransientError, we just return it
+        return currentTask;
       });
     };
 

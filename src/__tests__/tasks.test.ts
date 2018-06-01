@@ -2,9 +2,11 @@ import { Either, isLeft, isRight, Left, left, right } from "fp-ts/lib/Either";
 import { Task } from "fp-ts/lib/Task";
 import { TaskEither, taskify } from "fp-ts/lib/TaskEither";
 
+import { DeferredPromise } from "../promises";
 import {
   MaxRetries,
   RetriableTask,
+  RetryAborted,
   TransientError,
   withRetries
 } from "../tasks";
@@ -93,5 +95,41 @@ describe("withRetries", () => {
       expect(r.value).toEqual("ok");
     }
     expect(taskMock).toHaveBeenCalledTimes(3);
+  });
+
+  it("should abort retries", async () => {
+    const transientError = Promise.resolve(
+      left<Error | TransientError, boolean>(TransientError)
+    );
+
+    // create a deferred promise that we will use to abort a RetriableTask
+    const { e1: abortPromise, e2: abortResolve } = DeferredPromise<boolean>();
+    const taskMock: () => Promise<
+      Either<Error | TransientError, boolean>
+    > = jest
+      .fn()
+      // first run, fail with a TransientError
+      .mockImplementationOnce(() => transientError)
+      .mockImplementationOnce(() => {
+        // On the second run we still fail with a TransientError and also
+        // resolve the abort promise on the second run.
+        // There should be no more retries after this one.
+        abortResolve(true);
+        return transientError;
+      });
+    const transientFailingTaskMock: RetriableTask<
+      Error,
+      boolean
+    > = new TaskEither(new Task(taskMock));
+
+    // Retry this task for max 5 times
+    const t = withConstantRetries(5)(transientFailingTaskMock, abortPromise);
+
+    const r = await t.run();
+    expect(r.isLeft()).toBeTruthy();
+    if (isLeft(r)) {
+      expect(r.value).toEqual(RetryAborted);
+    }
+    expect(taskMock).toHaveBeenCalledTimes(2);
   });
 });
