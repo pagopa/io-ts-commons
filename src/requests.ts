@@ -291,6 +291,7 @@ export class ApiRequestBuilder<
   /**
    * Creates a new empty request with the PUT method.
    */
+  /* tslint:disable-next-line:no-identical-functions */
   public static ofPut(): EmptyApiRequestBuilder<"put", {}, "Content-Type"> {
     return new ApiRequestBuilder<
       "put",

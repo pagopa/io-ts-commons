@@ -18,7 +18,7 @@ import {
   toFetch
 } from "../fetch";
 import { timeoutPromise, withTimeout } from "../promises";
-import { RetryAborted, withRetries, MaxRetries } from "../tasks";
+import { MaxRetries, RetryAborted, withRetries } from "../tasks";
 import { Millisecond } from "../units";
 
 const TEST_HOST = "localhost";
@@ -26,7 +26,10 @@ const TEST_PORT = 40000;
 
 // tslint:disable-next-line:no-any
 function createServerMock(): any {
-  const server = new ServerMock({ host: TEST_HOST, port: TEST_PORT }, {});
+  const server = new ServerMock(
+    { host: TEST_HOST, port: TEST_PORT },
+    undefined
+  );
 
   server.on({
     delay: 10 * 1000, // delay the response by 10 seconds
