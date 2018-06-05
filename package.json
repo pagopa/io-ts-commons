@@ -57,6 +57,7 @@
         "skipBabel": true
       }
     },
+    "testEnvironment": "node",
     "collectCoverage": true,
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
