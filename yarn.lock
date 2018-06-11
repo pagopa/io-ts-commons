@@ -1059,8 +1059,8 @@ danger-plugin-yarn@^1.2.1:
     esdoc "^0.5.2"
 
 danger@^3.1.7:
-  version "3.7.15"
-  resolved "https://registry.yarnpkg.com/danger/-/danger-3.7.15.tgz#ef380471d381c8571739a986d62a5dbfb9095d2d"
+  version "3.7.16"
+  resolved "https://registry.yarnpkg.com/danger/-/danger-3.7.16.tgz#b7179461b8e6b25459fd7bc9d13691d02b085b08"
   dependencies:
     "@octokit/rest" "^15.5.0"
     babel-polyfill "^6.23.0"
@@ -3419,11 +3419,7 @@ node-fetch@^1.7.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@^2.1.1, node-fetch@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
-
-"node-fetch@https://github.com/bitinn/node-fetch#abort":
+node-fetch@^2.1.1, node-fetch@^2.1.2, "node-fetch@https://github.com/bitinn/node-fetch#abort":
   version "2.1.2"
   resolved "https://github.com/bitinn/node-fetch#a823a1ef74a34b9b6b25ed6cb790de8c40e4ef38"
   dependencies:
