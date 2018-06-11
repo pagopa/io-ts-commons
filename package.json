@@ -43,7 +43,7 @@
     "tslint-sonarts": "^1.6.0",
     "typedoc": "^0.11.1",
     "typescript": "^2.9.1",
-    "typestrict": "^0.0.8"
+    "typestrict": "^0.0.9"
   },
   "dependencies": {
     "fp-ts": "^1.6.0",
