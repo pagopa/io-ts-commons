@@ -2,6 +2,8 @@
 
 [![codecov](https://codecov.io/gh/teamdigitale/italia-ts-commons/branch/master/graph/badge.svg)](https://codecov.io/gh/teamdigitale/italia-ts-commons)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/c9be630a66618bde8e4a/maintainability)](https://codeclimate.com/github/teamdigitale/italia-ts-commons/maintainability)
+
 # Italia TypeScript Commons
 
 This module provides code shared by the projects of the
