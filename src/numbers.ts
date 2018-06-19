@@ -42,3 +42,50 @@ export const NonNegativeNumber = tag<INonNegativeNumberTag>()(
 );
 
 export type NonNegativeNumber = t.TypeOf<typeof NonNegativeNumber>;
+
+//
+//  Integers
+//
+export type IntegerType = typeof t.Integer;
+
+export interface IWithinRangeIntegerTag<L extends number, H extends number> {
+  readonly lower: L;
+  readonly higher: H;
+  readonly kind: "IWithinRangeIntegerTag";
+}
+
+/**
+ * An integer guaranteed to be within the range [L,H)
+ */
+export const WithinRangeInteger = <
+  L extends number,
+  H extends number,
+  T extends IWithinRangeIntegerTag<L, H>
+>(
+  l: L,
+  h: H
+): Tagged<T, number> =>
+  tag<T>()(
+    t.refinement(
+      t.Integer,
+      // tslint:disable-next-line:no-any
+      s => s >= l && s < h,
+      `integer >= ${l} and < ${h}`
+    )
+  );
+export type WithinRangeInteger<
+  L extends number,
+  H extends number
+> = IntegerType & IWithinRangeIntegerTag<L, H>;
+
+export interface INonNegativeIntegerTag {
+  readonly kind: "INonNegativeIntegerTag";
+}
+
+/**
+ * A non negative integer
+ */
+export const NonNegativeInteger = tag<INonNegativeIntegerTag>()(
+  t.refinement(t.Integer, s => s >= 0, "integer >= 0")
+);
+export type NonNegativeInteger = t.TypeOf<typeof NonNegativeInteger>;

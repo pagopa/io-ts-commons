@@ -2,7 +2,6 @@ import {
   ApplicationCode,
   AuxDigit,
   CheckDigit,
-  CodiceSegregazione,
   IUV13,
   IUV15,
   IUV17,
@@ -11,7 +10,9 @@ import {
   PaymentNoticeNumber1,
   PaymentNoticeNumber2,
   PaymentNoticeNumber3,
-  PaymentNoticeNumberFromString
+  PaymentNoticeNumberFromString,
+  QrCodeFromString,
+  SegregationCode
 } from "../pagopa";
 
 import { isLeft, isRight } from "fp-ts/lib/Either";
@@ -47,7 +48,7 @@ describe("PaymentNoticeNumberFromString", () => {
             break;
           case "3":
             expect(paymentNoticeNumber.checkDigit).toHaveLength(2);
-            expect(paymentNoticeNumber.codiceSegregazione).toHaveLength(2);
+            expect(paymentNoticeNumber.segregationCode).toHaveLength(2);
             expect(paymentNoticeNumber.iuv13).toHaveLength(13);
             break;
         }
@@ -115,12 +116,46 @@ describe("PaymentNoticeNumberFromString", () => {
     const aValidPaymentNoticeNumber: PaymentNoticeNumber3 = {
       auxDigit: "3",
       checkDigit: "33" as CheckDigit,
-      codiceSegregazione: "44" as CodiceSegregazione,
-      iuv13: "0123456789012" as IUV13
+      iuv13: "0123456789012" as IUV13,
+      segregationCode: "44" as SegregationCode
     };
     const paymentNoticeString = PaymentNoticeNumberFromString.encode(
       aValidPaymentNoticeNumber
     );
     expect(paymentNoticeString).toEqual("344012345678901233");
+  });
+});
+
+describe("QrCodeFromString", () => {
+  it("should succeed with valid QrCode", async () => {
+    const qrCodeSrt = "PAGOPA|002|123456789012345678|12345678901|1234567801";
+    const validation = QrCodeFromString.decode(qrCodeSrt);
+    expect(isRight(validation)).toBeTruthy();
+    if (isRight(validation)) {
+      expect(validation.value.amount).toHaveLength(10);
+      expect(validation.value.identifier).toHaveLength(6);
+      expect(validation.value.version).toHaveLength(3);
+      expect(validation.value.organizationFiscalCode).toHaveLength(11);
+      expect(validation.value.paymentNoticeNumber.auxDigit).toEqual("1");
+      // tslint:disable-next-line:no-any
+      expect((validation.value.paymentNoticeNumber as any).iuv17).toEqual(
+        "23456789012345678"
+      );
+      expect(QrCodeFromString.encode(validation.value)).toEqual(qrCodeSrt);
+    }
+  });
+
+  it("should fail with invalid QrCode", async () => {
+    const qrCodeSrts: ReadonlyArray<string> = [
+      "XAGOPA|002|123456789012345678|12345678901|1234567801", // invalid identifier
+      "PAGOPA|003|123456789012345678|12345678901|1234567801", // invalid version
+      "PAGOPA|003|123456789012345678|12345678901|123456780X", // invalid amount
+      "PAGOPA|003|12345678901234567X|12345678901|1234567800", // invalid paymentNumber
+      "PAGOPA|003|123456789012345675|X2345678901|1234567800" // invalid fiscal code
+    ];
+    qrCodeSrts.map(qrCodeSrt => {
+      const validation = QrCodeFromString.decode(qrCodeSrt);
+      expect(isRight(validation)).toBeFalsy();
+    });
   });
 });

@@ -127,3 +127,19 @@ const v6 = `
 export const CIDR = PatternString(`(?:^${v4}$)|(?:^${v6}$)`);
 
 export type CIDR = t.TypeOf<typeof CIDR>;
+
+/**
+ * A valid Fiscal Number (for persons)
+ */
+export const FiscalCode = PatternString(
+  "^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]$"
+);
+
+export type FiscalCode = t.TypeOf<typeof FiscalCode>;
+
+/**
+ * A valid Fiscal Number (for organizations)
+ */
+export const OrganizationFiscalCode = PatternString("^[0-9]{11}$");
+
+export type OrganizationFiscalCode = t.TypeOf<typeof OrganizationFiscalCode>;
