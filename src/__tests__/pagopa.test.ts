@@ -53,6 +53,10 @@ describe("PaymentNoticeNumberFromString", () => {
         }
       }
       expect(PaymentNoticeNumber.is(validation.value)).toBeTruthy();
+      const encoded = PaymentNoticeNumber.decode(validation.value)
+        .map(PaymentNoticeNumberFromString.encode)
+        .getOrElse(undefined);
+      expect(encoded).toEqual(aValidPaymentNoticeNumber);
     });
   });
 
