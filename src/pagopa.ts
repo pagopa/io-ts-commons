@@ -2,6 +2,7 @@
  * Typescript (io-ts) types related to PagoPA.
  */
 import * as t from "io-ts";
+// tslint:disable-next-line:no-unused-variable
 import { IPatternStringTag, PatternString } from "./strings";
 
 const PAYMENT_NOTICE_NUMBER_LENGTH = 18;
@@ -131,6 +132,7 @@ export const PaymentNoticeNumberFromString = new t.Type<
           }
           switch (s[0]) {
             case "0": {
+              // tslint:disable-next-line:no-dead-store
               const [, auxDigit, applicationCode, iuv13, checkDigit, ..._] =
                 s.match(/^(\d{1})(\d{2})(\d{13})(\d{2})$/) || [];
               return PaymentNoticeNumber0.decode({
@@ -141,6 +143,7 @@ export const PaymentNoticeNumberFromString = new t.Type<
               } as PaymentNoticeNumber0);
             }
             case "1": {
+              // tslint:disable-next-line:no-dead-store
               const [, auxDigit, iuv17, ..._] =
                 s.match(/^(\d{1})(\d{17})$/) || [];
               return PaymentNoticeNumber1.decode({
@@ -149,6 +152,7 @@ export const PaymentNoticeNumberFromString = new t.Type<
               } as PaymentNoticeNumber1);
             }
             case "2": {
+              // tslint:disable-next-line:no-dead-store
               const [, auxDigit, iuv15, checkDigit, ..._] =
                 s.match(/^(\d{1})(\d{15})(\d{2})$/) || [];
               return PaymentNoticeNumber2.decode({
@@ -158,6 +162,7 @@ export const PaymentNoticeNumberFromString = new t.Type<
               } as PaymentNoticeNumber2);
             }
             case "3": {
+              // tslint:disable-next-line:no-dead-store
               const [, auxDigit, codiceSegregazione, iuv13, checkDigit, ..._] =
                 s.match(/^(\d{1})(\d{2})(\d{13})(\d{2})$/) || [];
               return PaymentNoticeNumber3.decode({
