@@ -81,7 +81,8 @@ export const PaymentNoticeNumber = t.taggedUnion("auxDigit", [
 export type PaymentNoticeNumber = t.TypeOf<typeof PaymentNoticeNumber>;
 
 /**
- * Private convenience method, use PaymentNoticeNumber.encode() instead.
+ * Private convenience method,
+ * use PaymentNoticeNumberFromString.encode() instead.
  */
 function paymentNoticeNumberToString(
   paymentNoticeNumber: PaymentNoticeNumber
@@ -107,6 +108,7 @@ function paymentNoticeNumberToString(
   ].join("");
 }
 
+/* istanbul ignore next */
 const isPaymentNoticeNumber = (v: t.mixed): v is PaymentNoticeNumber =>
   PaymentNoticeNumber.is(v);
 
@@ -116,6 +118,15 @@ const isPaymentNoticeNumber = (v: t.mixed): v is PaymentNoticeNumber =>
  * PaymentNoticeNumberFromString.decode("044012345678901200")
  * will decode a PaymentNoticeNumber (NumeroAvviso) into its parts
  * according to the AuxDigit field value.
+ *
+ * To convert a PaymentNoticeNumber to a string:
+ *
+ *    PaymentNoticeNumber.decode({
+ *      auxDigit: "2",
+ *      checkDigit: "22",
+ *      iuv15: "012345678901234"
+ *    }).map(PaymentNoticeNumberFromString.encode)
+ *
  */
 export const PaymentNoticeNumberFromString = new t.Type<
   PaymentNoticeNumber,
@@ -176,7 +187,7 @@ export const PaymentNoticeNumberFromString = new t.Type<
               return t.failure(s, c);
           }
         }),
-  a => paymentNoticeNumberToString(a)
+  paymentNoticeNumberToString
 );
 
 export type PaymentNoticeNumberFromString = t.TypeOf<
