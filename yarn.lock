@@ -85,8 +85,8 @@
   resolved "https://registry.yarnpkg.com/@types/highlight.js/-/highlight.js-9.12.2.tgz#6ee7cd395effe5ec80b515d3ff1699068cd0cd1d"
 
 "@types/jest@^23.0.0":
-  version "23.0.0"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.0.0.tgz#760cac74f00bb9c3075587716d2b3b4435663bc0"
+  version "23.1.0"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.1.0.tgz#8054dd838ba23dc331794d26456b86c7e50bf0f6"
 
 "@types/lodash@4.14.104":
   version "4.14.104"
@@ -1059,8 +1059,8 @@ danger-plugin-yarn@^1.2.1:
     esdoc "^0.5.2"
 
 danger@^3.1.7:
-  version "3.7.15"
-  resolved "https://registry.yarnpkg.com/danger/-/danger-3.7.15.tgz#ef380471d381c8571739a986d62a5dbfb9095d2d"
+  version "3.7.18"
+  resolved "https://registry.yarnpkg.com/danger/-/danger-3.7.18.tgz#944e0e2786b3f40c044345f8185c0e2e61131cdc"
   dependencies:
     "@octokit/rest" "^15.5.0"
     babel-polyfill "^6.23.0"
@@ -1626,8 +1626,8 @@ form-data@~2.3.1:
     mime-types "^2.1.12"
 
 fp-ts@^1.0.0, fp-ts@^1.6.0:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-1.6.1.tgz#83526f1d173387e5f686c57652f5b5fc580e6d1e"
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-1.6.2.tgz#21f3675262d35b507b6e854f68965979e125ff77"
 
 fragment-cache@^0.2.1:
   version "0.2.1"
@@ -2004,8 +2004,8 @@ invert-kv@^1.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
 io-ts@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-1.1.4.tgz#8d8b448fa7d9899e1e4fe32afa8374ee6774fa92"
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-1.1.5.tgz#5a943eeb063eebf27517a559359fd121ba04eaaa"
   dependencies:
     fp-ts "^1.0.0"
 
@@ -3419,11 +3419,7 @@ node-fetch@^1.7.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@^2.1.1, node-fetch@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
-
-"node-fetch@https://github.com/bitinn/node-fetch#abort":
+node-fetch@^2.1.1, node-fetch@^2.1.2, "node-fetch@https://github.com/bitinn/node-fetch#abort":
   version "2.1.2"
   resolved "https://github.com/bitinn/node-fetch#a823a1ef74a34b9b6b25ed6cb790de8c40e4ef38"
   dependencies:
@@ -3803,8 +3799,8 @@ preserve@^0.2.0:
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
 prettier@^1.12.1:
-  version "1.13.4"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.13.4.tgz#31bbae6990f13b1093187c731766a14036fa72e6"
+  version "1.13.5"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.13.5.tgz#7ae2076998c8edce79d63834e9b7b09fead6bfd0"
 
 pretty-format@^18.1.0:
   version "18.1.0"
@@ -4568,8 +4564,8 @@ tslint-config-prettier@^1.6.0:
   resolved "https://registry.yarnpkg.com/tslint-config-prettier/-/tslint-config-prettier-1.13.0.tgz#189e821931ad89e0364e4e292d5c44a14e90ecd6"
 
 tslint-immutable@^4.5.4:
-  version "4.5.4"
-  resolved "https://registry.yarnpkg.com/tslint-immutable/-/tslint-immutable-4.5.4.tgz#17b0d825c1067fa6d125a8010d9b22feb12e5d32"
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/tslint-immutable/-/tslint-immutable-4.6.0.tgz#b93f50961c499e331d919084140f5034b84e80af"
 
 tslint-microsoft-contrib@^5.0.3:
   version "5.0.3"
@@ -4584,7 +4580,7 @@ tslint-plugin-prettier@^1.3.0:
     eslint-plugin-prettier "^2.2.0"
     tslib "^1.7.1"
 
-tslint-sonarts@^1.6.0:
+tslint-sonarts@^1.6.0, tslint-sonarts@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/tslint-sonarts/-/tslint-sonarts-1.7.0.tgz#1bcaf9f524c86b8d4cf9a2afae736edffd2e0dea"
   dependencies:
@@ -4667,15 +4663,15 @@ typescript@2.7.2:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
 
 typescript@^2.9.1:
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.1.tgz#fdb19d2c67a15d11995fd15640e373e09ab09961"
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
 
-typestrict@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/typestrict/-/typestrict-0.0.8.tgz#9607e58b3bb20a9ba0a2e149d3fca348c068bf99"
+typestrict@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/typestrict/-/typestrict-0.0.9.tgz#e4c882afb55a698e6f8b1ca125c50c229593d72c"
   dependencies:
     tslint-microsoft-contrib "^5.0.3"
-    tslint-sonarts "^1.6.0"
+    tslint-sonarts "^1.7.0"
 
 uglify-js@^2.6:
   version "2.8.29"
