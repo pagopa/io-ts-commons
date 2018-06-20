@@ -12,6 +12,7 @@ import {
   PaymentNoticeNumber3,
   PaymentNoticeNumberFromString,
   PaymentNoticeQrCodeFromString,
+  RptIdFromString,
   SegregationCode
 } from "../pagopa";
 
@@ -157,6 +158,34 @@ describe("QrCodeFromString", () => {
     ];
     qrCodeSrts.map(qrCodeSrt => {
       const validation = PaymentNoticeQrCodeFromString.decode(qrCodeSrt);
+      expect(isRight(validation)).toBeFalsy();
+    });
+  });
+});
+
+describe("RptIdFromString", () => {
+  it("should succeed with valid RptId", async () => {
+    const rptIdStr = "12345678901123456789012345678";
+    const validation = RptIdFromString.decode(rptIdStr);
+    expect(isRight(validation)).toBeTruthy();
+    if (isRight(validation)) {
+      expect(validation.value.organizationFiscalCode).toHaveLength(11);
+      expect(validation.value.paymentNoticeNumber.auxDigit).toEqual("1");
+      // tslint:disable-next-line:no-any
+      expect((validation.value.paymentNoticeNumber as any).iuv17).toEqual(
+        "23456789012345678"
+      );
+      expect(RptIdFromString.encode(validation.value)).toEqual(rptIdStr);
+    }
+  });
+
+  it("should fail with invalid RptId", async () => {
+    const rptIdStrs: ReadonlyArray<string> = [
+      "1234567890112345678901234567X", // invalid paymentNumber
+      "X2345678901123456789012345675" // invalid fiscal code
+    ];
+    rptIdStrs.map(rptIdStr => {
+      const validation = RptIdFromString.decode(rptIdStr);
       expect(isRight(validation)).toBeFalsy();
     });
   });

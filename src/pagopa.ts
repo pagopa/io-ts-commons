@@ -12,7 +12,13 @@ import {
 export const AmountInEuroCents = PatternString("[0-9]{10}");
 
 const PAYMENT_NOTICE_NUMBER_LENGTH = 18;
+
 const QR_CODE_LENGTH = 52;
+
+const ORGANIZATION_FISCAL_CODE_LENGTH = 11;
+
+const RPT_ID_LENGTH =
+  PAYMENT_NOTICE_NUMBER_LENGTH + ORGANIZATION_FISCAL_CODE_LENGTH;
 
 export type AuxDigit = "0" | "1" | "2" | "3";
 
@@ -306,3 +312,53 @@ export const PaymentNoticeQrCodeFromString = new t.Type<
 export type PaymentNoticeQrCodeFromString = t.TypeOf<
   typeof PaymentNoticeQrCodeFromString
 >;
+
+//
+//  PagoPA RPT id, used during RPT activation
+//
+
+/**
+ * Private convenience method,
+ * use RptIdFromString.encode() instead.
+ */
+function rptIdToString(rptId: RptId): string {
+  return [
+    rptId.organizationFiscalCode,
+    PaymentNoticeNumberFromString.encode(rptId.paymentNoticeNumber)
+  ].join("");
+}
+
+/**
+ * The id used for the PagoPA RPT requests
+ */
+export const RptId = t.interface({
+  organizationFiscalCode: OrganizationFiscalCode,
+  paymentNoticeNumber: PaymentNoticeNumberFromString
+});
+export type RptId = t.TypeOf<typeof RptId>;
+
+export const RptIdFromString = new t.Type<RptId, string>(
+  "RptIdFromString",
+  RptId.is,
+  (v, c) =>
+    RptId.is(v)
+      ? t.success(v)
+      : t.string.validate(v, c).chain(s => {
+          if (s.length !== RPT_ID_LENGTH) {
+            return t.failure(s, c);
+          }
+          const [
+            ,
+            organizationFiscalCode,
+            paymentNoticeNumber,
+            // tslint:disable-next-line:no-dead-store
+            ..._
+          ] =
+            s.match(/^(\d{11})(\d{18})$/) || [];
+          return RptId.decode({
+            organizationFiscalCode,
+            paymentNoticeNumber
+          });
+        }),
+  rptIdToString
+);
