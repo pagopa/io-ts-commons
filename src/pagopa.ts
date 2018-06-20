@@ -9,7 +9,7 @@ import {
   PatternString
 } from "./strings";
 
-export const AmountCents = PatternString("[0-9]{10}");
+export const AmountInEuroCents = PatternString("[0-9]{10}");
 
 const PAYMENT_NOTICE_NUMBER_LENGTH = 18;
 const QR_CODE_LENGTH = 52;
@@ -204,7 +204,7 @@ export type PaymentNoticeNumberFromString = t.TypeOf<
 //
 
 const PaymentNoticeQrCode2 = t.interface({
-  amount: AmountCents,
+  amount: AmountInEuroCents,
   identifier: t.literal("PAGOPA"),
   organizationFiscalCode: OrganizationFiscalCode,
   paymentNoticeNumber: PaymentNoticeNumberFromString,

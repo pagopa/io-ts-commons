@@ -46,7 +46,7 @@ export type NonNegativeNumber = t.TypeOf<typeof NonNegativeNumber>;
 //
 //  Integers
 //
-export type IntegerType = typeof t.Integer;
+export type Integer = typeof t.Integer;
 
 export interface IWithinRangeIntegerTag<L extends number, H extends number> {
   readonly lower: L;
@@ -73,10 +73,8 @@ export const WithinRangeInteger = <
       `integer >= ${l} and < ${h}`
     )
   );
-export type WithinRangeInteger<
-  L extends number,
-  H extends number
-> = IntegerType & IWithinRangeIntegerTag<L, H>;
+export type WithinRangeInteger<L extends number, H extends number> = Integer &
+  IWithinRangeIntegerTag<L, H>;
 
 export interface INonNegativeIntegerTag {
   readonly kind: "INonNegativeIntegerTag";
