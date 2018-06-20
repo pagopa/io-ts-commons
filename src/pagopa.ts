@@ -2,18 +2,31 @@
  * Typescript (io-ts) types related to PagoPA.
  */
 import * as t from "io-ts";
-// tslint:disable-next-line:no-unused-variable
-import { IPatternStringTag, PatternString } from "./strings";
+import {
+  // tslint:disable-next-line:no-unused-variable
+  IPatternStringTag,
+  OrganizationFiscalCode,
+  PatternString
+} from "./strings";
+
+export const AmountInEuroCents = PatternString("[0-9]{10}");
 
 const PAYMENT_NOTICE_NUMBER_LENGTH = 18;
+
+const QR_CODE_LENGTH = 52;
+
+const ORGANIZATION_FISCAL_CODE_LENGTH = 11;
+
+const RPT_ID_LENGTH =
+  PAYMENT_NOTICE_NUMBER_LENGTH + ORGANIZATION_FISCAL_CODE_LENGTH;
 
 export type AuxDigit = "0" | "1" | "2" | "3";
 
 export const ApplicationCode = PatternString("[0-9]{2}");
 export type ApplicationCode = t.TypeOf<typeof ApplicationCode>;
 
-export const CodiceSegregazione = PatternString("[0-9]{2}");
-export type CodiceSegregazione = t.TypeOf<typeof CodiceSegregazione>;
+export const SegregationCode = PatternString("[0-9]{2}");
+export type SegregationCode = t.TypeOf<typeof SegregationCode>;
 
 export const IUV13 = PatternString("[0-9]{13}");
 export type IUV13 = t.TypeOf<typeof IUV13>;
@@ -65,8 +78,8 @@ export type PaymentNoticeNumber2 = t.TypeOf<typeof PaymentNoticeNumber2>;
 export const PaymentNoticeNumber3 = t.interface({
   auxDigit: t.literal("3"),
   checkDigit: CheckDigit,
-  codiceSegregazione: CodiceSegregazione,
-  iuv13: IUV13
+  iuv13: IUV13,
+  segregationCode: SegregationCode
 });
 export type PaymentNoticeNumber3 = t.TypeOf<typeof PaymentNoticeNumber3>;
 
@@ -93,7 +106,7 @@ function paymentNoticeNumberToString(
       ? paymentNoticeNumber.applicationCode
       : "",
     paymentNoticeNumber.auxDigit === "3"
-      ? paymentNoticeNumber.codiceSegregazione
+      ? paymentNoticeNumber.segregationCode
       : "",
     paymentNoticeNumber.auxDigit === "0"
       ? paymentNoticeNumber.iuv13
@@ -108,23 +121,21 @@ function paymentNoticeNumberToString(
   ].join("");
 }
 
-/* istanbul ignore next */
-const isPaymentNoticeNumber = (v: t.mixed): v is PaymentNoticeNumber =>
-  PaymentNoticeNumber.is(v);
-
 /**
  * Decodes a string into a valid PaymentNoticeNumber (NumeroAvviso).
  *
- * PaymentNoticeNumberFromString.decode("044012345678901200")
+ *    const paymentNotice = PaymentNoticeNumberFromString.decode(
+ *      "244012345678901200")
+ *
  * will decode a PaymentNoticeNumber (NumeroAvviso) into its parts
  * according to the AuxDigit field value.
  *
- * To convert a PaymentNoticeNumber to a string:
+ * To convert a PaymentNoticeNumber into a string:
  *
  *    PaymentNoticeNumber.decode({
  *      auxDigit: "2",
- *      checkDigit: "22",
- *      iuv15: "012345678901234"
+ *      checkDigit: "44",
+ *      iuv15: "012345678901200"
  *    }).map(PaymentNoticeNumberFromString.encode)
  *
  */
@@ -133,7 +144,7 @@ export const PaymentNoticeNumberFromString = new t.Type<
   string
 >(
   "PaymentNoticeNumberFromString",
-  isPaymentNoticeNumber,
+  PaymentNoticeNumber.is,
   (v, c) =>
     PaymentNoticeNumber.is(v)
       ? t.success(v)
@@ -174,13 +185,13 @@ export const PaymentNoticeNumberFromString = new t.Type<
             }
             case "3": {
               // tslint:disable-next-line:no-dead-store
-              const [, auxDigit, codiceSegregazione, iuv13, checkDigit, ..._] =
+              const [, auxDigit, segregationCode, iuv13, checkDigit, ..._] =
                 s.match(/^(\d{1})(\d{2})(\d{13})(\d{2})$/) || [];
               return PaymentNoticeNumber3.decode({
                 auxDigit,
                 checkDigit,
-                codiceSegregazione,
-                iuv13
+                iuv13,
+                segregationCode
               } as PaymentNoticeNumber3);
             }
             default:
@@ -193,3 +204,161 @@ export const PaymentNoticeNumberFromString = new t.Type<
 export type PaymentNoticeNumberFromString = t.TypeOf<
   typeof PaymentNoticeNumberFromString
 >;
+
+//
+//  PagoPA QR Code
+//
+
+const PaymentNoticeQrCode2 = t.interface({
+  amount: AmountInEuroCents,
+  identifier: t.literal("PAGOPA"),
+  organizationFiscalCode: OrganizationFiscalCode,
+  paymentNoticeNumber: PaymentNoticeNumberFromString,
+  version: t.literal("002")
+});
+type PaymentNoticeQrCode2 = t.TypeOf<typeof PaymentNoticeQrCode2>;
+
+/**
+ * Defines the QR Code string that contains PagoPA payment information.
+ */
+export const PaymentNoticeQrCode = t.taggedUnion("version", [
+  PaymentNoticeQrCode2
+]);
+export type PaymentNoticeQrCode = t.TypeOf<typeof PaymentNoticeQrCode>;
+
+/**
+ * Private convenience method,
+ * use PaymentNoticeQrCodeFromString.encode() instead.
+ */
+function paymentNoticeQrCodeToString(qrCode: PaymentNoticeQrCode): string {
+  return [
+    qrCode.identifier,
+    qrCode.version,
+    PaymentNoticeNumberFromString.encode(qrCode.paymentNoticeNumber),
+    qrCode.organizationFiscalCode,
+    qrCode.amount
+  ].join("|");
+}
+
+/**
+ * Decodes a string into a valid PaymentNoticeQrCode.
+ *
+ *  const qrCode = PaymentNoticeQrCodeFromString.decode(
+ *    "PAGOPA|002|123456789012345678|12345678901|1234567801");
+ *
+ * will parse a PaymentNoticeQrCodeString into its parts:
+ *
+ *    qrCode = {
+ *      identifier: "PAGOPA",
+ *      version: "002",
+ *      paymentNoticeNumber: {
+ *        auxDigit: "1",
+ *        checkDigit: "23",
+ *        iuv15: "456789012345678"
+ *      },
+ *      organizationFiscalCode: "12345678901",
+ *      amount: "1234567801"
+ *    }
+ *
+ * To convert a PaymentNoticeQrCode into a string:
+ *
+ *    PaymentNoticeQrCode.decode({
+ *      identifier: "PAGOPA",
+ *      version: "002",
+ *      paymentNoticeNumber: {
+ *        auxDigit: "2",
+ *        checkDigit: "22",
+ *        iuv15: "012345678901234"
+ *      },
+ *      organizationFiscalCode: "01234567891",
+ *      amount: "1234567890"
+ *    }).map(PaymentNoticeQrCodeFromString.encode)
+ *
+ */
+export const PaymentNoticeQrCodeFromString = new t.Type<
+  PaymentNoticeQrCode,
+  string
+>(
+  "PaymentNoticeQrCodeFromString",
+  PaymentNoticeQrCode.is,
+  (v, c) =>
+    PaymentNoticeQrCode.is(v)
+      ? t.success(v)
+      : t.string.validate(v, c).chain(s => {
+          if (s.length !== QR_CODE_LENGTH) {
+            return t.failure(s, c);
+          }
+          const [
+            identifier,
+            version,
+            paymentNoticeNumber,
+            organizationFiscalCode,
+            amount,
+            // tslint:disable-next-line:no-dead-store
+            ..._
+          ] =
+            s.split("|") || [];
+          return PaymentNoticeQrCode.decode({
+            amount,
+            identifier,
+            organizationFiscalCode,
+            paymentNoticeNumber,
+            version
+          });
+        }),
+  paymentNoticeQrCodeToString
+);
+
+export type PaymentNoticeQrCodeFromString = t.TypeOf<
+  typeof PaymentNoticeQrCodeFromString
+>;
+
+//
+//  PagoPA RPT id, used during RPT activation
+//
+
+/**
+ * Private convenience method,
+ * use RptIdFromString.encode() instead.
+ */
+function rptIdToString(rptId: RptId): string {
+  return [
+    rptId.organizationFiscalCode,
+    PaymentNoticeNumberFromString.encode(rptId.paymentNoticeNumber)
+  ].join("");
+}
+
+/**
+ * The id used for the PagoPA RPT requests
+ */
+export const RptId = t.interface({
+  organizationFiscalCode: OrganizationFiscalCode,
+  paymentNoticeNumber: PaymentNoticeNumberFromString
+});
+export type RptId = t.TypeOf<typeof RptId>;
+
+export const RptIdFromString = new t.Type<RptId, string>(
+  "RptIdFromString",
+  RptId.is,
+  (v, c) =>
+    RptId.is(v)
+      ? t.success(v)
+      : t.string.validate(v, c).chain(s => {
+          if (s.length !== RPT_ID_LENGTH) {
+            return t.failure(s, c);
+          }
+          const [
+            ,
+            organizationFiscalCode,
+            paymentNoticeNumber,
+            // tslint:disable-next-line:no-dead-store
+            ..._
+          ] =
+            s.match(/^(\d{11})(\d{18})$/) || [];
+          return RptId.decode({
+            organizationFiscalCode,
+            paymentNoticeNumber
+          });
+        }),
+  rptIdToString
+);
