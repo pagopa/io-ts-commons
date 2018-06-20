@@ -11,7 +11,7 @@ import {
   PaymentNoticeNumber2,
   PaymentNoticeNumber3,
   PaymentNoticeNumberFromString,
-  QrCodeFromString,
+  PaymentNoticeQrCodeFromString,
   SegregationCode
 } from "../pagopa";
 
@@ -129,7 +129,7 @@ describe("PaymentNoticeNumberFromString", () => {
 describe("QrCodeFromString", () => {
   it("should succeed with valid QrCode", async () => {
     const qrCodeSrt = "PAGOPA|002|123456789012345678|12345678901|1234567801";
-    const validation = QrCodeFromString.decode(qrCodeSrt);
+    const validation = PaymentNoticeQrCodeFromString.decode(qrCodeSrt);
     expect(isRight(validation)).toBeTruthy();
     if (isRight(validation)) {
       expect(validation.value.amount).toHaveLength(10);
@@ -141,7 +141,9 @@ describe("QrCodeFromString", () => {
       expect((validation.value.paymentNoticeNumber as any).iuv17).toEqual(
         "23456789012345678"
       );
-      expect(QrCodeFromString.encode(validation.value)).toEqual(qrCodeSrt);
+      expect(PaymentNoticeQrCodeFromString.encode(validation.value)).toEqual(
+        qrCodeSrt
+      );
     }
   });
 
@@ -154,7 +156,7 @@ describe("QrCodeFromString", () => {
       "PAGOPA|003|123456789012345675|X2345678901|1234567800" // invalid fiscal code
     ];
     qrCodeSrts.map(qrCodeSrt => {
-      const validation = QrCodeFromString.decode(qrCodeSrt);
+      const validation = PaymentNoticeQrCodeFromString.decode(qrCodeSrt);
       expect(isRight(validation)).toBeFalsy();
     });
   });

@@ -118,16 +118,18 @@ function paymentNoticeNumberToString(
 /**
  * Decodes a string into a valid PaymentNoticeNumber (NumeroAvviso).
  *
- * PaymentNoticeNumberFromString.decode("044012345678901200")
+ *    const paymentNotice = PaymentNoticeNumberFromString.decode(
+ *      "244012345678901200")
+ *
  * will decode a PaymentNoticeNumber (NumeroAvviso) into its parts
  * according to the AuxDigit field value.
  *
- * To convert a PaymentNoticeNumber to a string:
+ * To convert a PaymentNoticeNumber into a string:
  *
  *    PaymentNoticeNumber.decode({
  *      auxDigit: "2",
- *      checkDigit: "22",
- *      iuv15: "012345678901234"
+ *      checkDigit: "44",
+ *      iuv15: "012345678901200"
  *    }).map(PaymentNoticeNumberFromString.encode)
  *
  */
@@ -198,33 +200,31 @@ export type PaymentNoticeNumberFromString = t.TypeOf<
 >;
 
 //
-//  QR Code
+//  PagoPA QR Code
 //
 
-// (6a) "PAGOPA"
-// (3n) "002"
-// (18n) Numero Avviso (PaymentNoticeNumberFromString)
-// (11a) codiceIdentificativoEnte (organizationFiscalCode)
-// (10n) Amount in euro cents (digits)
-
-// ie. "PAGOPA|002|123456789012345678|12345678901|1234567801"
-
-const QrCode2 = t.interface({
+const PaymentNoticeQrCode2 = t.interface({
   amount: AmountCents,
   identifier: t.literal("PAGOPA"),
   organizationFiscalCode: OrganizationFiscalCode,
   paymentNoticeNumber: PaymentNoticeNumberFromString,
   version: t.literal("002")
 });
-type QrCode2 = t.TypeOf<typeof QrCode2>;
+type PaymentNoticeQrCode2 = t.TypeOf<typeof PaymentNoticeQrCode2>;
 
 /**
  * Defines the QR Code string that contains PagoPA payment information.
  */
-export const QrCode = t.taggedUnion("version", [QrCode2]);
-export type QrCode = t.TypeOf<typeof QrCode>;
+export const PaymentNoticeQrCode = t.taggedUnion("version", [
+  PaymentNoticeQrCode2
+]);
+export type PaymentNoticeQrCode = t.TypeOf<typeof PaymentNoticeQrCode>;
 
-function qrCodeToString(qrCode: QrCode): string {
+/**
+ * Private convenience method,
+ * use PaymentNoticeQrCodeFromString.encode() instead.
+ */
+function paymentNoticeQrCodeToString(qrCode: PaymentNoticeQrCode): string {
   return [
     qrCode.identifier,
     qrCode.version,
@@ -234,11 +234,49 @@ function qrCodeToString(qrCode: QrCode): string {
   ].join("|");
 }
 
-export const QrCodeFromString = new t.Type<QrCode, string>(
-  "QrCodeFromString",
-  QrCode.is,
+/**
+ * Decodes a string into a valid PaymentNoticeQrCode.
+ *
+ *  const qrCode = PaymentNoticeQrCodeFromString.decode(
+ *    "PAGOPA|002|123456789012345678|12345678901|1234567801");
+ *
+ * will parse a PaymentNoticeQrCodeString into its parts:
+ *
+ *    qrCode = {
+ *      identifier: "PAGOPA",
+ *      version: "002",
+ *      paymentNoticeNumber: {
+ *        auxDigit: "1",
+ *        checkDigit: "23",
+ *        iuv15: "456789012345678"
+ *      },
+ *      organizationFiscalCode: "12345678901",
+ *      amount: "1234567801"
+ *    }
+ *
+ * To convert a PaymentNoticeQrCode into a string:
+ *
+ *    PaymentNoticeQrCode.decode({
+ *      identifier: "PAGOPA",
+ *      version: "002",
+ *      paymentNoticeNumber: {
+ *        auxDigit: "2",
+ *        checkDigit: "22",
+ *        iuv15: "012345678901234"
+ *      },
+ *      organizationFiscalCode: "01234567891",
+ *      amount: "1234567890"
+ *    }).map(PaymentNoticeQrCodeFromString.encode)
+ *
+ */
+export const PaymentNoticeQrCodeFromString = new t.Type<
+  PaymentNoticeQrCode,
+  string
+>(
+  "PaymentNoticeQrCodeFromString",
+  PaymentNoticeQrCode.is,
   (v, c) =>
-    QrCode.is(v)
+    PaymentNoticeQrCode.is(v)
       ? t.success(v)
       : t.string.validate(v, c).chain(s => {
           if (s.length !== QR_CODE_LENGTH) {
@@ -254,7 +292,7 @@ export const QrCodeFromString = new t.Type<QrCode, string>(
             ..._
           ] =
             s.split("|") || [];
-          return QrCode.decode({
+          return PaymentNoticeQrCode.decode({
             amount,
             identifier,
             organizationFiscalCode,
@@ -262,7 +300,9 @@ export const QrCodeFromString = new t.Type<QrCode, string>(
             version
           });
         }),
-  qrCodeToString
+  paymentNoticeQrCodeToString
 );
 
-export type QrCodeFromString = t.TypeOf<typeof QrCodeFromString>;
+export type PaymentNoticeQrCodeFromString = t.TypeOf<
+  typeof PaymentNoticeQrCodeFromString
+>;

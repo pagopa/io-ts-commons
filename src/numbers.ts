@@ -89,3 +89,29 @@ export const NonNegativeInteger = tag<INonNegativeIntegerTag>()(
   t.refinement(t.Integer, s => s >= 0, "integer >= 0")
 );
 export type NonNegativeInteger = t.TypeOf<typeof NonNegativeInteger>;
+
+/**
+ * Parses a string into a decimal
+ */
+export const NumberFromString = new t.Type<number, string>(
+  "NumberFromString",
+  t.number.is,
+  (m, c) => {
+    return t.string.validate(m, c).chain(s => {
+      const n = +s;
+      return isNaN(n) ? t.failure(s, c) : t.success(n);
+    });
+  },
+  String
+);
+export type NumberFromString = t.TypeOf<typeof NumberFromString>;
+
+/**
+ * Parses a string into an integer
+ */
+export const IntegerFromString = t.refinement(
+  NumberFromString,
+  t.Integer.predicate,
+  "IntegerFromString"
+);
+export type IntegerFromString = t.TypeOf<typeof IntegerFromString>;
