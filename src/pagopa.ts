@@ -362,3 +362,5 @@ export const RptIdFromString = new t.Type<RptId, string>(
         }),
   rptIdToString
 );
+
+export type RptIdFromString = t.TypeOf<typeof RptIdFromString>;
