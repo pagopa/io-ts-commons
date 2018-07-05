@@ -1,6 +1,6 @@
 import {
+  AmountInEuroCents,
   ApplicationCode,
-  AuxDigit,
   CheckDigit,
   IUV13,
   IUV15,
@@ -11,12 +11,15 @@ import {
   PaymentNoticeNumber2,
   PaymentNoticeNumber3,
   PaymentNoticeNumberFromString,
+  PaymentNoticeQrCode,
   PaymentNoticeQrCodeFromString,
+  rptIdFromPaymentNoticeQrCode,
   RptIdFromString,
   SegregationCode
 } from "../pagopa";
 
 import { isLeft, isRight } from "fp-ts/lib/Either";
+import { OrganizationFiscalCode } from "../strings";
 
 describe("PaymentNoticeNumberFromString", () => {
   it("should succeed with valid PaymentNoticeNumberFromString", async () => {
@@ -152,9 +155,9 @@ describe("QrCodeFromString", () => {
     const qrCodeSrts: ReadonlyArray<string> = [
       "XAGOPA|002|123456789012345678|12345678901|1234567801", // invalid identifier
       "PAGOPA|003|123456789012345678|12345678901|1234567801", // invalid version
-      "PAGOPA|003|123456789012345678|12345678901|123456780X", // invalid amount
-      "PAGOPA|003|12345678901234567X|12345678901|1234567800", // invalid paymentNumber
-      "PAGOPA|003|123456789012345675|X2345678901|1234567800" // invalid fiscal code
+      "PAGOPA|002|123456789012345678|12345678901|123456780X", // invalid amount
+      "PAGOPA|002|12345678901234567X|12345678901|1234567800", // invalid paymentNumber
+      "PAGOPA|002|123456789012345675|X2345678901|1234567800" // invalid fiscal code
     ];
     qrCodeSrts.map(qrCodeSrt => {
       const validation = PaymentNoticeQrCodeFromString.decode(qrCodeSrt);
@@ -188,5 +191,79 @@ describe("RptIdFromString", () => {
       const validation = RptIdFromString.decode(rptIdStr);
       expect(isRight(validation)).toBeFalsy();
     });
+  });
+});
+
+describe("RptIdFromPaymentNoticeQrCode", () => {
+  it("should convert a valid PaymentNoticeQrcode to an RptId", async () => {
+    const qrCodes: ReadonlyArray<PaymentNoticeQrCode> = [
+      {
+        identifier: "PAGOPA",
+        version: "002",
+        paymentNoticeNumber: {
+          auxDigit: "1",
+          iuv17: "01234567890123456" as IUV17
+        } as PaymentNoticeNumber,
+        organizationFiscalCode: "12345678901" as OrganizationFiscalCode,
+        amount: "12345" as AmountInEuroCents
+      },
+      {
+        identifier: "PAGOPA",
+        version: "002",
+        paymentNoticeNumber: {
+          auxDigit: "2",
+          checkDigit: "22" as CheckDigit,
+          iuv15: "012345678901234" as IUV15
+        } as PaymentNoticeNumber,
+        organizationFiscalCode: "12345678901" as OrganizationFiscalCode,
+        amount: "12345" as AmountInEuroCents
+      },
+      {
+        identifier: "PAGOPA",
+        version: "002",
+        paymentNoticeNumber: {
+          auxDigit: "3",
+          checkDigit: "33" as CheckDigit,
+          iuv13: "0123456789012" as IUV13,
+          segregationCode: "44" as SegregationCode
+        } as PaymentNoticeNumber,
+        organizationFiscalCode: "12345678901" as OrganizationFiscalCode,
+        amount: "12345" as AmountInEuroCents
+      }
+    ];
+    qrCodes.forEach(qrCode =>
+      expect(rptIdFromPaymentNoticeQrCode(qrCode).isRight()).toBeTruthy()
+    );
+  });
+});
+
+describe("rptIdFromPaymentNoticeQrCode", () => {
+  it("should NOT convert an invalid PaymentNoticeQrcode into an RptId", async () => {
+    const qrCodes: ReadonlyArray<any> = [
+      {
+        identifier: "PAGOPA",
+        version: "002",
+        paymentNoticeNumber: {
+          // invalid PaymentNoticeNumber (aux digit)
+          auxDigit: "5",
+          iuv17: "01234567890123456" as IUV17
+        },
+        organizationFiscalCode: "12345678901",
+        amount: "12345" as AmountInEuroCents
+      },
+      {
+        identifier: "PAGOPA",
+        version: "002",
+        paymentNoticeNumber: {
+          auxDigit: "1",
+          iuv17: "01234567890123456" as IUV17
+        } as PaymentNoticeNumber,
+        organizationFiscalCode: "12345*78901", // invalid fiscal code
+        amount: "12345" as AmountInEuroCents
+      }
+    ];
+    qrCodes.forEach(qrCode =>
+      expect(rptIdFromPaymentNoticeQrCode(qrCode).isLeft()).toBeTruthy()
+    );
   });
 });
