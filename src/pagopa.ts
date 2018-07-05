@@ -1,6 +1,7 @@
 /**
  * Typescript (io-ts) types related to PagoPA.
  */
+import { Either } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 import {
   // tslint:disable-next-line:no-unused-variable
@@ -10,6 +11,7 @@ import {
 } from "./strings";
 
 export const AmountInEuroCents = PatternString("[0-9]{10}");
+export type AmountInEuroCents = t.TypeOf<typeof AmountInEuroCents>;
 
 const PAYMENT_NOTICE_NUMBER_LENGTH = 18;
 
@@ -364,3 +366,11 @@ export const RptIdFromString = new t.Type<RptId, string>(
 );
 
 export type RptIdFromString = t.TypeOf<typeof RptIdFromString>;
+
+export const rptIdFromPaymentNoticeQrCode = (
+  paymentNoticeQrCode: PaymentNoticeQrCode
+): Either<t.Errors, RptId> =>
+  RptId.decode({
+    organizationFiscalCode: paymentNoticeQrCode.organizationFiscalCode,
+    paymentNoticeNumber: paymentNoticeQrCode.paymentNoticeNumber
+  });
