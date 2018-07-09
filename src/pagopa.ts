@@ -10,8 +10,34 @@ import {
   PatternString
 } from "./strings";
 
-export const AmountInEuroCents = PatternString("[0-9]{10}");
+export const MAX_AMOUNT_DIGITS = 10;
+export const CENTS_IN_ONE_EURO = 100;
+export const AmountInEuroCents = PatternString(`[0-9]{${MAX_AMOUNT_DIGITS}}`);
 export type AmountInEuroCents = t.TypeOf<typeof AmountInEuroCents>;
+
+/**
+ * Convert a number into its "AmountInEuroCents" counterpart:
+ * 1) convert to # of cents
+ * 2) pad with 0's
+ * encode() functionality is also available (converting
+ * AmountInEuroCents into a number)
+ */
+export const AmountInEuroCentsFromNumber = new t.Type<
+  AmountInEuroCents,
+  number,
+  number
+>(
+  "AmountInEuroCentsFromNumber",
+  AmountInEuroCents.is,
+  (i, c) =>
+    AmountInEuroCents.validate(
+      `${"0".repeat(MAX_AMOUNT_DIGITS)}${Math.floor(
+        i * CENTS_IN_ONE_EURO
+      )}`.slice(-MAX_AMOUNT_DIGITS),
+      c
+    ),
+  a => parseInt(a, 10) / CENTS_IN_ONE_EURO
+);
 
 const PAYMENT_NOTICE_NUMBER_LENGTH = 18;
 
