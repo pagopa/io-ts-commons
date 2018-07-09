@@ -1,7 +1,6 @@
 /**
  * Typescript (io-ts) types related to PagoPA.
  */
-import { Either } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 import {
   // tslint:disable-next-line:no-unused-variable
@@ -395,7 +394,7 @@ export type RptIdFromString = t.TypeOf<typeof RptIdFromString>;
 
 export const rptIdFromPaymentNoticeQrCode = (
   paymentNoticeQrCode: PaymentNoticeQrCode
-): Either<t.Errors, RptId> =>
+): t.Validation<RptId> =>
   RptId.decode({
     organizationFiscalCode: paymentNoticeQrCode.organizationFiscalCode,
     paymentNoticeNumber: paymentNoticeQrCode.paymentNoticeNumber
@@ -409,13 +408,13 @@ export const rptIdFromPaymentNoticeQrCode = (
  */
 export const rptIdFromQrCodeString = (
   qrCodeString: string
-): Either<t.Errors, RptId> => {
-  const qrCode = PaymentNoticeQrCodeFromString.decode(qrCodeString);
-  if (qrCode.isRight()) {
+): t.Validation<RptId> => {
+  const errorOrQrCode = PaymentNoticeQrCodeFromString.decode(qrCodeString);
+  if (errorOrQrCode.isRight()) {
     // the return value is either Left or Right
     // (should be Right if PaymentNoticeQrCodeFromString is successful)
-    return rptIdFromPaymentNoticeQrCode(qrCode.value);
+    return rptIdFromPaymentNoticeQrCode(errorOrQrCode.value);
   } else {
-    return qrCode; // is Left already
+    return errorOrQrCode; // is Left already
   }
 };
