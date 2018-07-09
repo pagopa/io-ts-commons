@@ -374,3 +374,22 @@ export const rptIdFromPaymentNoticeQrCode = (
     organizationFiscalCode: paymentNoticeQrCode.organizationFiscalCode,
     paymentNoticeNumber: paymentNoticeQrCode.paymentNoticeNumber
   });
+
+/**
+ * Convert a QR code string into an RptId
+ * (the inverse function cannot exist because
+ * "amount" only exists in the QR code)
+ * @param qrCodeString string in the format PAGOPA|002|...
+ */
+export const rptIdFromQrCodeString = (
+  qrCodeString: string
+): Either<t.Errors, RptId> => {
+  const qrCode = PaymentNoticeQrCodeFromString.decode(qrCodeString);
+  if (qrCode.isRight()) {
+    // the return value is either Left or Right
+    // (should be Right if PaymentNoticeQrCodeFromString is successful)
+    return rptIdFromPaymentNoticeQrCode(qrCode.value);
+  } else {
+    return qrCode; // is Left already
+  }
+};

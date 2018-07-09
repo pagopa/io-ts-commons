@@ -15,7 +15,8 @@ import {
   PaymentNoticeQrCodeFromString,
   rptIdFromPaymentNoticeQrCode,
   RptIdFromString,
-  SegregationCode
+  SegregationCode,
+  rptIdFromQrCodeString
 } from "../pagopa";
 
 import { isLeft, isRight } from "fp-ts/lib/Either";
@@ -264,6 +265,29 @@ describe("rptIdFromPaymentNoticeQrCode", () => {
     ];
     qrCodes.forEach(qrCode =>
       expect(rptIdFromPaymentNoticeQrCode(qrCode).isLeft()).toBeTruthy()
+    );
+  });
+});
+
+describe("rptIdFromQrCodeString", () => {
+  it("should convert valid QR code strings into RptIds", async () => {
+    const qrCodes = [
+      "PAGOPA|002|101234567890123456|12345678901|0000012345",
+      "PAGOPA|002|201234567890123422|12345678901|0000012345",
+      "PAGOPA|002|301234567890123344|12345678901|0000012345"
+    ];
+    qrCodes.forEach(qrCode =>
+      expect(rptIdFromQrCodeString(qrCode).isRight()).toBeTruthy()
+    );
+  });
+
+  it("should NOT convert invalid QR code strings into RptIds", async () => {
+    const qrCodes = [
+      "PAGOPA|002|501234567890123456|12345678901|0000012345", // invalid aux digit (5)
+      "PAGOPA|002|101234567890123456|12345*78901|0000012345" // invalid fiscal code
+    ];
+    qrCodes.forEach(qrCode =>
+      expect(rptIdFromQrCodeString(qrCode).isRight()).toBeFalsy()
     );
   });
 });
