@@ -1,6 +1,7 @@
 /**
  * Typescript (io-ts) types related to PagoPA.
  */
+import { left } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 import {
   // tslint:disable-next-line:no-unused-variable
@@ -408,13 +409,8 @@ export const rptIdFromPaymentNoticeQrCode = (
  */
 export const rptIdFromQrCodeString = (
   qrCodeString: string
-): t.Validation<RptId> => {
-  const errorOrQrCode = PaymentNoticeQrCodeFromString.decode(qrCodeString);
-  if (errorOrQrCode.isRight()) {
-    // the return value is either Left or Right
-    // (should be Right if PaymentNoticeQrCodeFromString is successful)
-    return rptIdFromPaymentNoticeQrCode(errorOrQrCode.value);
-  } else {
-    return errorOrQrCode; // is Left already
-  }
-};
+): t.Validation<RptId> =>
+  PaymentNoticeQrCodeFromString.decode(qrCodeString).fold(
+    l => left(l),
+    rptIdFromPaymentNoticeQrCode
+  );
