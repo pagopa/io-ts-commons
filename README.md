@@ -1,4 +1,5 @@
 [![CircleCI](https://circleci.com/gh/teamdigitale/italia-ts-commons.svg?style=svg)](https://circleci.com/gh/teamdigitale/italia-ts-commons)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons?ref=badge_shield)
 
 [![codecov](https://codecov.io/gh/teamdigitale/italia-ts-commons/branch/master/graph/badge.svg)](https://codecov.io/gh/teamdigitale/italia-ts-commons)
 
@@ -30,3 +31,7 @@ Make sure you update the docs first.
 $ npm version [major|minor|patch]
 $ npm publish
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons?ref=badge_large)
