@@ -1,6 +1,8 @@
+import { isRight } from "fp-ts/lib/Either";
+import { StrMap, toArray } from "fp-ts/lib/StrMap";
 import {
+  AmountInEuroCents,
   ApplicationCode,
-  AuxDigit,
   CheckDigit,
   IUV13,
   IUV15,
@@ -11,12 +13,15 @@ import {
   PaymentNoticeNumber2,
   PaymentNoticeNumber3,
   PaymentNoticeNumberFromString,
+  PaymentNoticeQrCode,
   PaymentNoticeQrCodeFromString,
+  rptIdFromPaymentNoticeQrCode,
   RptIdFromString,
-  SegregationCode
+  SegregationCode,
+  rptIdFromQrCodeString,
+  AmountInEuroCentsFromNumber
 } from "../pagopa";
-
-import { isLeft, isRight } from "fp-ts/lib/Either";
+import { OrganizationFiscalCode } from "../strings";
 
 describe("PaymentNoticeNumberFromString", () => {
   it("should succeed with valid PaymentNoticeNumberFromString", async () => {
@@ -152,9 +157,9 @@ describe("QrCodeFromString", () => {
     const qrCodeSrts: ReadonlyArray<string> = [
       "XAGOPA|002|123456789012345678|12345678901|1234567801", // invalid identifier
       "PAGOPA|003|123456789012345678|12345678901|1234567801", // invalid version
-      "PAGOPA|003|123456789012345678|12345678901|123456780X", // invalid amount
-      "PAGOPA|003|12345678901234567X|12345678901|1234567800", // invalid paymentNumber
-      "PAGOPA|003|123456789012345675|X2345678901|1234567800" // invalid fiscal code
+      "PAGOPA|002|123456789012345678|12345678901|123456780X", // invalid amount
+      "PAGOPA|002|12345678901234567X|12345678901|1234567800", // invalid paymentNumber
+      "PAGOPA|002|123456789012345675|X2345678901|1234567800" // invalid fiscal code
     ];
     qrCodeSrts.map(qrCodeSrt => {
       const validation = PaymentNoticeQrCodeFromString.decode(qrCodeSrt);
@@ -188,5 +193,118 @@ describe("RptIdFromString", () => {
       const validation = RptIdFromString.decode(rptIdStr);
       expect(isRight(validation)).toBeFalsy();
     });
+  });
+});
+
+describe("RptIdFromPaymentNoticeQrCode", () => {
+  it("should convert a valid PaymentNoticeQrcode to an RptId", async () => {
+    const qrCodes: ReadonlyArray<PaymentNoticeQrCode> = [
+      {
+        identifier: "PAGOPA",
+        version: "002",
+        paymentNoticeNumber: {
+          auxDigit: "1",
+          iuv17: "01234567890123456" as IUV17
+        } as PaymentNoticeNumber,
+        organizationFiscalCode: "12345678901" as OrganizationFiscalCode,
+        amount: "12345" as AmountInEuroCents
+      },
+      {
+        identifier: "PAGOPA",
+        version: "002",
+        paymentNoticeNumber: {
+          auxDigit: "2",
+          checkDigit: "22" as CheckDigit,
+          iuv15: "012345678901234" as IUV15
+        } as PaymentNoticeNumber,
+        organizationFiscalCode: "12345678901" as OrganizationFiscalCode,
+        amount: "12345" as AmountInEuroCents
+      },
+      {
+        identifier: "PAGOPA",
+        version: "002",
+        paymentNoticeNumber: {
+          auxDigit: "3",
+          checkDigit: "33" as CheckDigit,
+          iuv13: "0123456789012" as IUV13,
+          segregationCode: "44" as SegregationCode
+        } as PaymentNoticeNumber,
+        organizationFiscalCode: "12345678901" as OrganizationFiscalCode,
+        amount: "12345" as AmountInEuroCents
+      }
+    ];
+    qrCodes.forEach(qrCode =>
+      expect(rptIdFromPaymentNoticeQrCode(qrCode).isRight()).toBeTruthy()
+    );
+  });
+});
+
+describe("rptIdFromPaymentNoticeQrCode", () => {
+  it("should NOT convert an invalid PaymentNoticeQrcode into an RptId", async () => {
+    const qrCodes: ReadonlyArray<any> = [
+      {
+        identifier: "PAGOPA",
+        version: "002",
+        paymentNoticeNumber: {
+          // invalid PaymentNoticeNumber (aux digit)
+          auxDigit: "5",
+          iuv17: "01234567890123456" as IUV17
+        },
+        organizationFiscalCode: "12345678901",
+        amount: "12345" as AmountInEuroCents
+      },
+      {
+        identifier: "PAGOPA",
+        version: "002",
+        paymentNoticeNumber: {
+          auxDigit: "1",
+          iuv17: "01234567890123456" as IUV17
+        } as PaymentNoticeNumber,
+        organizationFiscalCode: "12345*78901", // invalid fiscal code
+        amount: "12345" as AmountInEuroCents
+      }
+    ];
+    qrCodes.forEach(qrCode =>
+      expect(rptIdFromPaymentNoticeQrCode(qrCode).isLeft()).toBeTruthy()
+    );
+  });
+});
+
+describe("rptIdFromQrCodeString", () => {
+  it("should convert valid QR code strings into RptIds", async () => {
+    const qrCodes = [
+      "PAGOPA|002|101234567890123456|12345678901|0000012345",
+      "PAGOPA|002|201234567890123422|12345678901|0000012345",
+      "PAGOPA|002|301234567890123344|12345678901|0000012345"
+    ];
+    qrCodes.forEach(qrCode =>
+      expect(rptIdFromQrCodeString(qrCode).isRight()).toBeTruthy()
+    );
+  });
+
+  it("should NOT convert invalid QR code strings into RptIds", async () => {
+    const qrCodes = [
+      "PAGOPA|002|501234567890123456|12345678901|0000012345", // invalid aux digit (5)
+      "PAGOPA|002|101234567890123456|12345*78901|0000012345" // invalid fiscal code
+    ];
+    qrCodes.forEach(qrCode =>
+      expect(rptIdFromQrCodeString(qrCode).isRight()).toBeFalsy()
+    );
+  });
+});
+
+describe("AmountInEuroCentsFromNumber", () => {
+  it("should convert numbers into AmountInEuroCents", async () => {
+    const expectedMapping = new StrMap({
+      "1234567890": 12345678.9,
+      "0000012345": 123.45,
+      "0000000100": 1,
+      "0000000030": 0.3,
+      "0000000012": 0.1 + 0.02 // 0.12000000000000001 but should be considered as .12
+    });
+
+    toArray(expectedMapping).forEach(([k, v]: [string, number]) =>
+      expect(AmountInEuroCentsFromNumber.decode(v).value).toBe(k)
+    );
   });
 });
