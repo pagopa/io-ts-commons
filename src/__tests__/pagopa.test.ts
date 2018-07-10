@@ -1,3 +1,5 @@
+import { isRight } from "fp-ts/lib/Either";
+import { StrMap, toArray } from "fp-ts/lib/StrMap";
 import {
   AmountInEuroCents,
   ApplicationCode,
@@ -19,10 +21,6 @@ import {
   rptIdFromQrCodeString,
   AmountInEuroCentsFromNumber
 } from "../pagopa";
-
-import * as _ from "lodash";
-
-import { isLeft, isRight } from "fp-ts/lib/Either";
 import { OrganizationFiscalCode } from "../strings";
 
 describe("PaymentNoticeNumberFromString", () => {
@@ -297,14 +295,15 @@ describe("rptIdFromQrCodeString", () => {
 
 describe("AmountInEuroCentsFromNumber", () => {
   it("should convert numbers into AmountInEuroCents", async () => {
-    const expectedMapping: { [key: string]: number } = {
+    const expectedMapping = new StrMap({
       "1234567890": 12345678.9,
       "0000012345": 123.45,
       "0000000100": 1,
       "0000000030": 0.3,
       "0000000012": 0.1 + 0.02 // 0.12000000000000001 but should be considered as .12
-    };
-    _.entries(expectedMapping).forEach(([k, v]: [string, number]) =>
+    });
+
+    toArray(expectedMapping).forEach(([k, v]: [string, number]) =>
       expect(AmountInEuroCentsFromNumber.decode(v).value).toBe(k)
     );
   });
