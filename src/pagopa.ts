@@ -1,7 +1,6 @@
 /**
  * Typescript (io-ts) types related to PagoPA.
  */
-import { Either } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 import {
   // tslint:disable-next-line:no-unused-variable
@@ -10,8 +9,34 @@ import {
   PatternString
 } from "./strings";
 
-export const AmountInEuroCents = PatternString("[0-9]{10}");
+export const MAX_AMOUNT_DIGITS = 10;
+export const CENTS_IN_ONE_EURO = 100;
+export const AmountInEuroCents = PatternString(`[0-9]{${MAX_AMOUNT_DIGITS}}`);
 export type AmountInEuroCents = t.TypeOf<typeof AmountInEuroCents>;
+
+/**
+ * Convert a number into its "AmountInEuroCents" counterpart:
+ * 1) convert to # of cents
+ * 2) pad with 0's
+ * encode() functionality is also available (converting
+ * AmountInEuroCents into a number)
+ */
+export const AmountInEuroCentsFromNumber = new t.Type<
+  AmountInEuroCents,
+  number,
+  number
+>(
+  "AmountInEuroCentsFromNumber",
+  AmountInEuroCents.is,
+  (i, c) =>
+    AmountInEuroCents.validate(
+      `${"0".repeat(MAX_AMOUNT_DIGITS)}${Math.floor(
+        i * CENTS_IN_ONE_EURO
+      )}`.slice(-MAX_AMOUNT_DIGITS),
+      c
+    ),
+  a => parseInt(a, 10) / CENTS_IN_ONE_EURO
+);
 
 const PAYMENT_NOTICE_NUMBER_LENGTH = 18;
 
@@ -369,8 +394,21 @@ export type RptIdFromString = t.TypeOf<typeof RptIdFromString>;
 
 export const rptIdFromPaymentNoticeQrCode = (
   paymentNoticeQrCode: PaymentNoticeQrCode
-): Either<t.Errors, RptId> =>
+): t.Validation<RptId> =>
   RptId.decode({
     organizationFiscalCode: paymentNoticeQrCode.organizationFiscalCode,
     paymentNoticeNumber: paymentNoticeQrCode.paymentNoticeNumber
   });
+
+/**
+ * Convert a QR code string into an RptId
+ * (the inverse function cannot exist because
+ * "amount" only exists in the QR code)
+ * @param qrCodeString string in the format PAGOPA|002|...
+ */
+export const rptIdFromQrCodeString = (
+  qrCodeString: string
+): t.Validation<RptId> =>
+  PaymentNoticeQrCodeFromString.decode(qrCodeString).chain(
+    rptIdFromPaymentNoticeQrCode
+  );
