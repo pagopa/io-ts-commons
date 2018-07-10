@@ -286,7 +286,7 @@ describe("rptIdFromQrCodeString", () => {
 
   it("should NOT convert invalid QR code strings into RptIds", async () => {
     const qrCodes = [
-      "PAGOPA|002|5(01234567890123456|12345678901|0000012345", // invalid aux digit (5)
+      "PAGOPA|002|501234567890123456|12345678901|0000012345", // invalid aux digit (5)
       "PAGOPA|002|101234567890123456|12345*78901|0000012345" // invalid fiscal code
     ];
     qrCodes.forEach(qrCode =>
