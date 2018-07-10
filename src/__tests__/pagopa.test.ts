@@ -1,3 +1,5 @@
+import { isRight } from "fp-ts/lib/Either";
+import { StrMap, toArray } from "fp-ts/lib/StrMap";
 import {
   AmountInEuroCents,
   ApplicationCode,
@@ -15,10 +17,10 @@ import {
   PaymentNoticeQrCodeFromString,
   rptIdFromPaymentNoticeQrCode,
   RptIdFromString,
-  SegregationCode
+  SegregationCode,
+  rptIdFromQrCodeString,
+  AmountInEuroCentsFromNumber
 } from "../pagopa";
-
-import { isLeft, isRight } from "fp-ts/lib/Either";
 import { OrganizationFiscalCode } from "../strings";
 
 describe("PaymentNoticeNumberFromString", () => {
@@ -264,6 +266,45 @@ describe("rptIdFromPaymentNoticeQrCode", () => {
     ];
     qrCodes.forEach(qrCode =>
       expect(rptIdFromPaymentNoticeQrCode(qrCode).isLeft()).toBeTruthy()
+    );
+  });
+});
+
+describe("rptIdFromQrCodeString", () => {
+  it("should convert valid QR code strings into RptIds", async () => {
+    const qrCodes = [
+      "PAGOPA|002|101234567890123456|12345678901|0000012345",
+      "PAGOPA|002|201234567890123422|12345678901|0000012345",
+      "PAGOPA|002|301234567890123344|12345678901|0000012345"
+    ];
+    qrCodes.forEach(qrCode =>
+      expect(rptIdFromQrCodeString(qrCode).isRight()).toBeTruthy()
+    );
+  });
+
+  it("should NOT convert invalid QR code strings into RptIds", async () => {
+    const qrCodes = [
+      "PAGOPA|002|501234567890123456|12345678901|0000012345", // invalid aux digit (5)
+      "PAGOPA|002|101234567890123456|12345*78901|0000012345" // invalid fiscal code
+    ];
+    qrCodes.forEach(qrCode =>
+      expect(rptIdFromQrCodeString(qrCode).isRight()).toBeFalsy()
+    );
+  });
+});
+
+describe("AmountInEuroCentsFromNumber", () => {
+  it("should convert numbers into AmountInEuroCents", async () => {
+    const expectedMapping = new StrMap({
+      "1234567890": 12345678.9,
+      "0000012345": 123.45,
+      "0000000100": 1,
+      "0000000030": 0.3,
+      "0000000012": 0.1 + 0.02 // 0.12000000000000001 but should be considered as .12
+    });
+
+    toArray(expectedMapping).forEach(([k, v]: [string, number]) =>
+      expect(AmountInEuroCentsFromNumber.decode(v).value).toBe(k)
     );
   });
 });
