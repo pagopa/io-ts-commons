@@ -1688,8 +1688,8 @@ form-data@~2.3.1:
     mime-types "^2.1.12"
 
 fp-ts@^1.0.0, fp-ts@^1.6.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-1.7.0.tgz#3d6a7ab2a541125e7089c2228acaa600b271a68f"
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-1.7.1.tgz#b1ff2a39f345a7aa31bb53f26edab1ac3fc70b75"
 
 fragment-cache@^0.2.1:
   version "0.2.1"
@@ -2066,8 +2066,8 @@ invert-kv@^1.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
 io-ts@^1.1.4:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-1.2.0.tgz#240f4b3da4582a4e7adcfd30a0cc2f95880e24ad"
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-1.2.1.tgz#0f3cc43dff08d1656f2c1ad7462650dab4a6bae7"
   dependencies:
     fp-ts "^1.0.0"
 
@@ -3489,11 +3489,7 @@ node-fetch@^1.7.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@^2.1.1, node-fetch@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
-
-"node-fetch@https://github.com/bitinn/node-fetch#abort":
+node-fetch@^2.1.1, node-fetch@^2.1.2, "node-fetch@https://github.com/bitinn/node-fetch#abort":
   version "2.1.2"
   resolved "https://github.com/bitinn/node-fetch#a823a1ef74a34b9b6b25ed6cb790de8c40e4ef38"
   dependencies:
