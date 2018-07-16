@@ -47,7 +47,7 @@ export function AbortableFetch(f: typeof fetch = fetch): AbortableFetch {
  * Converts an AbortableFetch back to a simple fetch
  */
 export function toFetch(f: AbortableFetch): typeof fetch {
-  return (init, input) => f(init, input).e1;
+  return (input, init) => f(input, init).e1;
 }
 
 /**
@@ -90,6 +90,7 @@ export const retriableFetch: (
     reason => {
       // map rejection reason to a transient or permanent error
       if (
+        `${reason}`.toLowerCase().indexOf("aborted") >= 0 ||
         (reason as Error).name === "Aborted" ||
         (reason as Error).name === "Network request failed" ||
         // tslint:disable-next-line:no-any
