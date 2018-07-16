@@ -72,7 +72,7 @@ export function withRetries<E, T>(
             E | TransientError | RetryAborted,
             boolean
           >(delayTask(backoff(count), true).map(d => right(d)));
-          return delay.applySecond(runTaskOnce(count + 1, currentTask));
+          return delay.chain(() => runTaskOnce(count + 1, currentTask));
         }
         // ...with an error that is not a TransientError, we just return it
         return currentTask;
