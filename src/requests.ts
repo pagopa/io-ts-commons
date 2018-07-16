@@ -414,7 +414,7 @@ export function createFetchRequestForApi<
   requestType: ApiRequestType<P, KH, Q, R>,
   options: {
     readonly baseUrl?: string;
-    readonly fetch?: typeof fetch;
+    readonly fetchApi?: typeof fetch;
   } = {}
 ): (params: P) => Promise<R | undefined> {
   // TODO: handle unsuccessful fetch and HTTP errors
@@ -465,7 +465,7 @@ export function createFetchRequestForApi<
           };
 
     // Get the fetch client
-    const myFetch = options.fetch ? options.fetch : fetch;
+    const myFetch = options.fetchApi ? options.fetchApi : fetch;
 
     // make the async call
     const response = await myFetch(url, requestWithOptionalHeadersAndBody);
