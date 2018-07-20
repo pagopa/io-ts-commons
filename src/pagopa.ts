@@ -9,10 +9,11 @@ import {
   PatternString
 } from "./strings";
 
+export const MIN_AMOUNT_DIGITS = 2;
 export const MAX_AMOUNT_DIGITS = 10;
 export const CENTS_IN_ONE_EURO = 100;
 export const AmountInEuroCents = PatternString(
-  `^[0-9]{2,${MAX_AMOUNT_DIGITS}}$`
+  `^[0-9]{${MIN_AMOUNT_DIGITS},${MAX_AMOUNT_DIGITS}}$`
 );
 export type AmountInEuroCents = t.TypeOf<typeof AmountInEuroCents>;
 
