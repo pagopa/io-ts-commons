@@ -158,8 +158,8 @@ describe("QrCodeFromString", () => {
       "XAGOPA|002|123456789012345678|12345678901|1234567801", // invalid identifier
       "PAGOPA|003|123456789012345678|12345678901|1234567801", // invalid version
       "PAGOPA|002|123456789012345678|12345678901|123456780X", // invalid amount
-      "PAGOPA|002|12345678901234567X|12345678901|1234567800", // invalid paymentNumber
-      "PAGOPA|002|123456789012345675|X2345678901|1234567800" // invalid fiscal code
+      "PAGOPA|002|12345678901234567X|12345678901|1567800", // invalid paymentNumber
+      "PAGOPA|002|123456789012345675|X2345678901|567800" // invalid fiscal code
     ];
     qrCodeSrts.map(qrCodeSrt => {
       const validation = PaymentNoticeQrCodeFromString.decode(qrCodeSrt);
@@ -196,7 +196,7 @@ describe("RptIdFromString", () => {
   });
 });
 
-describe("RptIdFromPaymentNoticeQrCode", () => {
+describe("rptIdFromPaymentNoticeQrCode", () => {
   it("should convert a valid PaymentNoticeQrcode to an RptId", async () => {
     const qrCodes: ReadonlyArray<PaymentNoticeQrCode> = [
       {
@@ -237,9 +237,7 @@ describe("RptIdFromPaymentNoticeQrCode", () => {
       expect(rptIdFromPaymentNoticeQrCode(qrCode).isRight()).toBeTruthy()
     );
   });
-});
 
-describe("rptIdFromPaymentNoticeQrCode", () => {
   it("should NOT convert an invalid PaymentNoticeQrcode into an RptId", async () => {
     const qrCodes: ReadonlyArray<any> = [
       {
@@ -273,8 +271,8 @@ describe("rptIdFromPaymentNoticeQrCode", () => {
 describe("rptIdFromQrCodeString", () => {
   it("should convert valid QR code strings into RptIds", async () => {
     const qrCodes = [
-      "PAGOPA|002|101234567890123456|12345678901|0000012345",
-      "PAGOPA|002|201234567890123422|12345678901|0000012345",
+      "PAGOPA|002|101234567890123456|12345678901|12345",
+      "PAGOPA|002|201234567890123422|12345678901|12345",
       "PAGOPA|002|301234567890123344|12345678901|0000012345"
     ];
     qrCodes.forEach(qrCode =>
@@ -284,8 +282,8 @@ describe("rptIdFromQrCodeString", () => {
 
   it("should NOT convert invalid QR code strings into RptIds", async () => {
     const qrCodes = [
-      "PAGOPA|002|501234567890123456|12345678901|0000012345", // invalid aux digit (5)
-      "PAGOPA|002|101234567890123456|12345*78901|0000012345" // invalid fiscal code
+      "PAGOPA|002|501234567890123456|12345678901|12345", // invalid aux digit (5)
+      "PAGOPA|002|101234567890123456|12345*78901|12345" // invalid fiscal code
     ];
     qrCodes.forEach(qrCode =>
       expect(rptIdFromQrCodeString(qrCode).isRight()).toBeFalsy()
@@ -297,10 +295,10 @@ describe("AmountInEuroCentsFromNumber", () => {
   it("should convert numbers into AmountInEuroCents", async () => {
     const expectedMapping = new StrMap({
       "1234567890": 12345678.9,
-      "0000012345": 123.45,
-      "0000000100": 1,
-      "0000000030": 0.3,
-      "0000000012": 0.1 + 0.02 // 0.12000000000000001 but should be considered as .12
+      "12345": 123.45,
+      "100": 1,
+      "30": 0.3,
+      "12": 0.1 + 0.02 // 0.12000000000000001 but should be considered as .12
     });
 
     toArray(expectedMapping).forEach(([k, v]: [string, number]) =>
