@@ -9,9 +9,12 @@ import {
   PatternString
 } from "./strings";
 
+export const MIN_AMOUNT_DIGITS = 2;
 export const MAX_AMOUNT_DIGITS = 10;
 export const CENTS_IN_ONE_EURO = 100;
-export const AmountInEuroCents = PatternString(`[0-9]{${MAX_AMOUNT_DIGITS}}`);
+export const AmountInEuroCents = PatternString(
+  `^[0-9]{${MIN_AMOUNT_DIGITS},${MAX_AMOUNT_DIGITS}}$`
+);
 export type AmountInEuroCents = t.TypeOf<typeof AmountInEuroCents>;
 
 /**
@@ -29,18 +32,14 @@ export const AmountInEuroCentsFromNumber = new t.Type<
   "AmountInEuroCentsFromNumber",
   AmountInEuroCents.is,
   (i, c) =>
-    AmountInEuroCents.validate(
-      `${"0".repeat(MAX_AMOUNT_DIGITS)}${Math.floor(
-        i * CENTS_IN_ONE_EURO
-      )}`.slice(-MAX_AMOUNT_DIGITS),
-      c
-    ),
+    AmountInEuroCents.validate(`${Math.floor(i * CENTS_IN_ONE_EURO)}`, c),
   a => parseInt(a, 10) / CENTS_IN_ONE_EURO
 );
 
 const PAYMENT_NOTICE_NUMBER_LENGTH = 18;
 
-const QR_CODE_LENGTH = 52;
+const MIN_QR_CODE_LENGTH = 46;
+const MAX_QR_CODE_LENGTH = 52;
 
 const ORGANIZATION_FISCAL_CODE_LENGTH = 11;
 
@@ -312,7 +311,7 @@ export const PaymentNoticeQrCodeFromString = new t.Type<
     PaymentNoticeQrCode.is(v)
       ? t.success(v)
       : t.string.validate(v, c).chain(s => {
-          if (s.length !== QR_CODE_LENGTH) {
+          if (s.length < MIN_QR_CODE_LENGTH || s.length > MAX_QR_CODE_LENGTH) {
             return t.failure(s, c);
           }
           const [
