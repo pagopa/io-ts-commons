@@ -392,13 +392,14 @@ export const RptIdFromString = new t.Type<RptId, string>(
 
 export type RptIdFromString = t.TypeOf<typeof RptIdFromString>;
 
-export const rptIdFromPaymentNoticeQrCode = (
+export function rptIdFromPaymentNoticeQrCode(
   paymentNoticeQrCode: PaymentNoticeQrCode
-): t.Validation<RptId> =>
-  RptId.decode({
+): t.Validation<RptId> {
+  return RptId.decode({
     organizationFiscalCode: paymentNoticeQrCode.organizationFiscalCode,
     paymentNoticeNumber: paymentNoticeQrCode.paymentNoticeNumber
   });
+}
 
 /**
  * Convert a QR code string into an RptId
@@ -406,9 +407,10 @@ export const rptIdFromPaymentNoticeQrCode = (
  * "amount" only exists in the QR code)
  * @param qrCodeString string in the format PAGOPA|002|...
  */
-export const rptIdFromQrCodeString = (
+export function rptIdFromQrCodeString(
   qrCodeString: string
-): t.Validation<RptId> =>
-  PaymentNoticeQrCodeFromString.decode(qrCodeString).chain(
+): t.Validation<RptId> {
+  return PaymentNoticeQrCodeFromString.decode(qrCodeString).chain(
     rptIdFromPaymentNoticeQrCode
   );
+}

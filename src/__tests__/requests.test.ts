@@ -79,28 +79,28 @@ const simpleParams = {
 
 describe("A simple GET API", () => {
   it("should produce the URL from params", async () => {
-    const fetch = mockFetch(200, simpleValue);
+    const fetchApi = mockFetch(200, simpleValue);
 
     const getSimple = createFetchRequestForApi(getSimpleT, {
       baseUrl,
-      fetch
+      fetchApi
     });
 
     const res = await getSimple(simpleParams);
 
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith(
+    expect(fetchApi).toHaveBeenCalledTimes(1);
+    expect(fetchApi).toHaveBeenCalledWith(
       "https://localhost/api/v1/simples/123?param1=1&param2=should%20be%26encoded",
       { headers: { Authorization: "Bearer: 123" }, method: "get" }
     );
   });
 
   it("should parse a valid 200 response", async () => {
-    const fetch = mockFetch(200, simpleValue);
+    const fetchApi = mockFetch(200, simpleValue);
 
     const getSimple = createFetchRequestForApi(getSimpleT, {
       baseUrl,
-      fetch
+      fetchApi
     });
 
     const res = await getSimple(simpleParams);
@@ -109,11 +109,11 @@ describe("A simple GET API", () => {
   });
 
   it("should return an error on 404 response", async () => {
-    const fetch = mockFetch(404, undefined);
+    const fetchApi = mockFetch(404, undefined);
 
     const getSimple = createFetchRequestForApi(getSimpleT, {
       baseUrl,
-      fetch
+      fetchApi
     });
 
     const res = await getSimple(simpleParams);
@@ -125,11 +125,11 @@ describe("A simple GET API", () => {
   });
 
   it("should return an error on 500 response", async () => {
-    const fetch = mockFetch(500, undefined);
+    const fetchApi = mockFetch(500, undefined);
 
     const getSimple = createFetchRequestForApi(getSimpleT, {
       baseUrl,
-      fetch
+      fetchApi
     });
 
     const res = await getSimple(simpleParams);
@@ -141,11 +141,11 @@ describe("A simple GET API", () => {
   });
 
   it("should return undefined on an unknown response", async () => {
-    const fetch = mockFetch(999, undefined);
+    const fetchApi = mockFetch(999, undefined);
 
     const getSimple = createFetchRequestForApi(getSimpleT, {
       baseUrl,
-      fetch
+      fetchApi
     });
 
     const res = await getSimple(simpleParams);
@@ -156,19 +156,19 @@ describe("A simple GET API", () => {
 
 describe("A simple POST API", () => {
   it("should post the right payload", async () => {
-    const fetch = mockFetch(200, simpleValue);
+    const fetchApi = mockFetch(200, simpleValue);
 
     const postSimple = createFetchRequestForApi(postSimpleT, {
       baseUrl,
-      fetch
+      fetchApi
     });
 
     const res = await postSimple({
       value: simpleValue
     });
 
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith("https://localhost/api/v1/simples", {
+    expect(fetchApi).toHaveBeenCalledTimes(1);
+    expect(fetchApi).toHaveBeenCalledWith("https://localhost/api/v1/simples", {
       body: JSON.stringify(simpleValue),
       headers: { "Content-Type": "application/json" },
       method: "post"
@@ -202,19 +202,19 @@ describe("Complex types", () => {
   it("should handle complex types (ie. DateFromString)", async () => {
     const complexValue = {};
 
-    const fetch = mockFetch(200, complexValue);
+    const fetchApi = mockFetch(200, complexValue);
 
     const getComplex = createFetchRequestForApi(getComplexT, {
       baseUrl,
-      fetch
+      fetchApi
     });
 
     const res = await getComplex({
       created_at: new Date()
     });
 
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith(
+    expect(fetchApi).toHaveBeenCalledTimes(1);
+    expect(fetchApi).toHaveBeenCalledWith(
       expect.stringMatching(
         /https\:\/\/localhost\/api\/v1\/complex\?created_at\=[0-9]{4}\-[0-9]{2}\-(.+)/
       ),
