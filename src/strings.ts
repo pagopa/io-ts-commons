@@ -143,3 +143,33 @@ export type FiscalCode = t.TypeOf<typeof FiscalCode>;
 export const OrganizationFiscalCode = PatternString("^[0-9]{11}$");
 
 export type OrganizationFiscalCode = t.TypeOf<typeof OrganizationFiscalCode>;
+
+/**
+ * A valid (international) phone number
+ */
+function isItalianMobilePhoneNumber(v: t.mixed): v is ItalianMobilePhoneNumber {
+  return t.string
+    .decode(v)
+    .fold(_ => false, s => validator.isMobilePhone(s, "it-IT"));
+}
+
+export const ItalianMobilePhoneNumber: t.Type<
+  string,
+  string,
+  string
+> = new t.Type<string, string, string>(
+  "ItalianMobilePhoneNumber",
+  isItalianMobilePhoneNumber,
+  (v, c) => {
+    // removes spaces
+    const strippedPhoneNumber = v.replace(/\ /g, "");
+    return validator.isMobilePhone(strippedPhoneNumber, "it-IT")
+      ? t.success(strippedPhoneNumber)
+      : t.failure(v, c);
+  },
+  a => a.replace(/\ /g, "")
+);
+
+export type ItalianMobilePhoneNumber = t.TypeOf<
+  typeof ItalianMobilePhoneNumber
+>;
