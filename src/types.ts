@@ -33,6 +33,23 @@ export const tag = <T>() => <A, O = A, I = t.mixed>(
   type as any;
 
 /**
+ * Removes any extra tags from a type that extends a basic type.
+ *
+ * Basic types: string, number, boolean
+ */
+export type UntagBasicType<A> = A extends string
+  ? string
+  : A extends number ? number : A extends boolean ? boolean : never;
+
+/**
+ * Returns the passed tagged basic value after converting it to its basic type.
+ */
+export function untag<T>(a: T): UntagBasicType<T> {
+  // tslint:disable-next-line:no-any
+  return a as any;
+}
+
+/**
  * Returns an object where the keys are the values
  * of the object passed as input and all values are undefined
  */
