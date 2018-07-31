@@ -25,7 +25,12 @@ export type RequestMethod = "get" | "post" | "put";
  * Describes the possible header keys of a request
  */
 // tslint:disable-next-line:no-duplicate-string
-export type RequestHeaderKey = "Authorization" | "Content-Type";
+export type RequestHeaderKey =
+  | "Accept-Encoding"
+  | "Authorization"
+  | "Content-Type" // tslint:disable-line:no-duplicate-string
+  | "Host"
+  | "If-None-Match";
 
 /**
  * Describes a set of headers whose keys are of type RequestHeaderKey
@@ -71,13 +76,27 @@ export function composeHeaderProducers<
   };
 }
 
+export type BasicResponseHeaderKey =
+  | "Cache-Control"
+  | "Content-Encoding"
+  | "Content-Type"
+  | "Date"
+  | "ETag"
+  | "Expires"
+  | "Transfer-Encoding";
+
+export type ResponseHeaders<H extends string = never> = {
+  [key in BasicResponseHeaderKey | H]?: string
+};
+
 /**
  * Describes a possible response type: when the status code is S, the response
  * type is T.
  */
-export interface IResponseType<S extends number, T> {
+export interface IResponseType<S extends number, T, H extends string = never> {
   readonly status: S;
   readonly value: T;
+  readonly headers: ResponseHeaders<H>;
 }
 
 /**
@@ -489,10 +508,12 @@ export const ApiHeaderJson: RequestHeaderProducer<{}, "Content-Type"> = () => ({
  * @param status  The response status handled by this decoder
  * @param type    The response type corresponding to the status
  */
-export function ioResponseDecoder<S extends number, R, O = R>(
-  status: S,
-  type: t.Type<R, O>
-): ResponseDecoder<IResponseType<S, R>> {
+export function ioResponseDecoder<
+  S extends number,
+  R,
+  O = R,
+  H extends string = never
+>(status: S, type: t.Type<R, O>): ResponseDecoder<IResponseType<S, R, H>> {
   return async (response: Response) => {
     if (response.status !== status) {
       return undefined;
@@ -502,7 +523,12 @@ export function ioResponseDecoder<S extends number, R, O = R>(
     if (validated.isLeft()) {
       return undefined;
     }
-    return { status, value: validated.value };
+    return {
+      // tslint:disable-next-line:no-any
+      headers: response.headers as any,
+      status,
+      value: validated.value
+    };
   };
 }
 
@@ -510,14 +536,20 @@ export function ioResponseDecoder<S extends number, R, O = R>(
  * A basic ResponseDecoder that returns an Error with the status text if the
  * response status is S.
  */
-export function basicErrorResponseDecoder<S extends number>(
-  status: S
-): ResponseDecoder<IResponseType<S, Error>> {
+export function basicErrorResponseDecoder<
+  S extends number,
+  H extends string = never
+>(status: S): ResponseDecoder<IResponseType<S, Error, H>> {
   return async response => {
     if (response.status !== status) {
       return undefined;
     }
-    return { status, value: new Error(response.statusText) };
+    return {
+      // tslint:disable-next-line:no-any
+      headers: response.headers as any,
+      status,
+      value: new Error(response.statusText)
+    };
   };
 }
 
@@ -525,23 +557,23 @@ export function basicErrorResponseDecoder<S extends number>(
  * A basic set of responses where the 200 status corresponds to a payload of
  * type R and 404 and 500 to an Error
  */
-export type BasicResponseType<R> =
-  | IResponseType<200, R>
-  | IResponseType<404, Error>
-  | IResponseType<500, Error>;
+export type BasicResponseType<R, H extends string = never> =
+  | IResponseType<200, R, H>
+  | IResponseType<404, Error, H>
+  | IResponseType<500, Error, H>;
 
 /**
  * Returns a ResponseDecoder for BasicResponseType<R>
  */
-export function basicResponseDecoder<R, O = R>(
+export function basicResponseDecoder<R, O = R, H extends string = never>(
   type: t.Type<R, O>
-): ResponseDecoder<BasicResponseType<R>> {
+): ResponseDecoder<BasicResponseType<R, H>> {
   return composeResponseDecoders(
     composeResponseDecoders(
-      ioResponseDecoder(200, type),
-      basicErrorResponseDecoder(404)
+      ioResponseDecoder<200, R, O, H>(200, type),
+      basicErrorResponseDecoder<404, H>(404)
     ),
-    basicErrorResponseDecoder(500)
+    basicErrorResponseDecoder<500, H>(500)
   );
 }
 
