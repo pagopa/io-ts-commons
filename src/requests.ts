@@ -30,7 +30,8 @@ export type RequestHeaderKey =
   | "Authorization"
   | "Content-Type" // tslint:disable-line:no-duplicate-string
   | "Host"
-  | "If-None-Match";
+  | "If-None-Match"
+  | "Ocp-Apim-Subscription-Key";
 
 /**
  * Describes a set of headers whose keys are of type RequestHeaderKey
