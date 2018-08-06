@@ -1,6 +1,6 @@
 {
   "name": "italia-ts-commons",
-  "version": "2.12.0",
+  "version": "2.12.1",
   "description": "Shared TypeScript code for the Digital Citizenship projects",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -29,7 +29,7 @@
     "abort-controller": "^1.0.2",
     "danger": "^3.1.7",
     "danger-plugin-digitalcitizenship": "^0.3.1",
-    "jest": "^22.4.4",
+    "jest": "^23.4.2",
     "jest-mock-express": "^0.1.1",
     "mock-http-server": "^1.0.0",
     "node-fetch": "https://github.com/bitinn/node-fetch#abort",
