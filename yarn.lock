@@ -1097,8 +1097,8 @@ danger-plugin-yarn@^1.2.1:
     esdoc "^0.5.2"
 
 danger@^3.1.7:
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/danger/-/danger-3.8.1.tgz#f660b5ee7709f9dab250a2c59f02b25c43227d75"
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/danger/-/danger-3.8.4.tgz#e84b8398a3b7dd5707d7628a833f529efa4d1354"
   dependencies:
     "@octokit/rest" "^15.5.0"
     babel-polyfill "^6.23.0"
