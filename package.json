@@ -41,7 +41,7 @@
     "tslint-immutable": "^4.5.4",
     "tslint-plugin-prettier": "^1.3.0",
     "tslint-sonarts": "^1.6.0",
-    "typedoc": "^0.11.1",
+    "typedoc": "^0.12.0",
     "typescript": "^2.9.1",
     "typestrict": "^0.0.9"
   },
