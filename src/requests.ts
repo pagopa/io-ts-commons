@@ -223,6 +223,16 @@ export type TypeofApiResponse<T> = T extends ApiRequestType<
   : never;
 
 /**
+ * A union type of the Response statuses of an ApiRequestType
+ */
+export type TypeOfApiResponseStatus<T> = TypeofApiResponse<
+  T
+  // tslint:disable-next-line:no-any
+> extends IResponseType<infer S, any>
+  ? S
+  : never;
+
+/**
  * The type of the method that runs an ApiRequestType
  */
 export type TypeofApiCall<T> = (
