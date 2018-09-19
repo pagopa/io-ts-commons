@@ -1,6 +1,6 @@
 {
   "name": "italia-ts-commons",
-  "version": "2.12.3",
+  "version": "2.12.4",
   "description": "Shared TypeScript code for the Digital Citizenship projects",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -42,7 +42,7 @@
     "tslint-plugin-prettier": "^1.3.0",
     "tslint-sonarts": "^1.6.0",
     "typedoc": "^0.12.0",
-    "typescript": "^2.9.1",
+    "typescript": "^3.0.3",
     "typestrict": "^1.0.0"
   },
   "dependencies": {
