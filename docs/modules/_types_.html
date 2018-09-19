@@ -915,6 +915,9 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 			<a href="_types_.html#tagged" class="tsd-kind-icon">Tagged</a>
 		</li>
+		<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
+			<a href="_types_.html#untagbasictype" class="tsd-kind-icon">Untag<wbr>Basic<wbr>Type</a>
+		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
 			<a href="_types_.html#enumtype" class="tsd-kind-icon">enum<wbr>Type</a>
 		</li>
@@ -937,6 +940,9 @@ img { max-width: 100%; }
 			<a href="_types_.html#tag" class="tsd-kind-icon">tag</a>
 		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
+			<a href="_types_.html#untag" class="tsd-kind-icon">untag</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
 			<a href="_types_.html#withdefault" class="tsd-kind-icon">with<wbr>Default</a>
 		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
@@ -955,6 +961,7 @@ img { max-width: 100%; }
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_types_.html#limitedfields" class="tsd-kind-icon">Limited<wbr>Fields</a></li>
 							<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_types_.html#tagged" class="tsd-kind-icon">Tagged</a></li>
+							<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_types_.html#untagbasictype" class="tsd-kind-icon">Untag<wbr>Basic<wbr>Type</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
@@ -967,6 +974,7 @@ img { max-width: 100%; }
 							<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_types_.html#readonlysettype" class="tsd-kind-icon">readonly<wbr>Set<wbr>Type</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_types_.html#strictinterfacewithoptionals" class="tsd-kind-icon">strict<wbr>Interface<wbr>With<wbr>Optionals</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_types_.html#tag" class="tsd-kind-icon">tag</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_types_.html#untag" class="tsd-kind-icon">untag</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_types_.html#withdefault" class="tsd-kind-icon">with<wbr>Default</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_types_.html#withoutundefinedvalues" class="tsd-kind-icon">without<wbr>Undefined<wbr>Values</a></li>
 						</ul>
@@ -982,7 +990,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Limited<wbr>Fields<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/types.ts#L78">types.ts:78</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L97">types.ts:97</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -999,16 +1007,32 @@ img { max-width: 100%; }
 			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 				<a name="tagged" class="tsd-anchor"></a>
 				<h3>Tagged</h3>
-				<div class="tsd-signature tsd-kind-icon">Tagged<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<div class="tsd-signature tsd-kind-icon">Tagged<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">O</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/types.ts#L24">types.ts:24</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L24">types.ts:24</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>An io-ts Type tagged with T</p>
 					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
+				<a name="untagbasictype" class="tsd-anchor"></a>
+				<h3>Untag<wbr>Basic<wbr>Type</h3>
+				<div class="tsd-signature tsd-kind-icon">Untag<wbr>Basic<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">UntagBasicType&lt;A&gt;</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L40">types.ts:40</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Removes any extra tags from a type that extends a basic type.</p>
+					</div>
+					<p>Basic types: string, number, boolean</p>
 				</div>
 			</section>
 		</section>
@@ -1024,7 +1048,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/types.ts#L47">types.ts:47</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L66">types.ts:66</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1061,7 +1085,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/types.ts#L37">types.ts:37</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L56">types.ts:56</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1092,7 +1116,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/types.ts#L83">types.ts:83</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L102">types.ts:102</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1120,7 +1144,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/types.ts#L11">types.ts:11</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L11">types.ts:11</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1170,7 +1194,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/types.ts#L54">types.ts:54</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L73">types.ts:73</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1207,7 +1231,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/types.ts#L123">types.ts:123</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L142">types.ts:142</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1254,7 +1278,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/types.ts#L29">types.ts:29</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L29">types.ts:29</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1273,6 +1297,40 @@ img { max-width: 100%; }
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
+				<a name="untag" class="tsd-anchor"></a>
+				<h3>untag</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
+					<li class="tsd-signature tsd-kind-icon">untag&lt;T&gt;<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_types_.html#untagbasictype" class="tsd-signature-type">UntagBasicType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L47">types.ts:47</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns the passed tagged basic value after converting it to its basic type.</p>
+							</div>
+						</div>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>T</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>a: <span class="tsd-signature-type">T</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="_types_.html#untagbasictype" class="tsd-signature-type">UntagBasicType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
 				<a name="withdefault" class="tsd-anchor"></a>
 				<h3>with<wbr>Default</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
@@ -1282,7 +1340,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/types.ts#L163">types.ts:163</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L182">types.ts:182</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1320,7 +1378,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/types.ts#L89">types.ts:89</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/types.ts#L108">types.ts:108</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">

@@ -909,6 +909,9 @@ img { max-width: 100%; }
 </header>
 <nav class="tsd-navigation secondary">
 	<ul>
+		<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+			<a href="_url_.html#validurl" class="tsd-kind-icon">Valid<wbr>Url</a>
+		</li>
 		<li class=" tsd-kind-variable tsd-parent-kind-external-module">
 			<a href="_url_.html#httpurlfromstring" class="tsd-kind-icon">Http<wbr>Url<wbr>From<wbr>String</a>
 		</li>
@@ -930,6 +933,12 @@ img { max-width: 100%; }
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
+						<h3>Type aliases</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_url_.html#validurl" class="tsd-kind-icon">Valid<wbr>Url</a></li>
+						</ul>
+					</section>
+					<section class="tsd-index-section ">
 						<h3>Variables</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-variable tsd-parent-kind-external-module"><a href="_url_.html#httpurlfromstring" class="tsd-kind-icon">Http<wbr>Url<wbr>From<wbr>String</a></li>
@@ -947,6 +956,19 @@ img { max-width: 100%; }
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Type aliases</h2>
+			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+				<a name="validurl" class="tsd-anchor"></a>
+				<h3>Valid<wbr>Url</h3>
+				<div class="tsd-signature tsd-kind-icon">Valid<wbr>Url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Url</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/url.ts#L4">url.ts:4</a></li>
+					</ul>
+				</aside>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Variables</h2>
 			<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module">
 				<a name="httpurlfromstring" class="tsd-anchor"></a>
@@ -954,8 +976,8 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Http<wbr>Url<wbr>From<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RefinementType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;t.refinement(UrlFromString,o &#x3D;&gt; o.protocol &#x3D;&#x3D;&#x3D; &quot;http:&quot;)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/url.ts#L33">url.ts:33</a></li>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/url.ts#L37">url.ts:37</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/url.ts#L37">url.ts:37</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/url.ts#L41">url.ts:41</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -965,19 +987,19 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Https<wbr>Url<wbr>From<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RefinementType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;t.refinement(UrlFromString,o &#x3D;&gt; o.protocol &#x3D;&#x3D;&#x3D; &quot;https:&quot;)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/url.ts#L27">url.ts:27</a></li>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/url.ts#L31">url.ts:31</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/url.ts#L31">url.ts:31</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/url.ts#L35">url.ts:35</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module">
 				<a name="urlfromstring" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagConst">Const</span> Url<wbr>From<wbr>String</h3>
-				<div class="tsd-signature tsd-kind-icon">Url<wbr>From<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">t.TypeOf</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new t.Type&lt;url.Url, string&gt;(&quot;UrlFromString&quot;,isUrl,(v, c) &#x3D;&gt;isUrl(v)? t.success(v): t.string.validate(v, c).chain(s &#x3D;&gt; {const d &#x3D; url.parse(s);return !d.href ? t.failure(s, c) : t.success(d);}),a &#x3D;&gt; a.toString())</span></div>
+				<div class="tsd-signature tsd-kind-icon">Url<wbr>From<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">t.TypeOf</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new t.Type&lt;ValidUrl, string&gt;(&quot;UrlFromString&quot;,isUrl,(v, c) &#x3D;&gt;isUrl(v)? t.success(v): t.string.validate(v, c).chain(s &#x3D;&gt; {const d &#x3D; url.parse(s);// we can safely use url.href in calling methodsreturn !d.href ? t.failure(s, c) : t.success(d as ValidUrl);}),a &#x3D;&gt; a.toString())</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/url.ts#L12">url.ts:12</a></li>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/url.ts#L25">url.ts:25</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/url.ts#L15">url.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/url.ts#L29">url.ts:29</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1000,7 +1022,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/url.ts#L4">url.ts:4</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/url.ts#L6">url.ts:6</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
