@@ -992,7 +992,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Integer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RefinementType</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/numbers.ts#L49">numbers.ts:49</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/numbers.ts#L49">numbers.ts:49</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1005,8 +1005,8 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Integer<wbr>From<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">t.TypeOf</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RefinementType</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;t.refinement(NumberFromString,t.Integer.predicate,&quot;IntegerFromString&quot;)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/numbers.ts#L110">numbers.ts:110</a></li>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/numbers.ts#L115">numbers.ts:115</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/numbers.ts#L110">numbers.ts:110</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/numbers.ts#L115">numbers.ts:115</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1021,8 +1021,8 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Non<wbr>Negative<wbr>Integer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">t.TypeOf</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;tag&lt;INonNegativeIntegerTag&gt;()(t.refinement(t.Integer, s &#x3D;&gt; s &gt;&#x3D; 0, &quot;integer &gt;&#x3D; 0&quot;))</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/numbers.ts#L86">numbers.ts:86</a></li>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/numbers.ts#L89">numbers.ts:89</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/numbers.ts#L86">numbers.ts:86</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/numbers.ts#L89">numbers.ts:89</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1037,8 +1037,8 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Non<wbr>Negative<wbr>Number<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">t.TypeOf</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;tag&lt;INonNegativeNumberTag&gt;()(t.refinement(t.number, s &#x3D;&gt; s &gt;&#x3D; 0, &quot;number &gt;&#x3D; 0&quot;))</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/numbers.ts#L40">numbers.ts:40</a></li>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/numbers.ts#L44">numbers.ts:44</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/numbers.ts#L40">numbers.ts:40</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/numbers.ts#L44">numbers.ts:44</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1053,8 +1053,8 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Number<wbr>From<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">t.TypeOf</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new t.Type&lt;number, string&gt;(&quot;NumberFromString&quot;,t.number.is,(m, c) &#x3D;&gt; {return t.string.validate(m, c).chain(s &#x3D;&gt; {const n &#x3D; +s;return isNaN(n) ? t.failure(s, c) : t.success(n);});},String)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/numbers.ts#L94">numbers.ts:94</a></li>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/numbers.ts#L105">numbers.ts:105</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/numbers.ts#L94">numbers.ts:94</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/numbers.ts#L105">numbers.ts:105</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1076,7 +1076,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/numbers.ts#L60">numbers.ts:60</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/numbers.ts#L60">numbers.ts:60</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1119,7 +1119,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/numbers.ts#L18">numbers.ts:18</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/numbers.ts#L18">numbers.ts:18</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
