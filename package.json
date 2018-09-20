@@ -1,6 +1,6 @@
 {
   "name": "italia-ts-commons",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "description": "Shared TypeScript code for the Digital Citizenship projects",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
