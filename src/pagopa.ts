@@ -32,7 +32,14 @@ export const AmountInEuroCentsFromNumber = new t.Type<
   "AmountInEuroCentsFromNumber",
   AmountInEuroCents.is,
   (i, c) =>
+<<<<<<< HEAD
     AmountInEuroCents.validate(`${Math.floor(i * CENTS_IN_ONE_EURO)}`, c),
+=======
+    AmountInEuroCents.validate(
+      `${i < 0.1 ? "0" : ""}${Math.floor(i * CENTS_IN_ONE_EURO)}`,
+      c
+    ),
+>>>>>>> 7e7a4960997203307ca56376a9d3fc1648a45d78
   a => parseInt(a, 10) / CENTS_IN_ONE_EURO
 );
 
@@ -180,45 +187,48 @@ export const PaymentNoticeNumberFromString = new t.Type<
           }
           switch (s[0]) {
             case "0": {
-              // tslint:disable-next-line:no-dead-store
-              const [, auxDigit, applicationCode, iuv13, checkDigit, ..._] =
-                s.match(/^(\d{1})(\d{2})(\d{13})(\d{2})$/) || [];
+              const [, auxDigit, applicationCode, iuv13, checkDigit] = (s.match(
+                /^(\d{1})(\d{2})(\d{13})(\d{2})$/
+              ) || []) as ReadonlyArray<string | undefined>;
+
               return PaymentNoticeNumber0.decode({
                 applicationCode,
                 auxDigit,
                 checkDigit,
                 iuv13
-              } as PaymentNoticeNumber0);
+              });
             }
             case "1": {
               // tslint:disable-next-line:no-dead-store
-              const [, auxDigit, iuv17, ..._] =
-                s.match(/^(\d{1})(\d{17})$/) || [];
+              const [, auxDigit, iuv17, ..._] = (s.match(/^(\d{1})(\d{17})$/) ||
+                []) as ReadonlyArray<string | undefined>;
               return PaymentNoticeNumber1.decode({
                 auxDigit,
                 iuv17
-              } as PaymentNoticeNumber1);
+              });
             }
             case "2": {
               // tslint:disable-next-line:no-dead-store
-              const [, auxDigit, iuv15, checkDigit, ..._] =
-                s.match(/^(\d{1})(\d{15})(\d{2})$/) || [];
+              const [, auxDigit, iuv15, checkDigit, ..._] = (s.match(
+                /^(\d{1})(\d{15})(\d{2})$/
+              ) || []) as ReadonlyArray<string | undefined>;
               return PaymentNoticeNumber2.decode({
                 auxDigit,
                 checkDigit,
                 iuv15
-              } as PaymentNoticeNumber2);
+              });
             }
             case "3": {
               // tslint:disable-next-line:no-dead-store
-              const [, auxDigit, segregationCode, iuv13, checkDigit, ..._] =
-                s.match(/^(\d{1})(\d{2})(\d{13})(\d{2})$/) || [];
+              const [, auxDigit, segregationCode, iuv13, checkDigit] = (s.match(
+                /^(\d{1})(\d{2})(\d{13})(\d{2})$/
+              ) || []) as ReadonlyArray<string | undefined>;
               return PaymentNoticeNumber3.decode({
                 auxDigit,
                 checkDigit,
                 iuv13,
                 segregationCode
-              } as PaymentNoticeNumber3);
+              });
             }
             default:
               return t.failure(s, c);
@@ -322,8 +332,7 @@ export const PaymentNoticeQrCodeFromString = new t.Type<
             amount,
             // tslint:disable-next-line:no-dead-store
             ..._
-          ] =
-            s.split("|") || [];
+          ] = (s.split("|") || []) as ReadonlyArray<string | undefined>;
           return PaymentNoticeQrCode.decode({
             amount,
             identifier,
@@ -379,8 +388,9 @@ export const RptIdFromString = new t.Type<RptId, string>(
             paymentNoticeNumber,
             // tslint:disable-next-line:no-dead-store
             ..._
-          ] =
-            s.match(/^(\d{11})(\d{18})$/) || [];
+          ] = (s.match(/^(\d{11})(\d{18})$/) || []) as ReadonlyArray<
+            string | undefined
+          >;
           return RptId.decode({
             organizationFiscalCode,
             paymentNoticeNumber

@@ -912,6 +912,12 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-variable tsd-parent-kind-external-module">
 			<a href="_dates_.html#datefromstring" class="tsd-kind-icon">Date<wbr>From<wbr>String</a>
 		</li>
+		<li class=" tsd-kind-variable tsd-parent-kind-external-module">
+			<a href="_dates_.html#utcisodatefromstring" class="tsd-kind-icon">UTCISODate<wbr>From<wbr>String</a>
+		</li>
+		<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+			<a href="_dates_.html#utc_iso8601_full_regex" class="tsd-kind-icon">UTC_<wbr>ISO8601_<wbr>FULL_<wbr>REGEX</a>
+		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
 			<a href="_dates_.html#isdate" class="tsd-kind-icon">is<wbr>Date</a>
 		</li>
@@ -927,6 +933,8 @@ img { max-width: 100%; }
 						<h3>Variables</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-variable tsd-parent-kind-external-module"><a href="_dates_.html#datefromstring" class="tsd-kind-icon">Date<wbr>From<wbr>String</a></li>
+							<li class="tsd-kind-variable tsd-parent-kind-external-module"><a href="_dates_.html#utcisodatefromstring" class="tsd-kind-icon">UTCISODate<wbr>From<wbr>String</a></li>
+							<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_dates_.html#utc_iso8601_full_regex" class="tsd-kind-icon">UTC_<wbr>ISO8601_<wbr>FULL_<wbr>REGEX</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section tsd-is-not-exported">
@@ -946,10 +954,50 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Date<wbr>From<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">t.TypeOf</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new t.Type&lt;Date, string&gt;(&quot;DateFromString&quot;,isDate,(v, c) &#x3D;&gt;isDate(v)? t.success(v): t.string.validate(v, c).chain(s &#x3D;&gt; {const d &#x3D; new Date(s);return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);}),a &#x3D;&gt; a.toISOString())</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/dates.ts#L5">dates.ts:5</a></li>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/dates.ts#L18">dates.ts:18</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/dates.ts#L10">dates.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/dates.ts#L23">dates.ts:23</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Accepts short formats (ie. &quot;2018-10-13&quot;)
+						with or without time and timezone parts.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module">
+				<a name="utcisodatefromstring" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagConst">Const</span> UTCISODate<wbr>From<wbr>String</h3>
+				<div class="tsd-signature tsd-kind-icon">UTCISODate<wbr>From<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">t.TypeOf</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new t.Type&lt;Date, string&gt;(&quot;UTCISODateFromString&quot;,isDate,(v, c) &#x3D;&gt;isDate(v)? t.success(v): UTC_ISO8601_FULL_REGEX.validate(v, c).chain(s &#x3D;&gt; {const d &#x3D; new Date(s);return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);}),a &#x3D;&gt; a.toISOString())</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/dates.ts#L41">dates.ts:41</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/dates.ts#L54">dates.ts:54</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Accepts only full ISO8601 format with UTC (Z) timezone</p>
+					</div>
+					<p>ie. &quot;2018-10-13T00:00:00.000Z&quot;</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+				<a name="utc_iso8601_full_regex" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagConst">Const</span> UTC_<wbr>ISO8601_<wbr>FULL_<wbr>REGEX</h3>
+				<div class="tsd-signature tsd-kind-icon">UTC_<wbr>ISO8601_<wbr>FULL_<wbr>REGEX<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_strings_.ipatternstringtag.html" class="tsd-signature-type">IPatternStringTag</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(Z)?$"</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_strings_.ipatternstringtag.html" class="tsd-signature-type">IPatternStringTag</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(Z)?$"</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;PatternString(&quot;^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(Z)?$&quot;)</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/dates.ts#L32">dates.ts:32</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>ISO8601 format for dates.</p>
+					</div>
+					<p>Date and time is separated with a capital T.
+					UTC time is defined with a capital letter Z.</p>
+				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
@@ -964,7 +1012,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/f706bcb/src/dates.ts#L3">dates.ts:3</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/5950974/src/dates.ts#L4">dates.ts:4</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
