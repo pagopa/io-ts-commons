@@ -298,10 +298,7 @@ describe("AmountInEuroCentsFromNumber", () => {
       "12345": 123.45,
       "100": 1,
       "30": 0.3,
-<<<<<<< HEAD
-=======
       "01": 0.01,
->>>>>>> 7e7a4960997203307ca56376a9d3fc1648a45d78
       "12": 0.1 + 0.02 // 0.12000000000000001 but should be considered as .12
     });
 

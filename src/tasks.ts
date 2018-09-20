@@ -46,12 +46,9 @@ export function withRetries<E, T>(
     // the execution of the current task.
     // tslint:disable-next-line:no-let
     let mustAbort = false;
-    shouldAbort.then(
-      v => {
-        mustAbort = v;
-      },
-      _ => void 0
-    );
+    shouldAbort.then(v => {
+      mustAbort = v;
+    }, _ => void 0);
 
     const runTaskOnce = (
       count: number,

@@ -32,14 +32,10 @@ export const AmountInEuroCentsFromNumber = new t.Type<
   "AmountInEuroCentsFromNumber",
   AmountInEuroCents.is,
   (i, c) =>
-<<<<<<< HEAD
-    AmountInEuroCents.validate(`${Math.floor(i * CENTS_IN_ONE_EURO)}`, c),
-=======
     AmountInEuroCents.validate(
       `${i < 0.1 ? "0" : ""}${Math.floor(i * CENTS_IN_ONE_EURO)}`,
       c
     ),
->>>>>>> 7e7a4960997203307ca56376a9d3fc1648a45d78
   a => parseInt(a, 10) / CENTS_IN_ONE_EURO
 );
 
