@@ -19,7 +19,7 @@ import * as t from "io-ts";
 /**
  * Describes the possible methods of a request
  */
-export type RequestMethod = "get" | "post" | "put";
+export type RequestMethod = "get" | "post" | "put" | "delete";
 
 /**
  * Describes the possible header keys of a request
@@ -186,6 +186,18 @@ export interface IPutApiRequestType<
 }
 
 /**
+ * Fully describes a DELETE request.
+ */
+export interface IDeleteApiRequestType<
+  P,
+  KH extends RequestHeaderKey,
+  Q extends string,
+  R
+> extends IBaseApiRequestType<"delete", P, KH, Q, R> {
+  readonly method: "delete";
+}
+
+/**
  * The union of the possible ApiRequest types
  */
 export type ApiRequestType<
@@ -196,7 +208,8 @@ export type ApiRequestType<
 > =
   | IGetApiRequestType<P, KH, Q, R>
   | IPostApiRequestType<P, KH, Q, R>
-  | IPutApiRequestType<P, KH, Q, R>;
+  | IPutApiRequestType<P, KH, Q, R>
+  | IDeleteApiRequestType<P, KH, Q, R>;
 
 /**
  * The type of the Params of an ApiRequestType
@@ -487,7 +500,7 @@ export function createFetchRequestForApi<
           };
 
     const requestWithOptionalHeadersAndBody =
-      requestType.method === "get"
+      requestType.method === "get" || requestType.method === "delete"
         ? requestWithOptionalHeaders
         : {
             ...requestWithOptionalHeaders,
