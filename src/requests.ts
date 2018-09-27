@@ -602,6 +602,27 @@ export function basicResponseDecoder<R, O = R, H extends string = never>(
 }
 
 /**
+ * A response decoder that ignores the payload and returns a constant value
+ */
+export function constantResponseDecoder<
+  T,
+  S extends number,
+  H extends string = never
+>(status: S, value: T): ResponseDecoder<IResponseType<S, T, H>> {
+  return async response => {
+    if (response.status !== status) {
+      return undefined;
+    }
+    return {
+      // tslint:disable-next-line:no-any
+      headers: response.headers as any,
+      status,
+      value
+    };
+  };
+}
+
+/**
  * Returns a RequestHeaderProducer that produces an Authorization header of type
  * "bearer token" taking the value from the "token" parameter of each request.
  */
