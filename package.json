@@ -42,7 +42,7 @@
     "tslint-plugin-prettier": "^1.3.0",
     "tslint-sonarts": "^1.6.0",
     "typedoc": "^0.12.0",
-    "typescript": "^3.0.3",
+    "typescript": "^3.2.1",
     "typestrict": "^1.0.0"
   },
   "dependencies": {

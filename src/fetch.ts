@@ -17,7 +17,7 @@ import { Millisecond } from "./units";
  * An instance of fetch, along its associated AbortController
  */
 export type AbortableFetch = (
-  input?: Request | string,
+  input: Request | string,
   init?: RequestInit
 ) => ITuple2<Promise<Response>, AbortController>;
 
@@ -46,9 +46,10 @@ export function AbortableFetch(f: typeof fetch = fetch): AbortableFetch {
 /**
  * Converts an AbortableFetch back to a simple fetch
  */
-export function toFetch(f: AbortableFetch): typeof fetch {
-  return (input, init) => f(input, init).e1;
-}
+export const toFetch = (f: AbortableFetch) => (
+  input: Request | string,
+  init?: RequestInit
+) => f(input, init).e1;
 
 /**
  * Sets a timeout on an AbortableFetch.
@@ -80,7 +81,10 @@ export const retriableFetch: (
   retryWrapper: (
     _: RetriableTask<Error, Response>
   ) => TaskEither<Error | MaxRetries | RetryAborted, Response>
-) => (f: typeof fetch) => typeof fetch = retryWrapper => f => (input, init) => {
+) => (f: typeof fetch) => typeof fetch = retryWrapper => f => (
+  input: Request | string,
+  init?: RequestInit
+) => {
   // wraps the fetch call with a TaskEither type, mapping certain promise
   // rejections to TransientError(s)
   const fetchTask = tryCatch<Error | TransientError, Response>(
@@ -115,7 +119,7 @@ export const retriableFetch: (
 
   // return a new promise that gets resolved when the task resolves to a Right
   // or gets rejected in all other cases
-  return new Promise((resolve, reject) => {
+  return new Promise<Response>((resolve, reject) => {
     fetchWithRetries.run().then(result => {
       result.fold(reject, resolve);
     }, reject);

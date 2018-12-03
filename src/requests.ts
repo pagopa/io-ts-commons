@@ -216,9 +216,9 @@ export type ApiRequestType<
  */
 export type TypeofApiParams<T> = T extends ApiRequestType<
   infer P,
-  infer KH,
-  infer Q,
-  infer R
+  infer _KH,
+  infer _Q,
+  infer _R
 >
   ? P
   : never;
@@ -227,9 +227,9 @@ export type TypeofApiParams<T> = T extends ApiRequestType<
  * The type of the Response of an ApiRequestType
  */
 export type TypeofApiResponse<T> = T extends ApiRequestType<
-  infer P,
-  infer KH,
-  infer Q,
+  infer _P,
+  infer _KH,
+  infer _Q,
   infer R
 >
   ? R
@@ -484,7 +484,7 @@ export function createFetchRequestForApi<
       queryString === undefined ? requestUrl : `${requestUrl}?${queryString}`;
 
     // get the headers from the params
-    const headers = requestType.headers.apply(params);
+    const headers = requestType.headers(params);
 
     // build the request
     const baseRequest: RequestInit = {
@@ -650,7 +650,7 @@ export function AuthorizationBearerHeaderProducer<P>(
 
 type MapTypeInApiResponse<T, S extends number, B> = T extends IResponseType<
   S,
-  infer R
+  infer _R
 >
   ? IResponseType<S, B>
   : T;
@@ -676,17 +676,17 @@ export type MapResponseType<
  * Replaces the parameters of the request T with the type P
  */
 export type ReplaceRequestParams<T, P> = T extends IGetApiRequestType<
-  infer P1,
+  infer _P1,
   infer H1,
   infer Q1,
   infer R1
 >
   ? IGetApiRequestType<P, H1, Q1, R1>
-  : T extends IPostApiRequestType<infer P2, infer H2, infer Q2, infer R2>
+  : T extends IPostApiRequestType<infer _P2, infer H2, infer Q2, infer R2>
     ? IPostApiRequestType<P, H2, Q2, R2>
-    : T extends IPutApiRequestType<infer P3, infer H3, infer Q3, infer R3>
+    : T extends IPutApiRequestType<infer _P3, infer H3, infer Q3, infer R3>
       ? IPutApiRequestType<P, H3, Q3, R3>
-      : T extends IDeleteApiRequestType<infer P4, infer H4, infer Q4, infer R4>
+      : T extends IDeleteApiRequestType<infer _P4, infer H4, infer Q4, infer R4>
         ? IDeleteApiRequestType<P, H4, Q4, R4>
         : never;
 

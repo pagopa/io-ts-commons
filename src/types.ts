@@ -127,7 +127,7 @@ export function withoutUndefinedValues<T, K extends keyof T>(obj: T): T {
         : acc;
     },
     {} as T
-  ) as T;
+  );
 }
 
 /**
