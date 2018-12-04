@@ -1,5 +1,4 @@
 import * as express from "express";
-import * as winston from "winston";
 
 import { Either, isLeft } from "fp-ts/lib/Either";
 
@@ -21,14 +20,9 @@ export function wrapRequestHandler<R>(
     return handler(request).then(
       r => {
         r.apply(response);
-        winston.log(
-          "debug",
-          `wrapRequestHandler|SUCCESS|${request.url}|${r.kind}`
-        );
       },
       e => {
         ResponseErrorInternal(e).apply(response);
-        winston.log("debug", `wrapRequestHandler|ERROR|${request.url}|${e}`);
       }
     );
   };
