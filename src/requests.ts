@@ -8,12 +8,6 @@
 // TODO: when query/headers type is "never", it should not allow any query/header to be produced
 // TODO: add etag support in responses
 
-// The type definition of fetch is needed because it's not provided by TypeScript
-export declare function fetch(
-  input: RequestInfo,
-  init?: RequestInit
-): Promise<Response>;
-
 import * as t from "io-ts";
 
 /**

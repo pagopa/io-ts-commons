@@ -28,8 +28,13 @@ export type AbortableFetch = (
  *
  * See https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
  */
-export function AbortableFetch(f: typeof fetch = fetch): AbortableFetch {
+export function AbortableFetch(
+  origFetch: typeof fetch = fetch
+): AbortableFetch {
+  // a fetch-like function that for each request, returns a tuple with the
+  // response and the instance of the abortController associated to the request
   return (input, init) => {
+    // instantiate an abort controller
     const abortController = new AbortController();
     const signal = abortController.signal;
 
@@ -39,7 +44,10 @@ export function AbortableFetch(f: typeof fetch = fetch): AbortableFetch {
       signal
     };
 
-    return Tuple2(f(input, newInit), abortController);
+    // execute the request
+    const response = origFetch(input, newInit);
+
+    return Tuple2(response, abortController);
   };
 }
 
