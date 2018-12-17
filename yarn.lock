@@ -152,8 +152,8 @@
     "@types/node" "*"
 
 "@types/validator@^9.4.0":
-  version "9.4.1"
-  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-9.4.1.tgz#bea5a290e61f1cbf12af3fd878706aeec2ba0087"
+  version "9.4.4"
+  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-9.4.4.tgz#67c745e988f721ea2a1e4cc5b4cd76e6bb3a76b1"
 
 abab@^1.0.0, abab@^1.0.3, abab@^1.0.4:
   version "1.0.4"
