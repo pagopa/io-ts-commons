@@ -3,7 +3,7 @@ import * as either from "fp-ts/lib/Either";
 import * as option from "fp-ts/lib/Option";
 import { OptionEither, optionEither } from "../OptionEither";
 
-describe("EitherOption", () => {
+describe("OptionEither", () => {
   it("should be created from an Either<Option<>>", () => {
     const fromNone = new OptionEither(option.none);
     expect(fromNone.isNone()).toBeTruthy();
