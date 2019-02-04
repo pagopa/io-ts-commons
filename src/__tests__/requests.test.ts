@@ -1,3 +1,4 @@
+import { right } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
 import {
@@ -105,7 +106,7 @@ describe("A simple GET API", () => {
 
     const res = await getSimple(simpleParams);
 
-    expect(res).toEqual({ status: 200, value: simpleValue });
+    expect(res).toEqual(right({ status: 200, value: simpleValue }));
   });
 
   it("should return an error on 404 response", async () => {
@@ -118,29 +119,15 @@ describe("A simple GET API", () => {
 
     const res = await getSimple(simpleParams);
 
-    expect(res).toEqual({
-      status: 404,
-      value: Error()
-    });
+    expect(res).toEqual(
+      right({
+        status: 404,
+        value: undefined
+      })
+    );
   });
 
-  it("should return an error on 500 response", async () => {
-    const fetchApi = mockFetch(500, undefined);
-
-    const getSimple = createFetchRequestForApi(getSimpleT, {
-      baseUrl,
-      fetchApi
-    });
-
-    const res = await getSimple(simpleParams);
-
-    expect(res).toEqual({
-      status: 500,
-      value: Error()
-    });
-  });
-
-  it("should return undefined on an unknown response", async () => {
+  it("should return a generic error on an unknown response", async () => {
     const fetchApi = mockFetch(999, undefined);
 
     const getSimple = createFetchRequestForApi(getSimpleT, {
@@ -150,7 +137,10 @@ describe("A simple GET API", () => {
 
     const res = await getSimple(simpleParams);
 
-    expect(res).toBeUndefined();
+    expect(res.isLeft()).toBeTruthy();
+    if (res.isLeft()) {
+      expect(res.value[0].value).toHaveProperty("status", 999);
+    }
   });
 });
 
