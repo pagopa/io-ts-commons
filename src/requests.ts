@@ -8,6 +8,7 @@
 // TODO: when query/headers type is "never", it should not allow any query/header to be produced
 // TODO: add etag support in responses
 
+import { left, right } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
 /**
@@ -99,7 +100,9 @@ export interface IResponseType<S extends number, T, H extends string = never> {
  * It should return undefined in case the response cannot be decoded (e.g.
  * in case of a parsing error).
  */
-export type ResponseDecoder<R> = (response: Response) => Promise<R | undefined>;
+export type ResponseDecoder<R> = (
+  response: Response
+) => Promise<t.Validation<R> | undefined>;
 
 /**
  * Composes two ResponseDecoder(s)
@@ -442,6 +445,7 @@ function queryStringFromParams<P extends string>(
  * Returns an async method that implements the provided ApiRequestType backed
  * by the "fetch" API.
  */
+// tslint:disable-next-line:cognitive-complexity
 export function createFetchRequestForApi<
   P,
   KH extends RequestHeaderKey,
@@ -453,7 +457,7 @@ export function createFetchRequestForApi<
     readonly baseUrl?: string;
     readonly fetchApi?: typeof fetch;
   } = {}
-): (params: P) => Promise<R | undefined> {
+): (params: P) => Promise<t.Validation<R>> {
   // TODO: handle unsuccessful fetch and HTTP errors
   // @see https://www.pivotaltracker.com/story/show/154661120
   return async params => {
@@ -508,7 +512,16 @@ export function createFetchRequestForApi<
     const response = await myFetch(url, requestWithOptionalHeadersAndBody);
 
     // decode the response
-    return requestType.response_decoder(response);
+    const decoded = await requestType.response_decoder(response);
+
+    return decoded !== undefined
+      ? decoded
+      : left<t.Errors, R>([
+          {
+            context: [],
+            value: response
+          }
+        ]);
   };
 }
 
@@ -534,19 +547,17 @@ export function ioResponseDecoder<
 >(status: S, type: t.Type<R, O>): ResponseDecoder<IResponseType<S, R, H>> {
   return async (response: Response) => {
     if (response.status !== status) {
+      // skip this decoder if status doesn't match
       return undefined;
     }
     const json = await response.json();
     const validated = type.decode(json);
-    if (validated.isLeft()) {
-      return undefined;
-    }
-    return {
+    return validated.map(value => ({
       // tslint:disable-next-line:no-any
       headers: response.headers as any,
       status,
-      value: validated.value
-    };
+      value
+    }));
   };
 }
 
@@ -557,17 +568,18 @@ export function ioResponseDecoder<
 export function basicErrorResponseDecoder<
   S extends number,
   H extends string = never
->(status: S): ResponseDecoder<IResponseType<S, Error, H>> {
+>(status: S): ResponseDecoder<IResponseType<S, string, H>> {
   return async response => {
     if (response.status !== status) {
+      // skip this decoder if status doesn't match
       return undefined;
     }
-    return {
+    return right<t.Errors, IResponseType<S, string, H>>({
       // tslint:disable-next-line:no-any
       headers: response.headers as any,
       status,
-      value: new Error(response.statusText)
-    };
+      value: response.statusText
+    });
   };
 }
 
@@ -577,8 +589,8 @@ export function basicErrorResponseDecoder<
  */
 export type BasicResponseType<R, H extends string = never> =
   | IResponseType<200, R, H>
-  | IResponseType<404, Error, H>
-  | IResponseType<500, Error, H>;
+  | IResponseType<404, string, H>
+  | IResponseType<500, string, H>;
 
 /**
  * Returns a ResponseDecoder for BasicResponseType<R>
@@ -607,12 +619,12 @@ export function constantResponseDecoder<
     if (response.status !== status) {
       return undefined;
     }
-    return {
+    return right<t.Errors, IResponseType<S, T, H>>({
       // tslint:disable-next-line:no-any
       headers: response.headers as any,
       status,
       value
-    };
+    });
   };
 }
 
