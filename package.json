@@ -1,5 +1,5 @@
 {
-  "name": "italia-ts-commons",
+  "name": "io-ts-commons",
   "version": "4.0.0",
   "description": "Shared TypeScript code for the Digital Citizenship projects",
   "main": "lib/index.js",

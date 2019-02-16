@@ -1,6 +1,6 @@
 [![CircleCI](https://circleci.com/gh/teamdigitale/io-ts-commons.svg?style=svg)](https://circleci.com/gh/teamdigitale/io-ts-commons)
 
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons?ref=badge_shield)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fteamdigitale%2Fio-ts-commons.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fteamdigitale%2Fio-ts-commons?ref=badge_shield)
 
 [![codecov](https://codecov.io/gh/teamdigitale/io-ts-commons/branch/master/graph/badge.svg)](https://codecov.io/gh/teamdigitale/io-ts-commons)
 
@@ -12,7 +12,7 @@ This module provides code shared by the projects of the
 [Digital Citizenship](https://github.com/teamdigitale/io)
 initiative.
 
-Documentation is available [here](https://teamdigitale.github.io/italia-ts-commons/)
+Documentation is available [here](https://teamdigitale.github.io/io-ts-commons/)
 
 ## Contributing
 
@@ -35,4 +35,4 @@ $ npm publish
 
 
 ## License
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons?ref=badge_large)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fteamdigitale%2Fio-ts-commons.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fteamdigitale%2Fio-ts-commons?ref=badge_large)
