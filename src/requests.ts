@@ -164,7 +164,7 @@ export interface IPostApiRequestType<
   R
 > extends IBaseApiRequestType<"post", P, KH | "Content-Type", Q, R> {
   readonly method: "post";
-  readonly body: (params: P) => string;
+  readonly body: (params: P) => string | FormData;
 }
 
 /**
@@ -179,7 +179,7 @@ export interface IPutApiRequestType<
   R
 > extends IBaseApiRequestType<"put", P, KH | "Content-Type", Q, R> {
   readonly method: "put";
-  readonly body: (params: P) => string;
+  readonly body: (params: P) => string | FormData;
 }
 
 /**
