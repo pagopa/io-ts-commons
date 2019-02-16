@@ -954,8 +954,8 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Date<wbr>From<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">t.TypeOf</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new t.Type&lt;Date, string&gt;(&quot;DateFromString&quot;,isDate,(v, c) &#x3D;&gt;isDate(v)? t.success(v): t.string.validate(v, c).chain(s &#x3D;&gt; {const d &#x3D; new Date(s);return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);}),a &#x3D;&gt; a.toISOString())</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/dates.ts#L10">dates.ts:10</a></li>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/dates.ts#L23">dates.ts:23</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/io-ts-commons/blob/9b98d9e/src/dates.ts#L10">dates.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/io-ts-commons/blob/9b98d9e/src/dates.ts#L23">dates.ts:23</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -971,8 +971,8 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">UTCISODate<wbr>From<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">t.TypeOf</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new t.Type&lt;Date, string&gt;(&quot;UTCISODateFromString&quot;,isDate,(v, c) &#x3D;&gt;isDate(v)? t.success(v): UTC_ISO8601_FULL_REGEX.validate(v, c).chain(s &#x3D;&gt; {const d &#x3D; new Date(s);return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);}),a &#x3D;&gt; a.toISOString())</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/dates.ts#L41">dates.ts:41</a></li>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/dates.ts#L54">dates.ts:54</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/io-ts-commons/blob/9b98d9e/src/dates.ts#L41">dates.ts:41</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/io-ts-commons/blob/9b98d9e/src/dates.ts#L54">dates.ts:54</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -988,7 +988,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">UTC_<wbr>ISO8601_<wbr>FULL_<wbr>REGEX<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_strings_.ipatternstringtag.html" class="tsd-signature-type">IPatternStringTag</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(Z)?$"</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_strings_.ipatternstringtag.html" class="tsd-signature-type">IPatternStringTag</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(Z)?$"</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;PatternString(&quot;^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(Z)?$&quot;)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/dates.ts#L32">dates.ts:32</a></li>
+						<li>Defined in <a href="https://github.com/teamdigitale/io-ts-commons/blob/9b98d9e/src/dates.ts#L32">dates.ts:32</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1012,7 +1012,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/teamdigitale/italia-ts-commons/blob/9b98d9e/src/dates.ts#L4">dates.ts:4</a></li>
+								<li>Defined in <a href="https://github.com/teamdigitale/io-ts-commons/blob/9b98d9e/src/dates.ts#L4">dates.ts:4</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
