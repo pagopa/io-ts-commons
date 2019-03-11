@@ -29,7 +29,7 @@
     "abort-controller": "^1.0.2",
     "danger": "^4.0.2",
     "danger-plugin-digitalcitizenship": "^0.3.1",
-    "jest": "^23.4.2",
+    "jest": "^24.3.1",
     "jest-mock-express": "^0.1.1",
     "mock-http-server": "^1.0.0",
     "node-fetch": "https://github.com/bitinn/node-fetch#abort",
