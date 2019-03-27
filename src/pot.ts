@@ -266,3 +266,25 @@ export const toUndefined = <A>(p: Pot<A, any>): A | undefined =>
 
 export const toOption = <A>(p: Pot<A, any>): option.Option<A> =>
   option.fromNullable(toUndefined(p));
+
+type PotKinds = { [index in Pot<any, any>["kind"]]: 0 };
+
+const PotKinds: PotKinds = {
+  PotNone: 0,
+  PotNoneError: 0,
+  PotNoneLoading: 0,
+  PotNoneUpdating: 0,
+  PotSome: 0,
+  PotSomeError: 0,
+  PotSomeLoading: 0,
+  PotSomeUpdating: 0
+};
+
+export const isPot = (value: any): value is Pot<any, any> => {
+  return (
+    value !== null &&
+    typeof value === "object" &&
+    value.kind !== undefined &&
+    value.kind in PotKinds
+  );
+};

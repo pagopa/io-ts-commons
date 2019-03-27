@@ -15,3 +15,14 @@ describe("toLoading", () => {
     }
   });
 });
+
+describe("isPot", () => {
+  it("should return false if value is not a valid Pot", () => {
+    expect(pot.isPot({})).toBeFalsy();
+    expect(pot.isPot({ kind: "INVALIDKIND" }));
+  });
+
+  it("should return true if value is a valid Pot", () => {
+    expect(pot.isPot({ kind: "PotNone" }));
+  });
+});
