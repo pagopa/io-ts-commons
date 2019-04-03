@@ -1,5 +1,8 @@
 // tslint:disable:no-duplicate-string
 
+import { right } from "fp-ts/lib/Either";
+import * as t from "io-ts";
+
 import {
   ApiRequestBuilder,
   createFetchRequestForApi,
@@ -26,7 +29,7 @@ const r1: R1 = ApiRequestBuilder.ofPost()
   .withQuery((params: { readonly param2: string }) => ({
     query2: params.param2
   }))
-  .withResponseDecoder(r => Promise.resolve("string"))
+  .withResponseDecoder(r => Promise.resolve(right("string")))
   .get();
 
 const f1a: TypeofApiCall<R1> = createFetchRequestForApi(r1);
@@ -36,7 +39,7 @@ const f1b: (
     readonly param1: string;
     readonly param2: string;
   }
-) => Promise<string | undefined> = f1a;
+) => Promise<t.Validation<string>> = f1a;
 
 // --------
 
