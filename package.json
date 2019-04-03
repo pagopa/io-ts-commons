@@ -32,7 +32,7 @@
     "jest": "^23.4.2",
     "jest-mock-express": "^0.1.1",
     "mock-http-server": "^1.0.0",
-    "node-fetch": "https://github.com/bitinn/node-fetch#abort",
+    "node-fetch": "bitinn/node-fetch#abort",
     "prettier": "^1.12.1",
     "rimraf": "^2.6.2",
     "ts-jest": "^23.0.1",
