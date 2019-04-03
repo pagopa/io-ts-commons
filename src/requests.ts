@@ -247,7 +247,7 @@ export type TypeOfApiResponseStatus<T> = TypeofApiResponse<
  */
 export type TypeofApiCall<T> = (
   params: TypeofApiParams<T>
-) => Promise<TypeofApiResponse<T> | undefined>;
+) => Promise<t.Validation<TypeofApiResponse<T>>>;
 
 export type ApiRequestTypeForMethod<
   M extends RequestMethod,
