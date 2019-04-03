@@ -4480,9 +4480,11 @@ tslint-config-prettier@^1.6.0:
   version "1.18.0"
   resolved "https://registry.yarnpkg.com/tslint-config-prettier/-/tslint-config-prettier-1.18.0.tgz#75f140bde947d35d8f0d238e0ebf809d64592c37"
 
-tslint-immutable@^4.5.4:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/tslint-immutable/-/tslint-immutable-4.7.0.tgz#086dfabfb5bc4c508128bc5f4e8e2d3fb1494f23"
+tslint-immutable@^5.5.2:
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/tslint-immutable/-/tslint-immutable-5.5.2.tgz#57331f6100156fa7ac4503e121cd2616df5bab8a"
+  dependencies:
+    tsutils "^2.28.0 || ^3.0.0"
 
 tslint-microsoft-contrib@^5.0.3:
   version "5.0.3"
@@ -4521,15 +4523,15 @@ tslint@^5.1.0:
     tslib "^1.8.0"
     tsutils "^2.27.2"
 
-tsutils@^2.12.1:
-  version "2.27.2"
-  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-2.27.2.tgz#60ba88a23d6f785ec4b89c6e8179cac9b431f1c7"
+tsutils@^2.12.1, tsutils@^2.27.2:
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-2.28.0.tgz#6bd71e160828f9d019b6f4e844742228f85169a1"
   dependencies:
     tslib "^1.8.1"
 
-tsutils@^2.27.2:
-  version "2.28.0"
-  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-2.28.0.tgz#6bd71e160828f9d019b6f4e844742228f85169a1"
+"tsutils@^2.28.0 || ^3.0.0":
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.10.0.tgz#6f1c95c94606e098592b0dff06590cf9659227d6"
   dependencies:
     tslib "^1.8.1"
 
