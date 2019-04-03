@@ -69,7 +69,7 @@ describe("AbortableFetch", () => {
 
     expect(responsePromise).rejects.toEqual(
       expect.objectContaining({
-        message: `Fetch to ${longDelayUrl} has been aborted`
+        message: "The user aborted a request."
       })
     );
     expect(server.requests().length).toEqual(1);
@@ -94,7 +94,7 @@ describe("setFetchTimeout", () => {
       expect(server.requests().length).toEqual(1);
       expect(e).toEqual(
         expect.objectContaining({
-          message: `Fetch to ${longDelayUrl} has been aborted`
+          message: "The user aborted a request."
         })
       );
     }
