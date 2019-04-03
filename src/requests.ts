@@ -258,8 +258,10 @@ export type ApiRequestTypeForMethod<
 > = M extends "get"
   ? IGetApiRequestType<P, KH, Q, R>
   : M extends "post"
-    ? IPostApiRequestType<P, KH, Q, R>
-    : M extends "put" ? IPutApiRequestType<P, KH, Q, R> : never;
+  ? IPostApiRequestType<P, KH, Q, R>
+  : M extends "put"
+  ? IPutApiRequestType<P, KH, Q, R>
+  : never;
 
 //
 // builder
@@ -671,12 +673,12 @@ export type MapResponseType<
 > = T extends IGetApiRequestType<infer P1, infer H1, infer Q1, infer R1>
   ? IGetApiRequestType<P1, H1, Q1, MapTypeInApiResponse<R1, S, B>>
   : T extends IPostApiRequestType<infer P2, infer H2, infer Q2, infer R2>
-    ? IPostApiRequestType<P2, H2, Q2, MapTypeInApiResponse<R2, S, B>>
-    : T extends IPutApiRequestType<infer P3, infer H3, infer Q3, infer R3>
-      ? IPutApiRequestType<P3, H3, Q3, MapTypeInApiResponse<R3, S, B>>
-      : T extends IDeleteApiRequestType<infer P4, infer H4, infer Q4, infer R4>
-        ? IDeleteApiRequestType<P4, H4, Q4, MapTypeInApiResponse<R4, S, B>>
-        : never;
+  ? IPostApiRequestType<P2, H2, Q2, MapTypeInApiResponse<R2, S, B>>
+  : T extends IPutApiRequestType<infer P3, infer H3, infer Q3, infer R3>
+  ? IPutApiRequestType<P3, H3, Q3, MapTypeInApiResponse<R3, S, B>>
+  : T extends IDeleteApiRequestType<infer P4, infer H4, infer Q4, infer R4>
+  ? IDeleteApiRequestType<P4, H4, Q4, MapTypeInApiResponse<R4, S, B>>
+  : never;
 
 /**
  * Replaces the parameters of the request T with the type P
@@ -689,12 +691,12 @@ export type ReplaceRequestParams<T, P> = T extends IGetApiRequestType<
 >
   ? IGetApiRequestType<P, H1, Q1, R1>
   : T extends IPostApiRequestType<infer _P2, infer H2, infer Q2, infer R2>
-    ? IPostApiRequestType<P, H2, Q2, R2>
-    : T extends IPutApiRequestType<infer _P3, infer H3, infer Q3, infer R3>
-      ? IPutApiRequestType<P, H3, Q3, R3>
-      : T extends IDeleteApiRequestType<infer _P4, infer H4, infer Q4, infer R4>
-        ? IDeleteApiRequestType<P, H4, Q4, R4>
-        : never;
+  ? IPostApiRequestType<P, H2, Q2, R2>
+  : T extends IPutApiRequestType<infer _P3, infer H3, infer Q3, infer R3>
+  ? IPutApiRequestType<P, H3, Q3, R3>
+  : T extends IDeleteApiRequestType<infer _P4, infer H4, infer Q4, infer R4>
+  ? IDeleteApiRequestType<P, H4, Q4, R4>
+  : never;
 
 /**
  * Adds the status S with response type A to the responses of the request
@@ -706,12 +708,12 @@ export type AddResponseType<
 > = T extends IGetApiRequestType<infer P1, infer H1, infer Q1, infer R1>
   ? IGetApiRequestType<P1, H1, Q1, R1 | IResponseType<S, A>>
   : T extends IPostApiRequestType<infer P2, infer H2, infer Q2, infer R2>
-    ? IPostApiRequestType<P2, H2, Q2, R2 | IResponseType<S, A>>
-    : T extends IPutApiRequestType<infer P3, infer H3, infer Q3, infer R3>
-      ? IPutApiRequestType<P3, H3, Q3, R3 | IResponseType<S, A>>
-      : T extends IDeleteApiRequestType<infer P4, infer H4, infer Q4, infer R4>
-        ? IDeleteApiRequestType<P4, H4, Q4, R4 | IResponseType<S, A>>
-        : never;
+  ? IPostApiRequestType<P2, H2, Q2, R2 | IResponseType<S, A>>
+  : T extends IPutApiRequestType<infer P3, infer H3, infer Q3, infer R3>
+  ? IPutApiRequestType<P3, H3, Q3, R3 | IResponseType<S, A>>
+  : T extends IDeleteApiRequestType<infer P4, infer H4, infer Q4, infer R4>
+  ? IDeleteApiRequestType<P4, H4, Q4, R4 | IResponseType<S, A>>
+  : never;
 
 /**
  * Removes a status from the union of IResponseType(s)

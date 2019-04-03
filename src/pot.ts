@@ -124,12 +124,16 @@ export type Pot<T, E> =
 export type PotType<T> = T extends Some<infer A0>
   ? A0
   : T extends SomeLoading<infer A1>
-    ? A1
-    : T extends SomeError<infer A2, any> ? A2 : never;
+  ? A1
+  : T extends SomeError<infer A2, any>
+  ? A2
+  : never;
 
 export type PotErrorType<T> = T extends NoneError<infer E0>
   ? E0
-  : T extends SomeError<any, infer E1> ? E1 : never;
+  : T extends SomeError<any, infer E1>
+  ? E1
+  : never;
 
 export const toSomeLoading = <T>(
   p: Some<T> | SomeError<T, any>

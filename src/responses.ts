@@ -288,8 +288,8 @@ export const ResponseErrorForbiddenNotAuthorizedForRecipient: IResponseErrorForb
  */
 export interface IResponseErrorForbiddenNotAuthorizedForDefaultAddresses
   extends IResponse<
-      "IResponseErrorForbiddenNotAuthorizedForDefaultAddresses"
-    > {}
+    "IResponseErrorForbiddenNotAuthorizedForDefaultAddresses"
+  > {}
 
 /**
  * The user is not allowed to send messages with default addresses.

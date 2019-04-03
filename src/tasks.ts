@@ -85,8 +85,8 @@ export function withRetries<E, T>(
     // if the recursive task execution returns with a failure and the failure is
     // a TransientError, it means that the retries have been exausted - we map
     // the error to a MaxRetries error.
-    return runTaskOnce(0, task).mapLeft(
-      l => (l === TransientError ? MaxRetries : l)
+    return runTaskOnce(0, task).mapLeft(l =>
+      l === TransientError ? MaxRetries : l
     );
   };
 }

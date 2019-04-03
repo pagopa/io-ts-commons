@@ -39,7 +39,11 @@ export const tag = <T>() => <A, O = A, I = t.mixed>(
  */
 export type UntagBasicType<A> = A extends string
   ? string
-  : A extends number ? number : A extends boolean ? boolean : never;
+  : A extends number
+  ? number
+  : A extends boolean
+  ? boolean
+  : never;
 
 /**
  * Returns the passed tagged basic value after converting it to its basic type.
@@ -161,11 +165,10 @@ export function strictInterfaceWithOptionals<
     (m, c) =>
       loose.validate(m, c).chain(o => {
         const errors: t.Errors = Object.getOwnPropertyNames(o)
-          .map(
-            key =>
-              !props.hasOwnProperty(key)
-                ? t.getValidationError(o[key], t.appendContext(c, key, t.never))
-                : undefined
+          .map(key =>
+            !props.hasOwnProperty(key)
+              ? t.getValidationError(o[key], t.appendContext(c, key, t.never))
+              : undefined
           )
           .filter((e): e is t.ValidationError => e !== undefined);
         return errors.length ? t.failures(errors) : t.success(o);
