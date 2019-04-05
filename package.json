@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "fp-ts": "^1.6.2",
-    "io-ts": "^1.4.2",
+    "io-ts": "^1.8.5",
     "json-set-map": "^1.0.2",
     "validator": "^10.1.0"
   },
