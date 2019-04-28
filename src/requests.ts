@@ -681,6 +681,24 @@ export type MapResponseType<
   : never;
 
 /**
+ * The parameters of the request T
+ */
+export type RequestParams<T> = T extends IGetApiRequestType<
+  infer P1,
+  infer _H1,
+  infer _Q1,
+  infer _R1
+>
+  ? P1
+  : T extends IPostApiRequestType<infer P2, infer _H2, infer _Q2, infer _R2>
+  ? P2
+  : T extends IPutApiRequestType<infer P3, infer _H3, infer _Q3, infer _R3>
+  ? P3
+  : T extends IDeleteApiRequestType<infer P4, infer _H4, infer _Q4, infer _R4>
+  ? P4
+  : never;
+
+/**
  * Replaces the parameters of the request T with the type P
  */
 export type ReplaceRequestParams<T, P> = T extends IGetApiRequestType<
