@@ -34,6 +34,7 @@ export type ProblemJson = t.TypeOf<typeof ProblemJson>;
 export interface IResponse<T> {
   readonly kind: T;
   readonly apply: (response: express.Response) => void;
+  readonly detail?: string;
 }
 
 //
@@ -105,6 +106,7 @@ export function ResponsePermanentRedirect(
 ): IResponsePermanentRedirect {
   return {
     apply: res => res.redirect(location.href, 301),
+    detail: location.href,
     kind: "IResponsePermanentRedirect"
   };
 }
@@ -132,6 +134,7 @@ export function ResponseSuccessRedirectToResource<T, V>(
         .set("Location", url)
         .status(201)
         .json(payload),
+    detail: url,
     kind: "IResponseSuccessRedirectToResource",
     payload,
     resource
@@ -173,6 +176,7 @@ export function ResponseErrorGeneric(
         .status(status)
         .set("Content-Type", "application/problem+json")
         .json(problem),
+    detail: `${title}: ${detail}`,
     kind: "IResponseErrorGeneric"
   };
 }
@@ -194,6 +198,7 @@ export function ResponseErrorNotFound(
 ): IResponseErrorNotFound {
   return {
     ...ResponseErrorGeneric(HttpStatusCodeEnum.HTTP_STATUS_404, title, detail),
+    detail: `${title}: ${detail}`,
     kind: "IResponseErrorNotFound"
   };
 }
@@ -213,6 +218,7 @@ export function ResponseErrorValidation(
 ): IResponseErrorValidation {
   return {
     ...ResponseErrorGeneric(HttpStatusCodeEnum.HTTP_STATUS_400, title, detail),
+    detail: `${title}: ${detail}`,
     kind: "IResponseErrorValidation"
   };
 }
