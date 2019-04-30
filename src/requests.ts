@@ -540,7 +540,7 @@ export const ApiHeaderJson: RequestHeaderProducer<{}, "Content-Type"> = () => ({
  *
  * @param status  The response status handled by this decoder
  * @param type    The response type corresponding to the status
- * @param processor A function that takes the object corresponding to the json response as input
+ * @param preprocessor A function that takes the object corresponding to the json response as input
  * and returns the processed object (usefull when you want alterate the json body received)
  */
 export function ioResponseDecoder<
@@ -552,7 +552,7 @@ export function ioResponseDecoder<
   status: S,
   type: t.Type<R, O>,
   // tslint:disable-next-line: no-any
-  processor: (i: any) => any = _ => _
+  preprocessor: (i: any) => any = _ => _
 ): ResponseDecoder<IResponseType<S, R, H>> {
   return async (response: Response) => {
     if (response.status !== status) {
