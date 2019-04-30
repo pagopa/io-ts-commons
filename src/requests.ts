@@ -540,20 +540,27 @@ export const ApiHeaderJson: RequestHeaderProducer<{}, "Content-Type"> = () => ({
  *
  * @param status  The response status handled by this decoder
  * @param type    The response type corresponding to the status
+ * @param processor A function that takes the object corresponding to the json response as input
+ * and returns the processed object (usefull when you want alterate the json body received)
  */
 export function ioResponseDecoder<
   S extends number,
   R,
   O = R,
   H extends string = never
->(status: S, type: t.Type<R, O>): ResponseDecoder<IResponseType<S, R, H>> {
+>(
+  status: S,
+  type: t.Type<R, O>,
+  // tslint:disable-next-line: no-any
+  processor: (i: any) => any = _ => _
+): ResponseDecoder<IResponseType<S, R, H>> {
   return async (response: Response) => {
     if (response.status !== status) {
       // skip this decoder if status doesn't match
       return undefined;
     }
     const json = await response.json();
-    const validated = type.decode(json);
+    const validated = type.decode(processor(json));
     return validated.map(value => ({
       // tslint:disable-next-line:no-any
       headers: response.headers as any,
@@ -598,11 +605,13 @@ export type BasicResponseType<R, H extends string = never> =
  * Returns a ResponseDecoder for BasicResponseType<R>
  */
 export function basicResponseDecoder<R, O = R, H extends string = never>(
-  type: t.Type<R, O>
+  type: t.Type<R, O>,
+  // tslint:disable-next-line: no-any
+  processor?: (i: any) => any
 ): ResponseDecoder<BasicResponseType<R, H>> {
   return composeResponseDecoders(
     composeResponseDecoders(
-      ioResponseDecoder<200, R, O, H>(200, type),
+      ioResponseDecoder<200, R, O, H>(200, type, processor),
       basicErrorResponseDecoder<404, H>(404)
     ),
     basicErrorResponseDecoder<500, H>(500)
