@@ -39,6 +39,16 @@ const getSimpleT: GetSimpleT = {
   url: params => `/api/v1/simples/${params.id}`
 };
 
+const getSimpleTP: GetSimpleT = {
+  headers: () => ({
+    Authorization: "Bearer: 123"
+  }),
+  method: "get",
+  query: params => ({ param1: `${params.p1}`, param2: params.p2 }),
+  response_decoder: basicResponseDecoder(SimpleModel, _ => processedValue),
+  url: params => `/api/v1/simples/${params.id}`
+};
+
 type PostSimpleT = IPostApiRequestType<
   {
     readonly value: SimpleModel;
@@ -72,6 +82,11 @@ const simpleValue = {
   name: "name"
 };
 
+const processedValue = {
+  id: 123,
+  name: "name processed"
+};
+
 const simpleParams = {
   id: "123",
   p1: 1,
@@ -94,6 +109,18 @@ describe("A simple GET API", () => {
       "https://localhost/api/v1/simples/123?param1=1&param2=should%20be%26encoded",
       { headers: { Authorization: "Bearer: 123" }, method: "get" }
     );
+  });
+
+  it("should parse a valid 200 response with pre-processor", async () => {
+    const fetchApi = mockFetch(200, simpleValue);
+
+    const getSimple = createFetchRequestForApi(getSimpleTP, {
+      baseUrl,
+      fetchApi
+    });
+
+    const res = await getSimple(simpleParams);
+    expect(res).toEqual(right({ status: 200, value: processedValue }));
   });
 
   it("should parse a valid 200 response", async () => {
