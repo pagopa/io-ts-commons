@@ -45,9 +45,7 @@ const getSimpleTP: GetSimpleT = {
   }),
   method: "get",
   query: params => ({ param1: `${params.p1}`, param2: params.p2 }),
-  response_decoder: basicResponseDecoder(SimpleModel, _ => {
-    return processedValue;
-  }),
+  response_decoder: basicResponseDecoder(SimpleModel, _ => processedValue),
   url: params => `/api/v1/simples/${params.id}`
 };
 

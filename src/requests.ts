@@ -560,7 +560,7 @@ export function ioResponseDecoder<
       return undefined;
     }
     const json = await response.json();
-    const validated = type.decode(processor(json));
+    const validated = type.decode(preprocessor(json));
     return validated.map(value => ({
       // tslint:disable-next-line:no-any
       headers: response.headers as any,
@@ -607,11 +607,11 @@ export type BasicResponseType<R, H extends string = never> =
 export function basicResponseDecoder<R, O = R, H extends string = never>(
   type: t.Type<R, O>,
   // tslint:disable-next-line: no-any
-  processor?: (i: any) => any
+  preprocessor?: (i: any) => any
 ): ResponseDecoder<BasicResponseType<R, H>> {
   return composeResponseDecoders(
     composeResponseDecoders(
-      ioResponseDecoder<200, R, O, H>(200, type, processor),
+      ioResponseDecoder<200, R, O, H>(200, type, preprocessor),
       basicErrorResponseDecoder<404, H>(404)
     ),
     basicErrorResponseDecoder<500, H>(500)
