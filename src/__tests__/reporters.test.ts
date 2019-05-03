@@ -32,12 +32,12 @@ describe("ReadableReporter", () => {
       {
         o: "",
         vt: NonEmptyString,
-        e: ["value is not a non empty string"]
+        e: ['value [""] at [root] is not a valid [non empty string]']
       },
       {
         o: -1,
         vt: NonNegativeNumber,
-        e: ["value is not a number >= 0"]
+        e: ["value [-1] at [root] is not a valid [number >= 0]"]
       },
       {
         o: {
@@ -49,10 +49,10 @@ describe("ReadableReporter", () => {
         },
         vt: TestType,
         e: [
-          "value.a is not a number",
-          "value.b is not a string",
-          "value.c.a is not a number",
-          "value.c.b is not a non empty string"
+          'value ["a"] at [root.a] is not a valid [number]',
+          "value [1] at [root.b] is not a valid [string]",
+          'value ["b"] at [root.c.a] is not a valid [number]',
+          "value [undefined] at [root.c.b] is not a valid [non empty string]"
         ]
       }
     ];
@@ -76,6 +76,6 @@ describe("ReadableReporter", () => {
     );
     const validation = aType.decode({ foo: true, x: true });
     const res = ReadableReporter.report(validation);
-    expect(res).toEqual(["value.x: unknown property"]);
+    expect(res).toEqual(["value [true] at [root.x] is not a known property"]);
   });
 });

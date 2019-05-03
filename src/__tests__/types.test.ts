@@ -79,7 +79,9 @@ describe("strictInterfaceWithOptionals", () => {
     expect(isLeft(validation)).toBeTruthy();
     if (isLeft(validation)) {
       const errors = readableReport(validation.value);
-      expect(errors).toEqual("value.x: unknown property");
+      expect(errors).toEqual(
+        "value [true] at [root.x] is not a known property"
+      );
     }
   });
 });

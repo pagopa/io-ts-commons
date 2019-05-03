@@ -15,15 +15,14 @@ function getContextPath(context: Context): string {
   const lastType = context[context.length - 1].type;
 
   if ("never" === lastType.name) {
-    return `${keysPath}: unknown property`;
+    return `${keysPath}] is not a known property`;
   }
 
-  return `${keysPath} is not a ${lastType.name}`;
+  return `${keysPath}] is not a valid [${lastType.name}]`;
 }
 
-// tslint:disable-next-line:no-any
-function getMessage(_: any, context: Context): string {
-  return `value${getContextPath(context)}`;
+function getMessage(value: unknown, context: Context): string {
+  return `value [${JSON.stringify(value)}] at [root${getContextPath(context)}`;
 }
 
 /**
