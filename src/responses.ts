@@ -375,7 +375,7 @@ export interface IResponseErrorTooManyRequests
   extends IResponse<"IResponseErrorTooManyRequests"> {}
 
 /**
- * Returns a response describing an too many requests error (429).
+ * Returns a response describing a too many requests error (429).
  *
  * @param detail The error message
  */
