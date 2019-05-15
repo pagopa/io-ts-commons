@@ -10,6 +10,7 @@ export enum HttpStatusCodeEnum {
   HTTP_STATUS_403 = 403,
   HTTP_STATUS_404 = 404,
   HTTP_STATUS_409 = 409,
+  HTTP_STATUS_429 = 429,
   HTTP_STATUS_500 = 500
 }
 export const HttpStatusCode = enumType<HttpStatusCodeEnum>(
@@ -364,6 +365,30 @@ export function ResponseErrorConflict(detail: string): IResponseErrorConflict {
       detail
     ),
     kind: "IResponseErrorConflict"
+  };
+}
+
+/**
+ * Interface for a response describing a too many requests error (429).
+ */
+export interface IResponseErrorTooManyRequests
+  extends IResponse<"IResponseErrorTooManyRequests"> {}
+
+/**
+ * Returns a response describing an too many requests error (429).
+ *
+ * @param detail The error message
+ */
+export function ResponseErrorTooManyRequests(
+  detail: string
+): IResponseErrorTooManyRequests {
+  return {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_429,
+      "Too many requests",
+      detail
+    ),
+    kind: "IResponseErrorTooManyRequests"
   };
 }
 
