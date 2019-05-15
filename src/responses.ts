@@ -105,7 +105,7 @@ export function ResponsePermanentRedirect(
   location: UrlFromString
 ): IResponsePermanentRedirect {
   return {
-    apply: res => res.redirect(location.href, 301),
+    apply: res => res.redirect(301, location.href),
     detail: location.href,
     kind: "IResponsePermanentRedirect"
   };
