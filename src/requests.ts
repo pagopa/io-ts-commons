@@ -299,6 +299,7 @@ export class ApiRequestBuilder<
   R,
   T extends ApiRequestTypeForMethod<M, P, KH, Q, R>
 > {
+  constructor(private readonly _request: T) {}
   /**
    * Creates a new empty request with the GET method.
    */
@@ -347,8 +348,6 @@ export class ApiRequestBuilder<
       method: "put"
     });
   }
-
-  constructor(private readonly _request: T) {}
 
   public get(): T {
     return this._request;

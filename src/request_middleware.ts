@@ -71,7 +71,8 @@ export function withRequestMiddlewares<R1, R2, R3, T1, T2, T3>(
   v3: IRequestMiddleware<R3, T3>
 ): <RH>(
   handler: (v1: T1, v2: T2, v3: T3) => Promise<IResponse<RH>>
-) => RequestHandler<RH | R1 | R2 | R3>;
+) => // tslint:disable-next-line:max-union-size
+RequestHandler<RH | R1 | R2 | R3>;
 
 export function withRequestMiddlewares<R1, R2, R3, R4, T1, T2, T3, T4>(
   v1: IRequestMiddleware<R1, T1>,
@@ -80,7 +81,8 @@ export function withRequestMiddlewares<R1, R2, R3, R4, T1, T2, T3, T4>(
   v4: IRequestMiddleware<R4, T4>
 ): <RH>(
   handler: (v1: T1, v2: T2, v3: T3, v4: T4) => Promise<IResponse<RH>>
-) => RequestHandler<RH | R1 | R2 | R3 | R4>;
+) => // tslint:disable-next-line:max-union-size
+RequestHandler<RH | R1 | R2 | R3 | R4>;
 
 export function withRequestMiddlewares<R1, R2, R3, R4, R5, T1, T2, T3, T4, T5>(
   v1: IRequestMiddleware<R1, T1>,
@@ -90,7 +92,8 @@ export function withRequestMiddlewares<R1, R2, R3, R4, R5, T1, T2, T3, T4, T5>(
   v5: IRequestMiddleware<R5, T5>
 ): <RH>(
   handler: (v1: T1, v2: T2, v3: T3, v4: T4, v5: T5) => Promise<IResponse<RH>>
-) => RequestHandler<RH | R1 | R2 | R3 | R4 | R5>;
+) => // tslint:disable-next-line:max-union-size
+RequestHandler<RH | R1 | R2 | R3 | R4 | R5>;
 
 export function withRequestMiddlewares<
   R1,
@@ -121,7 +124,8 @@ export function withRequestMiddlewares<
     v5: T5,
     v6: T6
   ) => Promise<IResponse<RH>>
-) => RequestHandler<RH | R1 | R2 | R3 | R4 | R5 | R6>;
+) => // tslint:disable-next-line:max-union-size
+RequestHandler<RH | R1 | R2 | R3 | R4 | R5 | R6>;
 
 /**
  * Returns a request handler wrapped with the provided middlewares.
@@ -165,7 +169,8 @@ export function withRequestMiddlewares<
     v5?: T5,
     v6?: T6
   ) => Promise<IResponse<RH>>
-) => RequestHandler<R1 | R2 | R3 | R4 | R5 | R6 | RH> {
+) => // tslint:disable-next-line:max-union-size
+RequestHandler<R1 | R2 | R3 | R4 | R5 | R6 | RH> {
   return <RH>(
     handler: (
       v1: T1,
@@ -180,6 +185,7 @@ export function withRequestMiddlewares<
     // by the handler or one of the types returned by any of the middlewares (i.e., when
     // a middleware returns an error response).
     return request =>
+      // tslint:disable-next-line:max-union-size
       new Promise<IResponse<R1 | R2 | R3 | R4 | R5 | R6 | RH>>(
         (resolve, reject) => {
           // we execute each middleware in sequence, stopping at the first middleware that is
