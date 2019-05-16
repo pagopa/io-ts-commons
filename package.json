@@ -13,7 +13,7 @@
   "scripts": {
     "prepare": "rimraf lib && npm run build",
     "build": "tsc",
-    "postversion": "git push --tags",
+    "postversion": "git push && git push --tags",
     "test": "jest",
     "lint": "tslint --project .",
     "check-typings": "tsc -p typings-checker",
