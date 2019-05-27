@@ -3382,8 +3382,9 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
     minimist "0.0.8"
 
 mock-http-server@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/mock-http-server/-/mock-http-server-1.0.0.tgz#c9009a59828a44f5d41e20ee13f00abf05ea755e"
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/mock-http-server/-/mock-http-server-1.2.0.tgz#656fe9ab187eb716495e0f72ffbc0620f6a5ed0a"
+  integrity sha512-zXYVv3fkaohg7cInx1TBaTvAzlGHFgNIpdkMyYPfwDjPeipbIjFaZpvZVNqoMaXAiGOxvU625s2uvYiApEq7hA==
   dependencies:
     body-parser "^1.18.1"
     connect "^3.4.0"
