@@ -380,13 +380,13 @@ export interface IResponseErrorTooManyRequests
  * @param detail The error message
  */
 export function ResponseErrorTooManyRequests(
-  detail: string
+  detail?: string
 ): IResponseErrorTooManyRequests {
   return {
     ...ResponseErrorGeneric(
       HttpStatusCodeEnum.HTTP_STATUS_429,
       "Too many requests",
-      detail
+      detail === undefined ? "" : detail
     ),
     kind: "IResponseErrorTooManyRequests"
   };
