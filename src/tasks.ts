@@ -4,6 +4,17 @@ import { fromLeft, TaskEither } from "fp-ts/lib/TaskEither";
 import { Millisecond } from "./units";
 
 /**
+ * Returns a Task that resolves to a value after a delay.
+ */
+export const delayTask = <A>(n: Millisecond, a: A): Task<A> =>
+  new Task<A>(
+    () =>
+      new Promise<A>(resolve => {
+        setTimeout(() => resolve(a), n);
+      })
+  );
+
+/**
  * In the context of a retriable task, when it returns a TransientError the
  * task can be executed again.
  */
@@ -90,14 +101,3 @@ export function withRetries<E, T>(
     );
   };
 }
-
-/**
- * Returns a Task that resolves to a value after a delay.
- */
-export const delayTask = <A>(n: Millisecond, a: A): Task<A> =>
-  new Task<A>(
-    () =>
-      new Promise<A>(resolve => {
-        setTimeout(() => resolve(a), n);
-      })
-  );
