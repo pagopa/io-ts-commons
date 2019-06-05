@@ -29,8 +29,14 @@ export { environment };
 import * as requests from "./requests";
 export { requests };
 
+import * as responses from "./responses";
+export { responses };
+
 import * as promises from "./promises";
 export { promises };
+
+import * as request_middleware from "./request_middleware";
+export { request_middleware };
 
 import * as tasks from "./tasks";
 export { tasks };
@@ -41,5 +47,17 @@ export { backoff };
 import * as units from "./units";
 export { units };
 
+import * as express from "./express";
+export { express };
+
+import * as pot from "./pot";
+export { pot };
+
 import * as fetch from "./fetch";
 export { fetch };
+
+import * as OptionEither from "./OptionEither";
+export { OptionEither };
+
+import * as OptionValidation from "./OptionValidation";
+export { OptionValidation };
