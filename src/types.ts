@@ -249,3 +249,8 @@ export const replaceProp1 = <
   name?: string
 ): t.Type<ReplaceProp1<A, P, A1>, O, I> =>
   t.refinement(type, o => typeB.is(o[p]), name) as any;
+
+/**
+ * Returns the type `A` if `T` is a `Promise<A>`, or else returns `never`
+ */
+export type PromiseType<T> = T extends Promise<infer A> ? A : never;
