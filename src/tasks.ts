@@ -48,9 +48,10 @@ export function withRetries<E, T>(
   backoff: (count: number) => Millisecond
 ): (
   _: RetriableTask<E, T>,
-  shouldAbort?: Promise<boolean>
+  shouldAbort?: Promise<boolean>,
+  shouldClientAbort?: Promise<boolean>
 ) => TaskEither<E | MaxRetries | RetryAborted, T> {
-  return (task, shouldAbort = Promise.resolve(false)) => {
+  return (task, shouldAbort = Promise.resolve(false), shouldClientAbort) => {
     // Whether we must stop retrying
     // the abort process gets triggered when the shouldAbort promise resolves
     // to true. Not that aborting stops the retry process, it does NOT stop
@@ -63,13 +64,24 @@ export function withRetries<E, T>(
       },
       _ => void 0
     );
+    // Abort if client has stopped polling
+    // tslint:disable-next-line: no-let
+    let isRetryAbort = false;
 
     const runTaskOnce = (
       count: number,
       currentTask: RetriableTask<E, T>
     ): TaskEither<E | TransientError | RetryAborted, T> => {
+      if (shouldClientAbort) {
+        shouldClientAbort.then(
+          v => {
+            isRetryAbort = v;
+          },
+          _ => void 0
+        );
+      }
       // on first execution, count === 0
-      if (count >= maxRetries - 1) {
+      if (count >= maxRetries - 1 || isRetryAbort) {
         // no more retries left
         return currentTask;
       }
