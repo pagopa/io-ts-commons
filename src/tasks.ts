@@ -14,6 +14,15 @@ export const delayTask = <A>(n: Millisecond, a: A): Task<A> =>
       })
   );
 
+type RetryState = "ABORTED" | "ENABLED";
+// tslint:disable-next-line: no-let
+let retryState: RetryState = "ENABLED";
+
+// Stopped retry request
+export function stopRetryByClient() {
+  retryState = "ABORTED";
+}
+
 /**
  * In the context of a retriable task, when it returns a TransientError the
  * task can be executed again.
@@ -64,24 +73,14 @@ export function withRetries<E, T>(
       },
       _ => void 0
     );
-    // Abort if client has stopped polling
-    // tslint:disable-next-line: no-let
-    let isRetryAbort = false;
-
     const runTaskOnce = (
       count: number,
       currentTask: RetriableTask<E, T>
     ): TaskEither<E | TransientError | RetryAborted, T> => {
-      if (shouldClientAbort) {
-        shouldClientAbort.then(
-          v => {
-            isRetryAbort = v;
-          },
-          _ => void 0
-        );
-      }
       // on first execution, count === 0
-      if (count >= maxRetries - 1 || isRetryAbort) {
+      if (count >= maxRetries - 1 || retryState === "ABORTED") {
+        // reset state
+        retryState = "ENABLED";
         // no more retries left
         return currentTask;
       }
