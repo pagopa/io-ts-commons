@@ -19,9 +19,9 @@ type RetryState = "ABORTED" | "ENABLED";
 let retryState: RetryState = "ENABLED";
 
 // Stopped retry request
-export function stopRetryByClient() {
+export const stopRetryByClient = () => {
   retryState = "ABORTED";
-}
+};
 
 /**
  * In the context of a retriable task, when it returns a TransientError the
@@ -57,10 +57,9 @@ export function withRetries<E, T>(
   backoff: (count: number) => Millisecond
 ): (
   _: RetriableTask<E, T>,
-  shouldAbort?: Promise<boolean>,
-  shouldClientAbort?: Promise<boolean>
+  shouldAbort?: Promise<boolean>
 ) => TaskEither<E | MaxRetries | RetryAborted, T> {
-  return (task, shouldAbort = Promise.resolve(false), shouldClientAbort) => {
+  return (task, shouldAbort = Promise.resolve(false)) => {
     // Whether we must stop retrying
     // the abort process gets triggered when the shouldAbort promise resolves
     // to true. Not that aborting stops the retry process, it does NOT stop
