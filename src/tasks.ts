@@ -14,15 +14,6 @@ export const delayTask = <A>(n: Millisecond, a: A): Task<A> =>
       })
   );
 
-type RetryState = "ABORTED" | "ENABLED";
-// tslint:disable-next-line: no-let
-let retryState: RetryState = "ENABLED";
-
-// Stopped retry request
-export const stopRetryByClient = () => {
-  retryState = "ABORTED";
-};
-
 /**
  * In the context of a retriable task, when it returns a TransientError the
  * task can be executed again.
@@ -43,6 +34,11 @@ export type RetryAborted = "retry-aborted";
 export const RetryAborted: RetryAborted = "retry-aborted";
 
 /**
+ * Retry request until is "ABORTED"
+ */
+type RetryState = "ABORTED" | "ENABLED";
+
+/**
  * A Task that can be retried when it fails with a transient error
  */
 export type RetriableTask<E, T> = E extends TransientError
@@ -52,14 +48,26 @@ export type RetriableTask<E, T> = E extends TransientError
 /**
  * Wraps a RetriableTask with a number of retries
  */
+// tslint:disable-next-line: cognitive-complexity
 export function withRetries<E, T>(
   maxRetries: number,
-  backoff: (count: number) => Millisecond
+  backoff: (count: number) => Millisecond,
+  controllerRetry?: Promise<Response>
 ): (
   _: RetriableTask<E, T>,
   shouldAbort?: Promise<boolean>
 ) => TaskEither<E | MaxRetries | RetryAborted, T> {
   return (task, shouldAbort = Promise.resolve(false)) => {
+    // tslint:disable-next-line: no-let
+    let retryState: RetryState = "ENABLED";
+    // Check if the client stop the retries
+    if (controllerRetry) {
+      controllerRetry
+        .then(() => {
+          retryState = "ABORTED";
+        })
+        .catch();
+    }
     // Whether we must stop retrying
     // the abort process gets triggered when the shouldAbort promise resolves
     // to true. Not that aborting stops the retry process, it does NOT stop
@@ -78,8 +86,6 @@ export function withRetries<E, T>(
     ): TaskEither<E | TransientError | RetryAborted, T> => {
       // on first execution, count === 0
       if (count >= maxRetries - 1 || retryState === "ABORTED") {
-        // reset state
-        retryState = "ENABLED";
         // no more retries left
         return currentTask;
       }
