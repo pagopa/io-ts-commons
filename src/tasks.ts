@@ -86,6 +86,8 @@ export function withRetries<E, T>(
     ): TaskEither<E | TransientError | RetryAborted, T> => {
       // on first execution, count === 0
       if (count >= maxRetries - 1 || retryState === "ABORTED") {
+        // Reset state
+        retryState = "ENABLED";
         // no more retries left
         return currentTask;
       }
