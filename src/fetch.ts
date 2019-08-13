@@ -87,12 +87,14 @@ export function setFetchTimeout(
  */
 export const retriableFetch: (
   retryWrapper: (
-    _: RetriableTask<Error, Response>
-  ) => TaskEither<Error | MaxRetries | RetryAborted, Response>
-) => (f: typeof fetch) => typeof fetch = retryWrapper => f => (
-  input: Request | string,
-  init?: RequestInit
-) => {
+    _: RetriableTask<Error, Response>,
+    shouldAbort?: Promise<boolean>
+  ) => TaskEither<Error | MaxRetries | RetryAborted, Response>,
+  shouldAbort?: Promise<boolean>
+) => (f: typeof fetch) => typeof fetch = (
+  retryWrapper,
+  shouldAbort = Promise.resolve(false)
+) => f => (input: Request | string, init?: RequestInit) => {
   // wraps the fetch call with a TaskEither type, mapping certain promise
   // rejections to TransientError(s)
   const fetchTask = tryCatch<Error | TransientError, Response>(
@@ -123,7 +125,7 @@ export const retriableFetch: (
   );
 
   // wrap the fetch task with the provided retry wrapper
-  const fetchWithRetries = retryWrapper(fetchTask);
+  const fetchWithRetries = retryWrapper(fetchTask, shouldAbort);
 
   // return a new promise that gets resolved when the task resolves to a Right
   // or gets rejected in all other cases

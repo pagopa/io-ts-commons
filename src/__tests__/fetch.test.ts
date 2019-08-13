@@ -17,7 +17,7 @@ import {
   setFetchTimeout,
   toFetch
 } from "../fetch";
-import { timeoutPromise, withTimeout } from "../promises";
+import { timeoutPromise, withTimeout, DeferredPromise } from "../promises";
 import { MaxRetries, RetryAborted, withRetries } from "../tasks";
 import { Millisecond } from "../units";
 
@@ -128,6 +128,41 @@ describe("retriableFetch", () => {
       // fetch should abort with MaxRetries
       expect(server.requests().length).toEqual(3);
       expect(e).toEqual(MaxRetries);
+    }
+  });
+
+  it("should stop retrying on abort", async () => {
+    // creates a deferred promise that gets resolved by calling resolveShouldAbort
+    const { e1: shouldAbort, e2: resolveShouldAbort } = DeferredPromise<
+      boolean
+    >();
+
+    // a fetch that can be aborted and that gets cancelled after 10ms
+    const abortableFetch = AbortableFetch(fetch);
+    const timeoutFetch = toFetch(
+      setFetchTimeout(10 as Millisecond, abortableFetch)
+    );
+
+    // retry 100 times with 10ms delay
+    const constantBackoff = () => 10 as Millisecond;
+    const withSomeRetries = withRetries<Error, Response>(100, constantBackoff);
+
+    // wraps the abortable fetch with the retry logic
+    const fetchWithRetries = retriableFetch(withSomeRetries, shouldAbort)(
+      timeoutFetch
+    );
+
+    // stop retrying after 100ms
+    timeoutPromise(100 as Millisecond).then(() => resolveShouldAbort(true));
+
+    try {
+      // start the fetch request
+      await fetchWithRetries(longDelayUrl);
+    } catch (e) {
+      // fetch should abort with RetryAborted after 100ms and 5 requests
+      // 100ms / (10ms timeout + 10ms delay) = 5 requests total
+      expect(server.requests().length).toEqual(5);
+      expect(e).toEqual(RetryAborted);
     }
   });
 });
