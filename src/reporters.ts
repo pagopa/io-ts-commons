@@ -11,6 +11,9 @@ import { Reporter } from "io-ts/lib/Reporter";
  *   ".c.b is not a non empty string"
  */
 function getContextPath(context: Context): string {
+  if (context.length === 0) {
+    return "] (decoder info n/a)";
+  }
   const keysPath = context.map(({ key }) => key).join(".");
   const lastType = context[context.length - 1].type;
 
