@@ -9,6 +9,7 @@ import { NonNegativeNumber } from "../numbers";
 
 import { strictInterfaceWithOptionals } from "../types";
 
+import { left } from "fp-ts/lib/Either";
 import { ReadableReporter } from "../reporters";
 
 const TestType = t.interface(
@@ -77,5 +78,13 @@ describe("ReadableReporter", () => {
     const validation = aType.decode({ foo: true, x: true });
     const res = ReadableReporter.report(validation);
     expect(res).toEqual(["value [true] at [root.x] is not a known property"]);
+  });
+
+  it("should report validation errors on Errors with empty Context", () => {
+    const errors = left([{ context: [], value: "some value" }]);
+    const errorsReport = ReadableReporter.report(errors);
+    expect(errorsReport).toEqual([
+      'value ["some value"] at [root] (decoder info n/a)'
+    ]);
   });
 });
