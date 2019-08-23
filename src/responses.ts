@@ -5,13 +5,69 @@ import { errorsToReadableMessages } from "./reporters";
 import { enumType, withDefault } from "./types";
 import { UrlFromString } from "./url";
 
+// see https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 export enum HttpStatusCodeEnum {
+  HTTP_STATUS_200 = 200,
+  HTTP_STATUS_201 = 201,
+  HTTP_STATUS_202 = 202,
+  HTTP_STATUS_203 = 203,
+  HTTP_STATUS_204 = 204,
+  HTTP_STATUS_205 = 205,
+  HTTP_STATUS_206 = 206,
+  HTTP_STATUS_207 = 207,
+  HTTP_STATUS_208 = 208,
+
+  HTTP_STATUS_300 = 300,
+  HTTP_STATUS_301 = 301,
+  HTTP_STATUS_302 = 302,
+  HTTP_STATUS_303 = 303,
+  HTTP_STATUS_304 = 304,
+  HTTP_STATUS_305 = 305,
+  HTTP_STATUS_306 = 306,
+  HTTP_STATUS_307 = 307,
+  HTTP_STATUS_308 = 308,
+
   HTTP_STATUS_400 = 400,
+  HTTP_STATUS_401 = 401,
+  HTTP_STATUS_402 = 402,
   HTTP_STATUS_403 = 403,
   HTTP_STATUS_404 = 404,
+  HTTP_STATUS_405 = 405,
+  HTTP_STATUS_406 = 406,
+  HTTP_STATUS_407 = 407,
+  HTTP_STATUS_408 = 408,
   HTTP_STATUS_409 = 409,
+  HTTP_STATUS_410 = 410,
+  HTTP_STATUS_411 = 411,
+  HTTP_STATUS_412 = 412,
+  HTTP_STATUS_413 = 413,
+  HTTP_STATUS_414 = 414,
+  HTTP_STATUS_415 = 415,
+  HTTP_STATUS_416 = 416,
+  HTTP_STATUS_417 = 417,
+  HTTP_STATUS_418 = 418,
+  HTTP_STATUS_421 = 421,
+  HTTP_STATUS_422 = 422,
+  HTTP_STATUS_423 = 423,
+  HTTP_STATUS_424 = 424,
+  HTTP_STATUS_425 = 425,
+  HTTP_STATUS_426 = 426,
+  HTTP_STATUS_428 = 428,
   HTTP_STATUS_429 = 429,
-  HTTP_STATUS_500 = 500
+  HTTP_STATUS_431 = 431,
+  HTTP_STATUS_451 = 451,
+
+  HTTP_STATUS_500 = 500,
+  HTTP_STATUS_501 = 501,
+  HTTP_STATUS_502 = 502,
+  HTTP_STATUS_503 = 503,
+  HTTP_STATUS_504 = 504,
+  HTTP_STATUS_505 = 505,
+  HTTP_STATUS_506 = 506,
+  HTTP_STATUS_507 = 507,
+  HTTP_STATUS_508 = 508,
+  HTTP_STATUS_510 = 510,
+  HTTP_STATUS_511 = 511
 }
 export const HttpStatusCode = enumType<HttpStatusCodeEnum>(
   HttpStatusCodeEnum,
@@ -60,7 +116,8 @@ export function ResponseSuccessJson<T>(o: T): IResponseSuccessJson<T> {
     kind: undefined
   });
   return {
-    apply: res => res.status(200).json(kindlessObject),
+    apply: res =>
+      res.status(HttpStatusCodeEnum.HTTP_STATUS_200).json(kindlessObject),
     kind: "IResponseSuccessJson",
     value: o
   };
@@ -83,7 +140,7 @@ export function ResponseSuccessXml<T>(o: T): IResponseSuccessXml<T> {
   return {
     apply: res =>
       res
-        .status(200)
+        .status(HttpStatusCodeEnum.HTTP_STATUS_200)
         .set("Content-Type", "application/xml")
         .send(o),
     kind: "IResponseSuccessXml",
@@ -106,7 +163,8 @@ export function ResponsePermanentRedirect(
   location: UrlFromString
 ): IResponsePermanentRedirect {
   return {
-    apply: res => res.redirect(301, location.href),
+    apply: res =>
+      res.redirect(HttpStatusCodeEnum.HTTP_STATUS_301, location.href),
     detail: location.href,
     kind: "IResponsePermanentRedirect"
   };
@@ -133,7 +191,7 @@ export function ResponseSuccessRedirectToResource<T, V>(
     apply: res =>
       res
         .set("Location", url)
-        .status(201)
+        .status(HttpStatusCodeEnum.HTTP_STATUS_201)
         .json(payload),
     detail: url,
     kind: "IResponseSuccessRedirectToResource",
@@ -408,6 +466,30 @@ export function ResponseErrorInternal(detail: string): IResponseErrorInternal {
     ...ResponseErrorGeneric(
       HttpStatusCodeEnum.HTTP_STATUS_500,
       "Internal server error",
+      detail
+    ),
+    kind: "IResponseErrorInternal"
+  };
+}
+
+/**
+ * Interface for a response describing a service unavailable error.
+ */
+export interface IResponseErrorServiceUnavailable
+  extends IResponse<"IResponseErrorServiceUnavailable"> {}
+
+/**
+ * Returns a response describing a service unavailable error.
+ *
+ * @param detail The error message
+ */
+export function ResponseErrorServiceUnavailable(
+  detail: string
+): IResponseErrorInternal {
+  return {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_503,
+      "Service temporarily unavailable",
       detail
     ),
     kind: "IResponseErrorInternal"
