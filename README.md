@@ -12,7 +12,7 @@ This module provides code shared by the projects of the
 [Digital Citizenship](https://github.com/teamdigitale/digital-citizenship)
 initiative.
 
-Documentation is available [here](https://teamdigitale.github.io/italia-ts-commons/)
+Documentation is available [here](https://teamdigitale.github.io/io-ts-commons/)
 
 ## Contributing
 
