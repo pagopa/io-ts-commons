@@ -138,13 +138,14 @@ export const FiscalCode = PatternString(
 export type FiscalCode = t.TypeOf<typeof FiscalCode>;
 
 /**
- * A fake Fiscal Number (for persons)
+ * A sandbox Fiscal Code (used for development)
+ * Note that this pattern doesn't generate valid fiscal codes
  */
-export const FiscalCodeFake = PatternString(
+export const SandboxFiscalCode = PatternString(
   "^[A-Z]{6}[0-9]{2}A[0-9]{2}Y[0-9]{3}X$"
 );
 
-export type FiscalCodeFake = t.TypeOf<typeof FiscalCodeFake>;
+export type SandboxFiscalCode = t.TypeOf<typeof SandboxFiscalCode>;
 
 /**
  * A valid Fiscal Number (for organizations)
