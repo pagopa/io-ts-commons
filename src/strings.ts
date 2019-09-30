@@ -138,6 +138,15 @@ export const FiscalCode = PatternString(
 export type FiscalCode = t.TypeOf<typeof FiscalCode>;
 
 /**
+ * A fake Fiscal Number (for persons)
+ */
+export const FiscalCodeFake = PatternString(
+  "^[A-Z]{6}[0-9]{2}A[0-9]{2}Y[0-9]{3}X$"
+);
+
+export type FiscalCodeFake = t.TypeOf<typeof FiscalCodeFake>;
+
+/**
  * A valid Fiscal Number (for organizations)
  */
 export const OrganizationFiscalCode = PatternString("^[0-9]{11}$");
