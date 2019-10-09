@@ -103,7 +103,13 @@ describe("withRetries", () => {
     );
 
     // create a deferred promise that we will use to abort a RetriableTask
-    const { e1: abortPromise, e2: abortResolve } = DeferredPromise<boolean>();
+    // tslint:disable-next-line: no-let prefer-const
+    let { e1: abortPromise, e2: abortResolve } = DeferredPromise<boolean>();
+
+    function onResolvePromise() {
+      return abortPromise.then();
+    }
+
     const taskMock: () => Promise<
       Either<Error | TransientError, boolean>
     > = jest
@@ -123,7 +129,10 @@ describe("withRetries", () => {
     > = new TaskEither(new Task(taskMock));
 
     // Retry this task for max 5 times
-    const t = withConstantRetries(5)(transientFailingTaskMock, abortPromise);
+    const t = withConstantRetries(5)(
+      transientFailingTaskMock,
+      onResolvePromise
+    );
 
     const r = await t.run();
     expect(r.isLeft()).toBeTruthy();

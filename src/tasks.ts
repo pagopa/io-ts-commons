@@ -48,22 +48,23 @@ export function withRetries<E, T>(
   backoff: (count: number) => Millisecond
 ): (
   _: RetriableTask<E, T>,
-  shouldAbort?: Promise<boolean>
+  onShouldAbort?: () => Promise<boolean>
 ) => TaskEither<E | MaxRetries | RetryAborted, T> {
-  return (task, shouldAbort = Promise.resolve(false)) => {
+  return (task, onShouldAbort) => {
     // Whether we must stop retrying
-    // the abort process gets triggered when the shouldAbort promise resolves
-    // to true. Not that aborting stops the retry process, it does NOT stop
+    // the abort process gets triggered when the onShouldAbort async-func resolves
+    // to true. Note that aborting stops the retry process, it does NOT stop
     // the execution of the current task.
     // tslint:disable-next-line:no-let
     let mustAbort = false;
-    shouldAbort.then(
-      v => {
-        mustAbort = v;
-      },
-      _ => void 0
-    );
-
+    // tslint:disable-next-line: typedef
+    async function stopPollingListener() {
+      if (onShouldAbort !== undefined) {
+        mustAbort = await onShouldAbort();
+      }
+    }
+    // tslint:disable-next-line: no-floating-promises
+    stopPollingListener();
     const runTaskOnce = (
       count: number,
       currentTask: RetriableTask<E, T>

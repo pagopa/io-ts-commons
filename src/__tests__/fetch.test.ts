@@ -137,6 +137,10 @@ describe("retriableFetch", () => {
       boolean
     >();
 
+    function onResolvePromise() {
+      return shouldAbort.then();
+    }
+
     // a fetch that can be aborted and that gets cancelled after 10ms
     const abortableFetch = AbortableFetch(fetch);
     const timeoutFetch = toFetch(
@@ -148,7 +152,7 @@ describe("retriableFetch", () => {
     const withSomeRetries = withRetries<Error, Response>(100, constantBackoff);
 
     // wraps the abortable fetch with the retry logic
-    const fetchWithRetries = retriableFetch(withSomeRetries, shouldAbort)(
+    const fetchWithRetries = retriableFetch(withSomeRetries, onResolvePromise)(
       timeoutFetch
     );
 
