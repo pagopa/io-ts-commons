@@ -104,10 +104,10 @@ describe("withRetries", () => {
 
     // create a deferred promise that we will use to abort a RetriableTask
     // tslint:disable-next-line: no-let prefer-const
-    let { e1: abortPromise, e2: abortResolve } = DeferredPromise<boolean>();
+    const { e1: abortPromise, e2: abortResolve } = DeferredPromise<boolean>();
 
     function onResolvePromise() {
-      return abortPromise.then();
+      return Promise.resolve(true).then();
     }
 
     const taskMock: () => Promise<
