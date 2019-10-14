@@ -149,6 +149,25 @@ export function ResponseSuccessXml<T>(o: T): IResponseSuccessXml<T> {
 }
 
 /**
+ * Interface for a issuing a request accepted response.
+ */
+export interface IResponseSuccessAccepted
+  extends IResponse<"IResponseSuccessAccepted"> {}
+
+/**
+ * Returns a request accepted response.
+ */
+export function ResponseSuccessAccepted(
+  detail?: string
+): IResponseSuccessAccepted {
+  return {
+    apply: res => res.send(HttpStatusCodeEnum.HTTP_STATUS_202),
+    detail,
+    kind: "IResponseSuccessAccepted"
+  };
+}
+
+/**
  * Interface for a issuing a client redirect .
  */
 export interface IResponsePermanentRedirect
