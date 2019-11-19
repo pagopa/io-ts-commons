@@ -161,7 +161,7 @@ export function ResponseSuccessAccepted(
   detail?: string
 ): IResponseSuccessAccepted {
   return {
-    apply: res => res.send(HttpStatusCodeEnum.HTTP_STATUS_202),
+    apply: res => res.status(HttpStatusCodeEnum.HTTP_STATUS_202).json({}),
     detail,
     kind: "IResponseSuccessAccepted"
   };
