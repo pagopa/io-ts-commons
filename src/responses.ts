@@ -198,7 +198,7 @@ export interface IResponseSeeOtherRedirect
 /**
  * Returns a HTTP_303 redirect response.
  *
- * @param o The object to return to the client
+ * @param location The url to redirect the client to
  */
 export function ResponseSeeOtherRedirect(
   location: UrlFromString
