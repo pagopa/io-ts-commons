@@ -190,6 +190,28 @@ export function ResponsePermanentRedirect(
 }
 
 /**
+ * Interface for issuing a client see-other redirect (uncached by browser) .
+ */
+export interface IResponseSeeOtherRedirect
+  extends IResponse<"IResponseSeeOtherRedirect"> {}
+
+/**
+ * Returns a HTTP_303 redirect response.
+ *
+ * @param o The object to return to the client
+ */
+export function ResponseSeeOtherRedirect(
+  location: UrlFromString
+): IResponseSeeOtherRedirect {
+  return {
+    apply: res =>
+      res.redirect(HttpStatusCodeEnum.HTTP_STATUS_303, location.href),
+    detail: location.href,
+    kind: "IResponseSeeOtherRedirect"
+  };
+}
+
+/**
  * Interface for a successful response returning a redirect to a resource.
  */
 export interface IResponseSuccessRedirectToResource<T, V>
