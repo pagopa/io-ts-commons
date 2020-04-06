@@ -78,14 +78,14 @@ const getKeepaliveHttpsFetch: (
   };
 };
 
-// HTTP-only fetch, eventually with keepalive agent
+// HTTP-only fetch, with optional keepalive agent
 export const getHttpFetch = (env: typeof process.env): typeof fetch =>
   isFetchKeepaliveEnabled(env)
     ? getKeepaliveHttpFetch(getKeepAliveAgentOptions(env))
     : // tslint:disable-next-line: no-any
       (nodeFetch as any);
 
-// HTTPs-only fetch, eventually with keepalive agent
+// HTTPs-only fetch, with optional keepalive agent
 export const getHttpsFetch = (env: typeof process.env): typeof fetch =>
   isFetchKeepaliveEnabled(env)
     ? getKeepaliveHttpsFetch(getKeepAliveAgentOptions(env))
