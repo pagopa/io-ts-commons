@@ -15,7 +15,7 @@
     "build": "tsc",
     "postversion": "git push && git push --tags",
     "postinstall": "patch-package",
-    "test": "jest",
+    "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 jest",
     "lint": "tslint --project .",
     "check-typings": "tsc -p typings-checker",
     "typedoc": "typedoc --out docs/ --exclude '**/__tests__/*' --module commonjs --theme minimal src",
