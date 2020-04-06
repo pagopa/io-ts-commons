@@ -90,52 +90,43 @@ const envWithKeepalive = {
   FETCH_KEEPALIVE_ENABLED: "true"
 };
 
+const anHttpUrl = `http://${HTTP_TEST_HOST}:${HTTP_TEST_PORT}/agent`;
+const anHttpsUrl = `https://${HTTPS_TEST_HOST}:${HTTPS_TEST_PORT}/agent`;
+
 describe("HttpAgentKeepAlive", () => {
   const server = createServerMock();
   beforeAll(server.start);
   afterAll(server.stop);
 
-  it("should set the keepalive http header", async () => {
+  it("should use keepalive for http request", async () => {
     const fetch = getHttpFetch(envWithKeepalive);
-    const res = await fetch(`http://${HTTP_TEST_HOST}:${HTTP_TEST_PORT}/agent`);
+    const res = await fetch(anHttpUrl);
     expect(res.headers.get("connection")).toContain("keep-alive");
-    const res2 = await fetch(
-      `http://${HTTP_TEST_HOST}:${HTTP_TEST_PORT}/agent`
-    );
+    const res2 = await fetch(anHttpUrl);
     expect(await res2.json()).toEqual(await res.json());
   });
 
-  it("should not set the keepalive http header", async () => {
+  it("should not use keepalive for http request", async () => {
     const fetch = getHttpFetch({});
-    const res = await fetch(`http://${HTTP_TEST_HOST}:${HTTP_TEST_PORT}/agent`);
+    const res = await fetch(anHttpUrl);
     expect(res.headers.get("connection")).toContain("close");
-    const res2 = await fetch(
-      `http://${HTTP_TEST_HOST}:${HTTP_TEST_PORT}/agent`
-    );
+    const res2 = await fetch(anHttpUrl);
     expect(await res2.json()).not.toEqual(await res.json());
   });
 
-  it("should set the keepalive https header", async () => {
+  it("should use keepalive for https request", async () => {
     const fetch = getHttpsFetch(envWithKeepalive);
-    const res = await fetch(
-      `https://${HTTPS_TEST_HOST}:${HTTPS_TEST_PORT}/agent`
-    );
+    const res = await fetch(anHttpsUrl);
     expect(res.headers.get("connection")).toContain("keep-alive");
-    const res2 = await fetch(
-      `https://${HTTPS_TEST_HOST}:${HTTPS_TEST_PORT}/agent`
-    );
+    const res2 = await fetch(anHttpsUrl);
     expect(await res2.json()).toEqual(await res.json());
   });
 
-  it("should not set the keepalive https header", async () => {
+  it("should not use keepalive for https request", async () => {
     const fetch = getHttpsFetch({});
-    const res = await fetch(
-      `https://${HTTPS_TEST_HOST}:${HTTPS_TEST_PORT}/agent`
-    );
+    const res = await fetch(anHttpsUrl);
     expect(res.headers.get("connection")).toContain("close");
-    const res2 = await fetch(
-      `https://${HTTPS_TEST_HOST}:${HTTPS_TEST_PORT}/agent`
-    );
+    const res2 = await fetch(anHttpsUrl);
     expect(await res2.json()).not.toEqual(await res.json());
   });
 });
