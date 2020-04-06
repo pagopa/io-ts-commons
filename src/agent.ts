@@ -35,13 +35,25 @@ export const getKeepAliveAgentOptions = (env: typeof process.env) => ({
       : parseInt(env.FETCH_KEEPALIVE_TIMEOUT, 10)
 });
 
+// We need the following two exports to prevent the caller module
+// to access the unptached version of agentkeepalive which has a bug
+// @see https://github.com/node-modules/agentkeepalive/issues/76
+
+// HTTP-only agent, with optional keepalive agent
+export const newHttpAgent = (httpOptions: agentkeepalive.HttpOptions) =>
+  new agentkeepalive(httpOptions);
+
+// HTTPs-only agent, with optional keepalive agent
+export const newHttpsAgent = (httpsOptions: agentkeepalive.HttpsOptions) =>
+  new agentkeepalive.HttpsAgent(httpsOptions);
+
 // Returns a fetch instance backed by a keepalive-enabled HTTP agent
 const getKeepaliveHttpFetch: (
   _: agentkeepalive.HttpOptions
 ) => typeof fetch = httpOptions => {
   // custom HTTP agent that will reuse sockets
   // see https://github.com/node-modules/agentkeepalive#new-agentoptions
-  const httpAgent = new agentkeepalive(httpOptions);
+  const httpAgent = newHttpAgent(httpOptions);
 
   return (input, init) => {
     const initWithKeepalive = {
@@ -59,10 +71,10 @@ const getKeepaliveHttpFetch: (
 // Returns a fetch instance backed by a keepalive-enabled HTTP agent
 const getKeepaliveHttpsFetch: (
   _: agentkeepalive.HttpsOptions
-) => typeof fetch = httpOptions => {
+) => typeof fetch = httpsOptions => {
   // custom HTTP agent that will reuse sockets
   // see https://github.com/node-modules/agentkeepalive#new-agentoptions
-  const httpAgent = new agentkeepalive.HttpsAgent(httpOptions);
+  const httpAgent = newHttpsAgent(httpsOptions);
 
   // tslint:disable-next-line: no-identical-functions
   return (input, init) => {
