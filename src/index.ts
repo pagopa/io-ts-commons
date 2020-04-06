@@ -61,3 +61,6 @@ export { OptionEither };
 
 import * as OptionValidation from "./OptionValidation";
 export { OptionValidation };
+
+import * as agent from "./agent";
+export { agent };
