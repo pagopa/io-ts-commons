@@ -11,10 +11,9 @@
     "lib/"
   ],
   "scripts": {
-    "prepare": "rimraf lib && npm run build",
+    "prepare": "patch-package && rimraf lib && npm run build",
     "build": "tsc",
     "postversion": "git push && git push --tags",
-    "postinstall": "patch-package",
     "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 jest",
     "lint": "tslint --project .",
     "check-typings": "tsc -p typings-checker",
