@@ -1,11 +1,11 @@
 {
   "name": "italia-ts-commons",
   "version": "5.1.13",
-  "description": "Shared TypeScript code for the Digital Citizenship projects",
+  "description": "Shared TypeScript code for the IO project",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "repository": "https://github.com/teamdigitale/italia-ts-commons",
-  "author": "https://teamdigitale.governo.it",
+  "repository": "https://github.com/pagopa/io-ts-commons",
+  "author": "https://www.pagopa.gov.it",
   "license": "MIT",
   "files": [
     "lib/"
@@ -37,6 +37,7 @@
     "node-fetch": "^2.3.0",
     "patch-package": "^6.2.2",
     "prettier": "^1.12.1",
+    "release-it": "^13.5.1",
     "rimraf": "^2.6.2",
     "ts-jest": "^23.0.1",
     "tslint": "^5.1.0",
