@@ -11,7 +11,7 @@
     "lib/"
   ],
   "scripts": {
-    "prepare": "patch-package && rimraf lib && npm run build",
+    "prepare": "rimraf lib && npm run build",
     "build": "tsc",
     "postversion": "git push && git push --tags",
     "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 jest",
@@ -44,7 +44,7 @@
     "typescript": "^3.6.0"
   },
   "dependencies": {
-    "agentkeepalive": "^4.1.0",
+    "agentkeepalive": "https://github.com/pagopa/agentkeepalive#v4.1.1",
     "fp-ts": "1.12.0",
     "io-ts": "1.8.5",
     "json-set-map": "^1.0.2",
