@@ -1,4 +1,4 @@
-import { hybridDecrypt, hybridEncrypt } from "../encrypt";
+import { fromEncryptedPayload, toEncryptedPayload } from "../encrypt";
 
 const rsaPublicKey = `-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDhiXpvLD8UMMUy1T2JCzo/Sj5E
@@ -27,9 +27,12 @@ const aTextToEncrypt = "<xml>A text to encrypt</xml>";
 
 describe("encrypt", () => {
   it("should encrypt and decrypt a string with combination AES/RSA", async () => {
-    const tuple = hybridEncrypt(aTextToEncrypt, rsaPublicKey);
-    expect(tuple).toHaveProperty("encryptedOutput");
-    const decryptedString = hybridDecrypt(tuple, rsaPrivateKey);
+    const encryptedPayload = toEncryptedPayload(rsaPublicKey, aTextToEncrypt);
+    expect(encryptedPayload).toHaveProperty("encryptedOutput");
+    const decryptedString = fromEncryptedPayload(
+      rsaPrivateKey,
+      encryptedPayload
+    );
     expect(decryptedString).toEqual(aTextToEncrypt);
   });
 });
