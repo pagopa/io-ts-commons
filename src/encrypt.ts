@@ -1,15 +1,18 @@
 import * as crypto from "crypto";
+import { Either, toError, tryCatch2v } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
 // AES-128-CBC requires 16 random bytes for pseudo randomic string used in crypto algorithm
 const IV_LENGTH = 16;
-const AES_LENGTH = 16;
+
+// aes-128-cbc uses a 128 bit key (16 bytes * 8)
+const AES_KEY_LENGTH = 16;
 
 const EncryptedPayload = t.interface({
-  // Hybrid encrypted result (Base64)
-  encryptedPayload: t.string,
+  // encrypted text (Base64)
+  cypherText: t.string,
 
-  // random AES string (Base64)
+  // random string to feed AES (Base64)
   iv: t.string,
 
   // AES Key encrypted with RSA public key (Base64)
@@ -20,42 +23,47 @@ export type EncryptedPayload = t.TypeOf<typeof EncryptedPayload>;
 
 export function toEncryptedPayload(
   rsaPubKey: string,
-  payload: string
-): EncryptedPayload {
-  const iv = crypto.randomBytes(IV_LENGTH);
-  const aesKey = crypto.randomBytes(AES_LENGTH);
-  const cipher = crypto.createCipheriv("aes-128-cbc", Buffer.from(aesKey), iv);
-  const encryptedPayload = Buffer.concat([
-    cipher.update(payload),
-    cipher.final()
-  ]).toString("base64");
-  const encryptedKey = crypto
-    .publicEncrypt(rsaPubKey, Buffer.from(aesKey))
-    .toString("base64");
-  return {
-    encryptedKey,
-    encryptedPayload,
-    iv: iv.toString("base64")
-  } as EncryptedPayload;
+  plainText: string
+): Either<Error, EncryptedPayload> {
+  return tryCatch2v(() => {
+    const iv = crypto.randomBytes(IV_LENGTH);
+    const aesKey = crypto.randomBytes(AES_KEY_LENGTH);
+    const cipher = crypto.createCipheriv("aes-128-cbc", aesKey, iv);
+    // @see https://nodejs.org/api/crypto.html#crypto_class_cipher
+    const cypherText = Buffer.concat([
+      cipher.update(plainText),
+      cipher.final()
+    ]).toString("base64");
+    const encryptedKey = crypto
+      .publicEncrypt(rsaPubKey, aesKey)
+      .toString("base64");
+    return {
+      cypherText,
+      encryptedKey,
+      iv: iv.toString("base64")
+    };
+  }, toError);
 }
 
-export function fromEncryptedPayload(
+export function toPlainText(
   rsaPrivateKey: string,
   encryptedPayload: EncryptedPayload
-): string {
-  const iv = Buffer.from(encryptedPayload.iv, "base64");
-  const aesKey = crypto.privateDecrypt(
-    rsaPrivateKey,
-    Buffer.from(encryptedPayload.encryptedKey, "base64")
-  );
-  const decipher = crypto.createDecipheriv(
-    "aes-128-cbc",
-    Buffer.from(aesKey),
-    iv
-  );
-  const decrypted = decipher.update(
-    Buffer.from(encryptedPayload.encryptedPayload, "base64")
-  );
-  const output = Buffer.concat([decrypted, decipher.final()]);
-  return output.toString("utf-8");
+): Either<Error, string> {
+  return tryCatch2v(() => {
+    const iv = Buffer.from(encryptedPayload.iv, "base64");
+    const aesKey = crypto.privateDecrypt(
+      rsaPrivateKey,
+      Buffer.from(encryptedPayload.encryptedKey, "base64")
+    );
+    const decipher = crypto.createDecipheriv(
+      "aes-128-cbc",
+      Buffer.from(aesKey),
+      iv
+    );
+    const decrypted = decipher.update(
+      Buffer.from(encryptedPayload.cypherText, "base64")
+    );
+    const plainText = Buffer.concat([decrypted, decipher.final()]);
+    return plainText.toString("utf-8");
+  }, toError);
 }

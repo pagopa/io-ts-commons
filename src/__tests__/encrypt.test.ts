@@ -1,4 +1,5 @@
-import { fromEncryptedPayload, toEncryptedPayload } from "../encrypt";
+import { isLeft, isRight } from "fp-ts/lib/Either";
+import { toEncryptedPayload, toPlainText } from "../encrypt";
 
 const rsaPublicKey = `-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDhiXpvLD8UMMUy1T2JCzo/Sj5E
@@ -27,12 +28,28 @@ const aTextToEncrypt = "<xml>A text to encrypt</xml>";
 
 describe("encrypt", () => {
   it("should encrypt and decrypt a string with combination AES/RSA", async () => {
-    const encryptedPayload = toEncryptedPayload(rsaPublicKey, aTextToEncrypt);
-    expect(encryptedPayload).toHaveProperty("encryptedOutput");
-    const decryptedString = fromEncryptedPayload(
-      rsaPrivateKey,
-      encryptedPayload
+    const errorOrEncryptedPayload = toEncryptedPayload(
+      rsaPublicKey,
+      aTextToEncrypt
     );
-    expect(decryptedString).toEqual(aTextToEncrypt);
+    expect(isRight(errorOrEncryptedPayload)).toBeTruthy();
+    if (isRight(errorOrEncryptedPayload)) {
+      const errorOrdecryptedString = toPlainText(
+        rsaPrivateKey,
+        errorOrEncryptedPayload.value
+      );
+      expect(errorOrdecryptedString.value).toEqual(aTextToEncrypt);
+    }
+  });
+  it("should catch any exception thrown", async () => {
+    const invalidKey = "foo";
+    const errorOrEncryptedPayload = toEncryptedPayload(
+      invalidKey,
+      aTextToEncrypt
+    );
+    expect(isLeft(errorOrEncryptedPayload)).toBeTruthy();
+    if (isLeft(errorOrEncryptedPayload)) {
+      expect(errorOrEncryptedPayload.value).toBeInstanceOf(Error);
+    }
   });
 });
