@@ -1,21 +1,13 @@
 import * as appInsights from "applicationinsights";
 import { DistributedTracingModes } from "applicationinsights";
 // tslint:disable-next-line: no-submodule-imports
-import { CorrelationContextManager } from "applicationinsights/out/AutoCollection/CorrelationContextManager";
-// tslint:disable-next-line: no-submodule-imports
 import Config = require("applicationinsights/out/Library/Config");
-// tslint:disable-next-line: no-submodule-imports
-import Traceparent = require("applicationinsights/out/Library/Traceparent");
-import { fromNullable } from "fp-ts/lib/Option";
-import { Context } from "vm";
 import {
   getKeepAliveAgentOptions,
   isFetchKeepaliveEnabled,
   newHttpAgent,
   newHttpsAgent
 } from "./agent";
-import { NonEmptyString } from "./strings";
-import { Millisecond } from "./units";
 
 interface IInsightsRequestData {
   baseType: "RequestData";
@@ -173,43 +165,4 @@ export function initAppInsights(
     ...config,
     ...agentOpts
   });
-}
-
-const NANOSEC_PER_MILLISEC = 1e6;
-const MILLISEC_PER_SEC = 1e3;
-
-/**
- * Wraps a function handler with a telemetry context,
- * useful in case you want to set correlation id.
- */
-export function withAppInsightsContext<R>(context: Context, f: () => R): R {
-  // @see https://github.com/Azure/azure-functions-host/issues/5170#issuecomment-553583362
-  const traceId = fromNullable(context.traceContext).fold(
-    context.invocationId,
-    tc =>
-      NonEmptyString.decode(tc.traceparent).fold(
-        _ => context.invocationId,
-        _ => new Traceparent(_).traceId
-      )
-  );
-  const correlationContext = CorrelationContextManager.generateContextObject(
-    traceId,
-    traceId,
-    context.executionContext.functionName
-  );
-  return CorrelationContextManager.runWithContext(correlationContext, () => {
-    return f();
-  });
-}
-
-/**
- * Small helper function that gets the difference in milliseconds
- * from an initial time obtained calling process.hrtime().
- * Used when profiling code.
- */
-// tslint:disable-next-line:readonly-array
-export function diffInMilliseconds(startHrtime: [number, number]): Millisecond {
-  const diff = process.hrtime(startHrtime);
-  return (diff[0] * MILLISEC_PER_SEC +
-    diff[1] / NANOSEC_PER_MILLISEC) as Millisecond;
 }
