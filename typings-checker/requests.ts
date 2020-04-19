@@ -34,12 +34,10 @@ const r1: R1 = ApiRequestBuilder.ofPost()
 
 const f1a: TypeofApiCall<R1> = createFetchRequestForApi(r1);
 
-const f1b: (
-  _: {
-    readonly param1: string;
-    readonly param2: string;
-  }
-) => Promise<t.Validation<string>> = f1a;
+const f1b: (_: {
+  readonly param1: string;
+  readonly param2: string;
+}) => Promise<t.Validation<string>> = f1a;
 
 // --------
 

@@ -75,13 +75,11 @@ describe("withRetries", () => {
   it("should return the result when the task resolves", async () => {
     const taskMock = jest
       .fn()
-      .mockResolvedValueOnce(
-        left<Error | TransientError, string>(TransientError)
-      )
-      .mockResolvedValueOnce(
-        left<Error | TransientError, string>(TransientError)
-      )
-      .mockResolvedValueOnce(right<Error | TransientError, string>("ok"));
+      .mockImplementationOnce(() => Promise.resolve(left(TransientError)))
+      .mockImplementationOnce(() => Promise.resolve(left(TransientError)))
+      .mockImplementationOnce(() =>
+        Promise.resolve(right<Error | TransientError, string>("ok"))
+      );
     const transientFailingTaskMock: RetriableTask<
       Error,
       string

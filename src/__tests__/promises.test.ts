@@ -1,3 +1,5 @@
+// tslint:disable no-any
+
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { DeferredPromise, withTimeout } from "../promises";
 
@@ -8,7 +10,7 @@ describe("withTimeout", () => {
 
     const r = await withTimeout(
       Promise.resolve(true),
-      1000,
+      1000 as any,
       _ => neverCompletesP
     );
 
@@ -22,7 +24,7 @@ describe("withTimeout", () => {
     // tslint:disable-next-line:promise-must-complete no-empty
     const neverCompletesP = new Promise<void>(() => {});
 
-    const r = await withTimeout(neverCompletesP, 1000, _ =>
+    const r = await withTimeout(neverCompletesP, 1000 as any, _ =>
       Promise.resolve<void>(undefined)
     );
 
@@ -35,14 +37,16 @@ describe("withTimeout", () => {
 
 describe("DeferredPromise", () => {
   it("should resolve asyncronously", async () => {
-    const { e1: p, e2: res, e3: rej } = DeferredPromise<number>();
+    const { e1: p, e2: res } = DeferredPromise<number>();
     res(1);
+    // tslint:disable-next-line: no-floating-promises
     expect(p).resolves.toEqual(1);
   });
 
   it("should reject asyncronously", async () => {
-    const { e1: p, e2: res, e3: rej } = DeferredPromise<number>();
+    const { e1: p, e3: rej } = DeferredPromise<number>();
     rej(new Error("failed"));
+    // tslint:disable-next-line: no-floating-promises
     expect(p).rejects.toEqual(new Error("failed"));
   });
 });

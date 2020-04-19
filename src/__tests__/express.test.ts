@@ -15,7 +15,7 @@ describe("toExpressHandler", () => {
       return mockResponse(req.params.test);
     });
     // tslint:disable-next-line:no-any
-    const res = await handler(mockRequest as express.Request, {} as any);
+    handler(mockRequest as any, {} as any);
     expect(mockResponse).toHaveBeenCalledTimes(1);
   });
 });
