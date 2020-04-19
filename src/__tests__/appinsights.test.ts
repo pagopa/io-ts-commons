@@ -14,14 +14,10 @@ describe("Create an App Insights Telemetry Client", () => {
 
   it("should create a new App Insights Telemetry Client with tracing enabled", () => {
     // tslint:disable-next-line: no-unused-expression
-    const telemetryClient = initAppInsights(
-      expectedAppInsightsKey,
-      {},
-      {
-        applicationVersion: "1.1.1",
-        cloudRole: "ai.role"
-      }
-    );
+    const telemetryClient = initAppInsights(expectedAppInsightsKey, {
+      applicationVersion: "1.1.1",
+      cloudRole: "ai.role"
+    });
     expect(mockSetup).toBeCalledWith(expectedAppInsightsKey);
     expect(spySetAutoDependencyCorrelation).not.toBeCalled();
     expect(spyStart).toHaveReturnedWith(Configuration);
@@ -30,15 +26,11 @@ describe("Create an App Insights Telemetry Client", () => {
 
   it("should create a new App Insights Telemetry Client with tracing disabled", () => {
     // tslint:disable-next-line: no-unused-expression
-    const telemetryClient = initAppInsights(
-      expectedAppInsightsKey,
-      {},
-      {
-        applicationVersion: "1.1.1",
-        cloudRole: "ai.role",
-        isTracingDisabled: true
-      }
-    );
+    const telemetryClient = initAppInsights(expectedAppInsightsKey, {
+      applicationVersion: "1.1.1",
+      cloudRole: "ai.role",
+      isTracingDisabled: true
+    });
     expect(mockSetup).toBeCalledWith(expectedAppInsightsKey);
     expect(spySetAutoDependencyCorrelation).toBeCalledWith(false);
     expect(spyStart).toHaveReturnedWith(Configuration);
@@ -61,17 +53,13 @@ describe("Create an App Insights Telemetry Client", () => {
   });
   it("should set client configuration settings", () => {
     // tslint:disable-next-line: no-unused-expression
-    const telemetryClient = initAppInsights(
-      expectedAppInsightsKey,
-      {},
-      {
-        applicationVersion: "1.1.1",
-        cloudRole: "ai.role",
-        // tslint:disable-next-line: no-any
-        httpAgent: {} as any,
-        samplingPercentage: 20
-      }
-    );
+    const telemetryClient = initAppInsights(expectedAppInsightsKey, {
+      applicationVersion: "1.1.1",
+      cloudRole: "ai.role",
+      // tslint:disable-next-line: no-any
+      httpAgent: {} as any,
+      samplingPercentage: 20
+    });
     expect(mockSetup).toBeCalledWith(expectedAppInsightsKey);
     expect(telemetryClient).toEqual(appInsights.defaultClient);
     expect(telemetryClient.config.httpAgent).not.toBeUndefined();

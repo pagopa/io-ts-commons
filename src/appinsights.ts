@@ -145,8 +145,8 @@ export function removeQueryParamsPreprocessor(
  */
 export function initAppInsights(
   aiInstrumentationKey: string,
-  env: typeof process.env = process.env,
-  config?: ApplicationInsightsConfig
+  config?: ApplicationInsightsConfig,
+  env: typeof process.env = process.env
 ): ReturnType<typeof startAppInsights> {
   // @see https://github.com/pagopa/io-ts-commons/blob/master/src/agent.ts
   // @see https://docs.microsoft.com/it-it/azure/load-balancer/load-balancer-outbound-connections
