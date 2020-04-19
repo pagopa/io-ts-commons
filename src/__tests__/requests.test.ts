@@ -31,12 +31,18 @@ type GetSimpleT = IGetApiRequestType<
 
 const getSimpleT: GetSimpleT = {
   headers: () => ({
+    // tslint:disable-next-line: no-duplicate-string
     Authorization: "Bearer: 123"
   }),
   method: "get",
   query: params => ({ param1: `${params.p1}`, param2: params.p2 }),
   response_decoder: basicResponseDecoder(SimpleModel),
   url: params => `/api/v1/simples/${params.id}`
+};
+
+const processedValue = {
+  id: 123,
+  name: "name processed"
 };
 
 const getSimpleTP: GetSimpleT = {
@@ -69,22 +75,17 @@ const postSimpleT: PostSimpleT = {
   url: () => "/api/v1/simples"
 };
 
-function mockFetch<T>(status: number, json: T): typeof fetch {
-  return jest.fn(() => ({
+const mockFetch = <T>(status: number, json: T) => {
+  return (jest.fn(() => ({
     json: () => Promise.resolve(json),
     status
-  }));
-}
+  })) as unknown) as typeof fetch;
+};
 
 const baseUrl = "https://localhost";
 const simpleValue = {
   id: 123,
   name: "name"
-};
-
-const processedValue = {
-  id: 123,
-  name: "name processed"
 };
 
 const simpleParams = {
@@ -102,10 +103,12 @@ describe("A simple GET API", () => {
       fetchApi
     });
 
-    const res = await getSimple(simpleParams);
+    await getSimple(simpleParams);
 
     expect(fetchApi).toHaveBeenCalledTimes(1);
-    expect(fetchApi).toHaveBeenCalledWith(
+    expect(
+      fetchApi
+    ).toHaveBeenCalledWith(
       "https://localhost/api/v1/simples/123?param1=1&param2=should%20be%26encoded",
       { headers: { Authorization: "Bearer: 123" }, method: "get" }
     );
@@ -180,7 +183,7 @@ describe("A simple POST API", () => {
       fetchApi
     });
 
-    const res = await postSimple({
+    await postSimple({
       value: simpleValue
     });
 
@@ -226,7 +229,7 @@ describe("Complex types", () => {
       fetchApi
     });
 
-    const res = await getComplex({
+    await getComplex({
       created_at: new Date()
     });
 

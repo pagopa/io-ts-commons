@@ -148,9 +148,10 @@ describe("retriableFetch", () => {
     const withSomeRetries = withRetries<Error, Response>(100, constantBackoff);
 
     // wraps the abortable fetch with the retry logic
-    const fetchWithRetries = retriableFetch(withSomeRetries, shouldAbort)(
-      timeoutFetch
-    );
+    const fetchWithRetries = retriableFetch(
+      withSomeRetries,
+      shouldAbort
+    )(timeoutFetch);
 
     // stop retrying after 100ms
     timeoutPromise(100 as Millisecond).then(() => resolveShouldAbort(true));

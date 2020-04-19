@@ -115,23 +115,18 @@ export function withoutUndefinedValues<T, K extends keyof T>(obj: T): T {
   // filtered out by the following code, so the output type T is always
   // a valid T
   const keys = Object.keys(obj);
-  return keys.reduce(
-    (acc, key) => {
-      const value = obj[key as K];
-      return value !== undefined
-        ? {
-            // see https://github.com/Microsoft/TypeScript/pull/13288
-            // tslint:disable-next-line:no-any
-            ...(acc as any),
-            // tslint:disable-next-line:no-any
-            [key]: isObject(value as any)
-              ? withoutUndefinedValues(value)
-              : value
-          }
-        : acc;
-    },
-    {} as T
-  );
+  return keys.reduce((acc, key) => {
+    const value = obj[key as K];
+    return value !== undefined
+      ? {
+          // see https://github.com/Microsoft/TypeScript/pull/13288
+          // tslint:disable-next-line:no-any
+          ...(acc as any),
+          // tslint:disable-next-line:no-any
+          [key]: isObject(value as any) ? withoutUndefinedValues(value) : value
+        }
+      : acc;
+  }, {} as T);
 }
 
 /**
@@ -205,7 +200,7 @@ export type ReplaceProp1<T, P1 extends keyof T, A> = { [K in P1]: A } &
   Pick<T, Exclude<keyof T, P1>>;
 
 export type ReplaceProp2<T, P1 extends keyof T, P2 extends keyof T[P1], A> = {
-  [K in P1]: ReplaceProp1<T[K], P2, A>
+  [K in P1]: ReplaceProp1<T[K], P2, A>;
 } &
   Pick<T, Exclude<keyof T, P1>>;
 

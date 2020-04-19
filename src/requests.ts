@@ -33,7 +33,7 @@ export type RequestHeaderKey =
  * Describes a set of headers whose keys are of type RequestHeaderKey
  */
 export type RequestHeaders<HS extends RequestHeaderKey> = {
-  [key in HS]: string
+  [key in HS]: string;
 };
 
 /**
@@ -83,7 +83,7 @@ export type BasicResponseHeaderKey =
   | "Transfer-Encoding";
 
 export type ResponseHeaders<H extends string = never> = {
-  [key in BasicResponseHeaderKey | H]?: string
+  [key in BasicResponseHeaderKey | H]?: string;
 };
 
 /**
