@@ -13,6 +13,9 @@ import {
 import { ITuple2, Tuple2 } from "./tuples";
 import { Millisecond } from "./units";
 
+// tslint:disable-next-line: no-submodule-imports
+import "abort-controller/polyfill";
+
 /**
  * An instance of fetch, along its associated AbortController
  */

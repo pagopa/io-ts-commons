@@ -1,15 +1,5 @@
-import { AbortController } from "abort-controller";
 import ServerMock = require("mock-http-server");
-import nodeFetch, { FetchError } from "node-fetch";
-
-//
-// We need to override the global fetch and AbortController to make the tests
-// compatible with node-fetch
-//
-// tslint:disable-next-line:no-object-mutation no-any
-(global as any).fetch = nodeFetch;
-// tslint:disable-next-line:no-object-mutation no-any
-(global as any).AbortController = AbortController;
+import nodeFetch from "node-fetch";
 
 import {
   AbortableFetch,
@@ -17,9 +7,12 @@ import {
   setFetchTimeout,
   toFetch
 } from "../fetch";
-import { timeoutPromise, withTimeout, DeferredPromise } from "../promises";
+import { DeferredPromise, timeoutPromise } from "../promises";
 import { MaxRetries, RetryAborted, withRetries } from "../tasks";
 import { Millisecond } from "../units";
+
+// tslint:disable-next-line: no-any no-object-mutation
+(global as any).fetch = nodeFetch;
 
 const TEST_HOST = "localhost";
 const TEST_PORT = 40000;
@@ -67,6 +60,7 @@ describe("AbortableFetch", () => {
     await timeoutPromise(100 as Millisecond);
     abortController.abort();
 
+    // tslint:disable-next-line: no-floating-promises
     expect(responsePromise).rejects.toEqual(
       expect.objectContaining({
         message: "The user aborted a request."
@@ -154,6 +148,7 @@ describe("retriableFetch", () => {
     )(timeoutFetch);
 
     // stop retrying after 100ms
+    // tslint:disable-next-line: no-floating-promises
     timeoutPromise(100 as Millisecond).then(() => resolveShouldAbort(true));
 
     try {
