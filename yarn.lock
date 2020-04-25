@@ -461,9 +461,10 @@ agent-base@4, agent-base@^4.3.0:
   dependencies:
     es6-promisify "^5.0.0"
 
-"agentkeepalive@https://github.com/pagopa/agentkeepalive#v4.1.1":
-  version "4.1.0"
-  resolved "https://github.com/pagopa/agentkeepalive#91309bcab216dccbd08631e227a974afbfe807fb"
+agentkeepalive@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/agentkeepalive/-/agentkeepalive-4.1.2.tgz#d7bc3bafd7ea88032f6be22b6f1389b3d42c9c91"
+  integrity sha512-waNHE7tQBBn+2qXucI8HY0o2Y0OBPWldWOWsZwY71JcCm4SvrPnWdceFfB5NIXSqE8Ewq6VR/Qt5b1i69P6KCQ==
   dependencies:
     debug "^4.1.0"
     depd "^1.1.2"
