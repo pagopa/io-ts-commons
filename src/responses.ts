@@ -151,19 +151,26 @@ export function ResponseSuccessXml<T>(o: T): IResponseSuccessXml<T> {
 /**
  * Interface for a issuing a request accepted response.
  */
-export interface IResponseSuccessAccepted
-  extends IResponse<"IResponseSuccessAccepted"> {}
+export interface IResponseSuccessAccepted<V = undefined>
+  extends IResponse<"IResponseSuccessAccepted"> {
+  readonly payload?: V;
+}
 
 /**
  * Returns a request accepted response.
  */
-export function ResponseSuccessAccepted(
-  detail?: string
-): IResponseSuccessAccepted {
+export function ResponseSuccessAccepted<V>(
+  detail?: string,
+  payload?: V
+): IResponseSuccessAccepted<V> {
   return {
-    apply: res => res.send(HttpStatusCodeEnum.HTTP_STATUS_202),
+    apply: res =>
+      payload === undefined
+        ? res.send(HttpStatusCodeEnum.HTTP_STATUS_202)
+        : res.status(HttpStatusCodeEnum.HTTP_STATUS_202).json(payload),
     detail,
-    kind: "IResponseSuccessAccepted"
+    kind: "IResponseSuccessAccepted",
+    payload
   };
 }
 
