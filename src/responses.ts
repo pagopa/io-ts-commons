@@ -543,3 +543,20 @@ export function ResponseErrorServiceUnavailable(
     kind: "IResponseErrorInternal"
   };
 }
+
+/**
+ * Returns a response describing a resource that is not more available.
+ */
+export interface IResponseErrorGone extends IResponse<"IResponseErrorGone"> {
+  readonly value: { detail: string };
+}
+/**
+ * Returns a json response with status 410.
+ */
+export function ResponseErrorGone(detail: string): IResponseErrorGone {
+  return {
+    apply: (res: express.Response) => res.status(410).json({ detail }),
+    kind: "IResponseErrorGone",
+    value: { detail }
+  };
+}
