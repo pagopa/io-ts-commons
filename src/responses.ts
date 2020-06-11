@@ -545,13 +545,13 @@ export function ResponseErrorServiceUnavailable(
 }
 
 /**
- * Returns a response describing a resource that is not more available.
+ * Returns a response describing a resource that is no more available.
  */
 export interface IResponseErrorGone extends IResponse<"IResponseErrorGone"> {
   readonly value: { detail: string };
 }
 /**
- * Returns a json response with status 410.
+ * Returns a response with status 410 and a detail msg.
  */
 export function ResponseErrorGone(detail: string): IResponseErrorGone {
   return {
