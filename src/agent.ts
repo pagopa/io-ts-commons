@@ -7,7 +7,9 @@ import nodeFetch from "node-fetch";
 export const isFetchKeepaliveEnabled = (env: typeof process.env) =>
   env.FETCH_KEEPALIVE_ENABLED === "true";
 
-export const getKeepAliveAgentOptions = (env: typeof process.env) => ({
+export const getKeepAliveAgentOptions = (
+  env: typeof process.env
+): agentkeepalive.HttpOptions => ({
   freeSocketTimeout:
     env.FETCH_KEEPALIVE_FREE_SOCKET_TIMEOUT === undefined
       ? undefined
@@ -33,6 +35,17 @@ export const getKeepAliveAgentOptions = (env: typeof process.env) => ({
     env.FETCH_KEEPALIVE_TIMEOUT === undefined
       ? undefined
       : parseInt(env.FETCH_KEEPALIVE_TIMEOUT, 10)
+});
+
+export const getKeepAliveHttpsAgentOptions = (
+  env: typeof process.env
+): agentkeepalive.HttpsOptions => ({
+  ...getKeepAliveAgentOptions(env),
+  cert: env.FETCH_TLS_CERT,
+  key: env.FETCH_TLS_KEY,
+  passphrase: env.FETCH_TLS_PASSPHRASE,
+  rejectUnauthorized:
+    env.FETCH_TLS_REJECT_UNAUTHORIZED?.toLowerCase() !== "false"
 });
 
 // We need the following two exports to prevent the caller module
