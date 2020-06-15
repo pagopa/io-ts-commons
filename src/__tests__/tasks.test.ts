@@ -72,6 +72,30 @@ describe("withRetries", () => {
     expect(taskMock).toHaveBeenCalledTimes(3);
   });
 
+  it("should run the task once when the task return a non transient error", async () => {
+    const [err1, err2]: ReadonlyArray<Error> = [new Error("1"), new Error("2")];
+    const taskMock = jest
+      .fn()
+      .mockImplementationOnce(() => Promise.resolve(left(err1)))
+      .mockImplementationOnce(() => Promise.resolve(left(err2)))
+      .mockImplementationOnce(() =>
+        Promise.resolve(right<Error | TransientError, string>("ok"))
+      );
+    const transientFailingTaskMock: RetriableTask<
+      Error,
+      string
+    > = new TaskEither(new Task(taskMock));
+
+    const t = withConstantRetries(3)(transientFailingTaskMock);
+
+    const r = await t.run();
+    expect(r.isRight()).toBeFalsy();
+    if (isLeft(r)) {
+      expect(r.value).toEqual(err1);
+    }
+    expect(taskMock).toHaveBeenCalledTimes(1);
+  });
+
   it("should return the result when the task resolves", async () => {
     const taskMock = jest
       .fn()
