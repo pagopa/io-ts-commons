@@ -89,7 +89,7 @@ describe("withRetries", () => {
     const t = withConstantRetries(3)(transientFailingTaskMock);
 
     const r = await t.run();
-    expect(r.isRight()).toBeFalsy();
+    expect(r.isLeft()).toBeTruthy();
     if (isLeft(r)) {
       expect(r.value).toEqual(err1);
     }
