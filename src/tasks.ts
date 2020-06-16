@@ -89,7 +89,7 @@ export function withRetries<E, T>(
           return delay.chain(() => runTaskOnce(count + 1, currentTask));
         }
         // ...with an error that is not a TransientError, we just return it
-        return currentTask;
+        return fromLeft(l);
       });
     };
 
