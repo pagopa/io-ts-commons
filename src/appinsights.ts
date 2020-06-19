@@ -167,47 +167,19 @@ export function initAppInsights(
   });
 }
 
-// tslint:disable-next-line: no-any
-const noop = (..._: readonly any[]): void => void 0;
-export interface ITelemetryDefaultClient {
-  addTelemetryProcessor: typeof appInsights.defaultClient.addTelemetryProcessor;
-  clearTelemetryProcessors: typeof appInsights.defaultClient.addTelemetryProcessor;
-  flush: typeof appInsights.defaultClient.flush;
-  track: typeof appInsights.defaultClient.track;
-  trackAvailability: typeof appInsights.defaultClient.trackAvailability;
-  trackDependency: typeof appInsights.defaultClient.trackDependency;
-  trackEvent: typeof appInsights.defaultClient.trackEvent;
-  trackException: typeof appInsights.defaultClient.trackException;
-  trackMetric: typeof appInsights.defaultClient.trackMetric;
-  trackNodeHttpDependency: typeof appInsights.defaultClient.trackNodeHttpDependency;
-  trackNodeHttpRequest: typeof appInsights.defaultClient.trackNodeHttpRequest;
-  trackNodeHttpRequestSync: typeof appInsights.defaultClient.trackNodeHttpRequestSync;
-  trackPageView: typeof appInsights.defaultClient.trackPageView;
-  trackRequest: typeof appInsights.defaultClient.trackRequest;
-  trackTrace: typeof appInsights.defaultClient.trackTrace;
-}
-
 /**
  * Wraps ApplicationInsights' defaultClient to provide a version which is never undefined.
  * ApplicationInsights' defaultClient is instantiated as a singleton inside its module. If no env configuration is provided, this results to be undefined and forces user to check everytime before using it
  * In case is not defined, we provide a dummy clone in which its methods results in no-operations, avoiding unhandled exceptions.
  */
-export const defaultClient: ITelemetryDefaultClient = appInsights.defaultClient
+export const defaultClient: typeof appInsights.defaultClient = appInsights.defaultClient
   ? appInsights.defaultClient
-  : {
-      addTelemetryProcessor: noop,
-      clearTelemetryProcessors: noop,
-      flush: noop,
-      track: noop,
-      trackAvailability: noop,
-      trackDependency: noop,
-      trackEvent: noop,
-      trackException: noop,
-      trackMetric: noop,
-      trackNodeHttpDependency: noop,
-      trackNodeHttpRequest: noop,
-      trackNodeHttpRequestSync: noop,
-      trackPageView: noop,
-      trackRequest: noop,
-      trackTrace: noop
-    };
+  : (new Proxy(
+      {},
+      {
+        // tslint:disable-next-line: no-any
+        get(): () => void {
+          return () => void 0;
+        }
+      }
+    ) as typeof appInsights.defaultClient);
