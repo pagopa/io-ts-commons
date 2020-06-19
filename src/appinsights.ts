@@ -178,7 +178,6 @@ export const defaultClient: typeof appInsights.defaultClient = appInsights.defau
   : (new Proxy(
       {},
       {
-        // tslint:disable-next-line: no-any
         // tslint:disable-next-line: typedef
         get(_, name: string) {
           const objectProps: ReadonlyArray<keyof typeof appInsights.defaultClient> = [
