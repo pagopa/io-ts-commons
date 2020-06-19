@@ -1,10 +1,10 @@
+// tslint:disable: no-any
+
 import * as appInsights from "applicationinsights";
 import { Configuration } from "applicationinsights";
-import { SlowBuffer } from "buffer";
 import {
   defaultClient,
   initAppInsights,
-  ITelemetryDefaultClient,
   removeQueryParamsPreprocessor
 } from "../appinsights";
 
@@ -106,7 +106,8 @@ describe("defaultClient Proxy", () => {
         appInsights.defaultClient[
           opName as keyof typeof appInsights.defaultClient
         ];
-      const proxied = defaultClient[opName as keyof ITelemetryDefaultClient];
+      const proxied =
+        defaultClient[opName as keyof typeof appInsights.defaultClient];
       expect(typeof native).toBe(typeof proxied);
     });
   });
@@ -134,7 +135,7 @@ describe("defaultClient Proxy", () => {
       methodName,
       args
     }: {
-      methodName: keyof ITelemetryDefaultClient;
+      methodName: keyof typeof appInsights.defaultClient;
       args: readonly any[];
     }) => {
       jest.doMock("applicationinsights", () => {
@@ -178,7 +179,7 @@ describe("defaultClient Proxy", () => {
       methodName,
       args
     }: {
-      methodName: keyof ITelemetryDefaultClient;
+      methodName: keyof typeof appInsights.defaultClient;
       args: readonly any[];
     }) => {
       jest.doMock("applicationinsights", () => {

@@ -178,8 +178,18 @@ export const defaultClient: typeof appInsights.defaultClient = appInsights.defau
       {},
       {
         // tslint:disable-next-line: no-any
-        get(): () => void {
-          return () => void 0;
+        // tslint:disable-next-line: typedef
+        get(_, name: string) {
+          const objectProps: ReadonlyArray<keyof typeof appInsights.defaultClient> = [
+            "config",
+            "context",
+            "commonProperties",
+            "channel",
+            "quickPulseClient"
+          ];
+          return (objectProps as readonly string[]).includes(name)
+            ? {}
+            : () => void 0;
         }
       }
     ) as typeof appInsights.defaultClient);
