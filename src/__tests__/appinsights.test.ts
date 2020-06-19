@@ -100,7 +100,7 @@ describe("Custom Telemetry Preprocessor", () => {
 });
 
 describe("defaultClient Proxy", () => {
-  it("should expose the same interfact of the default client", () => {
+  it("should expose the same interface of the default client", () => {
     Object.keys(defaultClient).forEach((opName: string) => {
       const native =
         appInsights.defaultClient[
