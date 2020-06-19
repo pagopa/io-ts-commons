@@ -1,6 +1,12 @@
 import * as appInsights from "applicationinsights";
 import { Configuration } from "applicationinsights";
-import { initAppInsights, removeQueryParamsPreprocessor } from "../appinsights";
+import { SlowBuffer } from "buffer";
+import {
+  defaultClient,
+  initAppInsights,
+  ITelemetryDefaultClient,
+  removeQueryParamsPreprocessor
+} from "../appinsights";
 
 describe("Create an App Insights Telemetry Client", () => {
   const mockSetup = jest.spyOn(appInsights, "setup");
@@ -91,4 +97,105 @@ describe("Custom Telemetry Preprocessor", () => {
     );
     expect(testValidEnvelope.data.baseData.url).toEqual(expectedUrl);
   });
+});
+
+describe("defaultClient Proxy", () => {
+  it("should expose the same interfact of the default client", () => {
+    Object.keys(defaultClient).forEach((opName: string) => {
+      const native =
+        appInsights.defaultClient[
+          opName as keyof typeof appInsights.defaultClient
+        ];
+      const proxied = defaultClient[opName as keyof ITelemetryDefaultClient];
+      expect(typeof native).toBe(typeof proxied);
+    });
+  });
+
+  it.each`
+    methodName                    | args
+    ${"addTelemetryProcessor"}    | ${[]}
+    ${"clearTelemetryProcessors"} | ${[]}
+    ${"flush"}                    | ${[]}
+    ${"track"}                    | ${[]}
+    ${"trackAvailability"}        | ${[]}
+    ${"trackDependency"}          | ${[]}
+    ${"trackEvent"}               | ${[]}
+    ${"trackException"}           | ${[]}
+    ${"trackMetric"}              | ${[]}
+    ${"trackNodeHttpDependency"}  | ${[]}
+    ${"trackNodeHttpRequest"}     | ${[]}
+    ${"trackNodeHttpRequestSync"} | ${[]}
+    ${"trackPageView"}            | ${[]}
+    ${"trackRequest"}             | ${[]}
+    ${"trackTrace"}               | ${[]}
+  `(
+    "should not call appInsights.$method if appInsights is not defined",
+    ({
+      methodName,
+      args
+    }: {
+      methodName: keyof ITelemetryDefaultClient;
+      args: readonly any[];
+    }) => {
+      jest.doMock("applicationinsights", () => {
+        return {
+          __esModule: true,
+          defaultClient: undefined
+        };
+      });
+      const spiedMethod = jest.spyOn(appInsights.defaultClient, methodName);
+      const fn = defaultClient[methodName];
+
+      // @ts-ignore because we don't need types here, we are checking the js execution
+      fn(...args);
+
+      expect(spiedMethod).not.toHaveBeenCalledWith(args);
+
+      jest.dontMock("applicationinsights");
+    }
+  );
+
+  it.each`
+    methodName                    | args
+    ${"addTelemetryProcessor"}    | ${[]}
+    ${"clearTelemetryProcessors"} | ${[]}
+    ${"flush"}                    | ${[]}
+    ${"track"}                    | ${[]}
+    ${"trackAvailability"}        | ${[]}
+    ${"trackDependency"}          | ${[]}
+    ${"trackEvent"}               | ${[]}
+    ${"trackException"}           | ${[]}
+    ${"trackMetric"}              | ${[]}
+    ${"trackNodeHttpDependency"}  | ${[]}
+    ${"trackNodeHttpRequest"}     | ${[]}
+    ${"trackNodeHttpRequestSync"} | ${[]}
+    ${"trackPageView"}            | ${[]}
+    ${"trackRequest"}             | ${[]}
+    ${"trackTrace"}               | ${[]}
+  `(
+    "should call appInsights.$method if appInsights is defined",
+    ({
+      methodName,
+      args
+    }: {
+      methodName: keyof ITelemetryDefaultClient;
+      args: readonly any[];
+    }) => {
+      jest.doMock("applicationinsights", () => {
+        return {
+          __esModule: true,
+          defaultClient: appInsights.defaultClient
+        };
+      });
+      const spiedMethod = jest.spyOn(appInsights.defaultClient, methodName);
+      const fn = defaultClient[methodName];
+
+      // @ts-ignore because we don't need types here, we are checking the js execution
+      fn(...args);
+
+      expect(spiedMethod).not.toHaveBeenCalledWith(args);
+
+      jest.dontMock("applicationinsights");
+    }
+  );
 });
