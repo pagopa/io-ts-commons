@@ -2,6 +2,7 @@ import * as appInsights from "applicationinsights";
 import { DistributedTracingModes } from "applicationinsights";
 // tslint:disable-next-line: no-submodule-imports
 import Config = require("applicationinsights/out/Library/Config");
+import { constVoid } from "fp-ts/lib/function";
 import {
   getKeepAliveAgentOptions,
   isFetchKeepaliveEnabled,
@@ -189,7 +190,7 @@ export const defaultClient: typeof appInsights.defaultClient = appInsights.defau
           ];
           return (objectProps as readonly string[]).includes(name)
             ? {}
-            : () => void 0;
+            : () => constVoid;
         }
       }
     ) as typeof appInsights.defaultClient);
