@@ -3830,9 +3830,10 @@ json-schema@0.2.3:
   resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.2.3.tgz#b480c892e59a2f05954ce727bd3f2a4e882f9e13"
   integrity sha1-tIDIkuWaLwWVTOcnvT8qTogvnhM=
 
-json-set-map@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/json-set-map/-/json-set-map-1.0.2.tgz#608aacb5464d9759158d06523a6e30be5650adc4"
+json-set-map@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/json-set-map/-/json-set-map-1.1.2.tgz#536cbc6549d06e8af11f76cb4fbd441ed2389e6e"
+  integrity sha512-x0TGwgcOG21jOa8wV1PWXDpSXUAKa1WuhMSHPBQhXU5Pb+4DdMrxOw5HMAWztVLP8KhSG5Kl5BoAOVF0aW63wA==
 
 json-stringify-safe@^5.0.1, json-stringify-safe@~5.0.1:
   version "5.0.1"
