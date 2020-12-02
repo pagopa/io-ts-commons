@@ -1,6 +1,10 @@
 import * as appInsights from "applicationinsights";
 import { Configuration } from "applicationinsights";
-import { initAppInsights, removeQueryParamsPreprocessor } from "../appinsights";
+import {
+  disableSamplingByTag,
+  initAppInsights,
+  removeQueryParamsPreprocessor
+} from "../appinsights";
 
 describe("Create an App Insights Telemetry Client", () => {
   const mockSetup = jest.spyOn(appInsights, "setup");
@@ -90,5 +94,43 @@ describe("Custom Telemetry Preprocessor", () => {
       (testValidEnvelope as unknown) as appInsights.Contracts.Envelope
     );
     expect(testValidEnvelope.data.baseData.url).toEqual(expectedUrl);
+  });
+});
+
+describe("Disable sampling with custom Telemetry Preprocessor", () => {
+  it("should override sampleRate (defined in ai config) with 100", () => {
+    const expectedSampleRate = 100;
+    const testValidEnvelope: appInsights.Contracts.Envelope = {
+      data: {
+        baseType: "RequestData"
+      },
+      iKey: "key",
+      name: "GET /test",
+      sampleRate: 20,
+      seq: "1",
+      tags: { samplingEnabled: "false" },
+      time: "",
+      ver: 1
+    };
+    disableSamplingByTag(testValidEnvelope);
+    expect(testValidEnvelope.sampleRate).toEqual(expectedSampleRate);
+  });
+
+  it("should NOT override sampleRate", () => {
+    const expectedSampleRate = 20;
+    const testValidEnvelope: appInsights.Contracts.Envelope = {
+      data: {
+        baseType: "RequestData"
+      },
+      iKey: "key",
+      name: "GET /test",
+      sampleRate: 20,
+      seq: "1",
+      tags: { test: "test" },
+      time: "",
+      ver: 1
+    };
+    disableSamplingByTag(testValidEnvelope);
+    expect(testValidEnvelope.sampleRate).toEqual(expectedSampleRate);
   });
 });

@@ -69,6 +69,8 @@ function startAppInsights(
     removeQueryParamsPreprocessor
   );
 
+  appInsights.defaultClient.addTelemetryProcessor(disableSamplingByTag);
+
   // Configure the data context of the telemetry client
   // refering to the current application version with a specific CloudRole
 
@@ -118,6 +120,19 @@ export function removeQueryParamsPreprocessor(
     (envelope.data as IInsightsRequestData).baseData.url = originalUrl.split(
       "?"
     )[0];
+  }
+  return true;
+}
+
+export function disableSamplingByTag(
+  envelope: appInsights.Contracts.Envelope,
+  _?: {
+    [name: string]: unknown;
+  }
+): boolean {
+  if (envelope.tags.samplingEnabled === "false") {
+    // tslint:disable-next-line: no-object-mutation
+    envelope.sampleRate = 100;
   }
   return true;
 }
