@@ -1,6 +1,10 @@
+import * as dns from "dns";
 import { IncomingMessage } from "http";
 import ServerMock = require("mock-http-server");
 import { getHttpFetch, getHttpsFetch } from "../agent";
+
+//@ts-ignore
+const compose = (...fns) => value => fns.reduce((p, e) => e(p), value);
 
 const HTTP_TEST_HOST = "localhost";
 const HTTP_TEST_PORT = 40004;
@@ -86,9 +90,16 @@ const createServerMock = () => {
   return server;
 };
 
-const envWithKeepalive = {
+const anEnv: typeof process.env = {};
+
+const withKeepalive = (e = anEnv) => ({
+  ...e,
   FETCH_KEEPALIVE_ENABLED: "true"
-};
+});
+const withDnsResolve = (e = anEnv) => ({
+  ...e,
+  FETCH_USE_DNS_RESOLVE: "true"
+});
 
 const anHttpUrl = `http://${HTTP_TEST_HOST}:${HTTP_TEST_PORT}/agent`;
 const anHttpsUrl = `https://${HTTPS_TEST_HOST}:${HTTPS_TEST_PORT}/agent`;
@@ -97,9 +108,11 @@ describe("HttpAgentKeepAlive", () => {
   const server = createServerMock();
   beforeAll(server.start);
   afterAll(server.stop);
+  afterEach(() => jest.clearAllMocks());
 
   it("should use keepalive for http request", async () => {
-    const fetch = getHttpFetch(envWithKeepalive);
+    const env = compose(withKeepalive)(anEnv);
+    const fetch = getHttpFetch(env);
     const res = await fetch(anHttpUrl);
     expect(res.headers.get("connection")).toContain("keep-alive");
     const res2 = await fetch(anHttpUrl);
@@ -107,7 +120,7 @@ describe("HttpAgentKeepAlive", () => {
   });
 
   it("should not use keepalive for http request", async () => {
-    const fetch = getHttpFetch({});
+    const fetch = getHttpFetch(anEnv);
     const res = await fetch(anHttpUrl);
     expect(res.headers.get("connection")).toContain("close");
     const res2 = await fetch(anHttpUrl);
@@ -115,7 +128,8 @@ describe("HttpAgentKeepAlive", () => {
   });
 
   it("should use keepalive for https request", async () => {
-    const fetch = getHttpsFetch(envWithKeepalive);
+    const env = compose(withKeepalive)(anEnv);
+    const fetch = getHttpsFetch(env);
     const res = await fetch(anHttpsUrl);
     expect(res.headers.get("connection")).toContain("keep-alive");
     const res2 = await fetch(anHttpsUrl);
@@ -128,5 +142,57 @@ describe("HttpAgentKeepAlive", () => {
     expect(res.headers.get("connection")).toContain("close");
     const res2 = await fetch(anHttpsUrl);
     expect(await res2.json()).not.toEqual(await res.json());
+  });
+
+  it("should use dns.resolve() on http client", async () => {
+    jest.spyOn(dns, "resolve");
+    jest.spyOn(dns, "lookup");
+    jest.spyOn(dns, "lookupService");
+
+    const env = compose(withDnsResolve)(anEnv);
+    const fetch = getHttpFetch(env);
+    await fetch(anHttpUrl);
+    expect(dns.resolve).toHaveBeenCalled();
+    expect(dns.lookup).not.toHaveBeenCalled();
+    expect(dns.lookupService).not.toHaveBeenCalled();
+  });
+
+  it("should use dns.resolve() on https client", async () => {
+    jest.spyOn(dns, "resolve");
+    jest.spyOn(dns, "lookup");
+    jest.spyOn(dns, "lookupService");
+
+    const env = compose(withDnsResolve)(anEnv);
+    const fetch = getHttpFetch(env);
+    await fetch(anHttpUrl);
+    expect(dns.resolve).toHaveBeenCalled();
+    expect(dns.lookup).not.toHaveBeenCalled();
+    expect(dns.lookupService).not.toHaveBeenCalled();
+  });
+
+  it("should use dns.resolve() on http client with keepalive", async () => {
+    jest.spyOn(dns, "resolve");
+    jest.spyOn(dns, "lookup");
+    jest.spyOn(dns, "lookupService");
+
+    const env = compose(withDnsResolve, withKeepalive)(anEnv);
+    const fetch = getHttpFetch(env);
+    await fetch(anHttpUrl);
+    expect(dns.resolve).toHaveBeenCalled();
+    expect(dns.lookup).not.toHaveBeenCalled();
+    expect(dns.lookupService).not.toHaveBeenCalled();
+  });
+
+  it("should use dns.resolve() on https client with keepalive", async () => {
+    jest.spyOn(dns, "resolve");
+    jest.spyOn(dns, "lookup");
+    jest.spyOn(dns, "lookupService");
+
+    const env = compose(withDnsResolve, withKeepalive)(anEnv);
+    const fetch = getHttpsFetch(env);
+    await fetch(anHttpsUrl);
+    expect(dns.resolve).toHaveBeenCalled();
+    expect(dns.lookup).not.toHaveBeenCalled();
+    expect(dns.lookupService).not.toHaveBeenCalled();
   });
 });
