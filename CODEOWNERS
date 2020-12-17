@@ -1,4 +1,4 @@
 # see https://help.github.com/en/articles/about-code-owners#example-of-a-codeowners-file
 
-* @gunzip @francescopersico @burnedmarshal @aledore @balanza @undermaken
+* @balanza @burnedmarshal @gunzip @francescopersico @aledore 
 
