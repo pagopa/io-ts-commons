@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/teamdigitale/italia-ts-commons.svg?style=svg)](https://circleci.com/gh/teamdigitale/italia-ts-commons)
+[![CircleCI](https://circleci.com/gh/pagopa/io-ts-commons.svg?style=svg)](https://circleci.com/gh/pagopa/io-ts-commons)
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons?ref=badge_shield)
 
@@ -26,12 +26,7 @@ Then git add/commit/push.
 
 ### Releasing a version
 
-Make sure you update the docs first.
-
-```
-$ npm version [major|minor|patch]
-$ npm publish
-```
+Releasing a new version to [npm](https://www.npmjs.com/package/italia-ts-commons) has been automatized using an Azure Pipeline, to be trigger manually from https://dev.azure.com/pagopa-io/
 
 
 ## License
