@@ -11,6 +11,7 @@
 variables:
   NODE_VERSION: '10.14.1'
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+  gitBranchName: ${{ replace(replace(variables['Build.SourceBranch'], 'refs/tags/', ''), 'refs/heads/', '') }}
 
 parameters:
   - name: 'RELEASE_SEMVER'
@@ -21,6 +22,8 @@ parameters:
       - minor
       - patch
     default: minor
+    
+
 
 # Only manual activations are intended
 trigger: none
@@ -70,6 +73,7 @@ stages:
               nodeVersion: $(NODE_VERSION)
               pkg_cache_version_id: $(CACHE_VERSION_ID)
               pkg_cache_folder: $(YARN_CACHE_FOLDER)
+              release_branch: $(gitBranchName)
 
         - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/master') }}:
           - script: |
