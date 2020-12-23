@@ -71,14 +71,3 @@ stages:
           - bash: |
               bash <(curl -s https://codecov.io/bash)
             displayName: 'Code coverage'
-
-  # TODO: Add Integration tests or remove stage?
-  - stage: IntegrationsTest
-    dependsOn: []
-    jobs:
-      - job: integrations_tests
-        steps:
-        - task: Bash@3
-          inputs:
-            targetType: 'inline'
-            script: echo 'To Do'
