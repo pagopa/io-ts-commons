@@ -2,7 +2,7 @@
 #
 # To make Danger JS run on a pull request you need to add the following pipeline 
 # variable and set it with a GitHub access token (scope public_repo); otherwise 
-# set its value to 'skip' without marking it secret: 
+# set its value to 'skip' (pipeline > Edit > Variables) without marking it secret: 
 # - DANGER_GITHUB_API_TOKEN
 # 
 
