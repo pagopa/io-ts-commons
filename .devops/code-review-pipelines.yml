@@ -22,9 +22,6 @@ stages:
     dependsOn: []
     jobs:
       - job: make_build
-        pool:
-          # As we deploy on Wondows machines, we use Windows to build
-          vmImage: 'windows-2019'
         steps:
           - template: azure-templates/setup-project.yml
           - script: |
