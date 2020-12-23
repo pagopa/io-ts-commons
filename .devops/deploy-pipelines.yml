@@ -12,7 +12,6 @@ variables:
   NODE_VERSION: '10.14.1'
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   gitReference: ${{ replace(replace(variables['Build.SourceBranch'], 'refs/tags/', ''), 'refs/heads/', '') }}
-  testPipelineSuffix: '-TEST-PIPELINE'
 
 parameters:
   - name: 'RELEASE_SEMVER'
@@ -57,8 +56,7 @@ stages:
           and(
             startsWith(variables['Build.SourceBranch'], 'refs/tags'),
             endsWith(variables['Build.SourceBranch'], '-RELEASE')
-          ),
-          endsWith(variables['Build.SourceBranch'], $(testPipelineSuffix))
+          )
         )
       )
     jobs:
@@ -74,7 +72,6 @@ stages:
               nodeVersion: $(NODE_VERSION)
               pkg_cache_version_id: $(CACHE_VERSION_ID)
               pkg_cache_folder: $(YARN_CACHE_FOLDER)
-              release_branch: $(gitReference)
 
         - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/master') }}:
           - script: |
@@ -133,10 +130,7 @@ stages:
   - stage: Publish
     dependsOn:
       - Prepare_artifact
-    condition:
-    not(
-        endsWith(variables['Build.SourceBranch'],  $(testPipelineSuffix))
-    )
+
     jobs:
       - job: publish
         steps:   
