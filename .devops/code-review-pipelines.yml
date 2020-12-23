@@ -77,4 +77,8 @@ stages:
     dependsOn: []
     jobs:
       - job: integrations_tests
-        bash: echo "To Do"
+        steps:
+        - task: Bash@3
+          inputs:
+            targetType: 'inline'
+            script: echo 'To Do'
