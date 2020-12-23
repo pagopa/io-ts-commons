@@ -18,7 +18,9 @@
     "lint": "tslint --project .",
     "check-typings": "tsc -p typings-checker",
     "typedoc": "typedoc --out docs/ --exclude '**/__tests__/*' --module commonjs --theme minimal src",
-    "docs": "rimraf docs && npm run typedoc && touch docs/.nojekyll"
+    "docs": "rimraf docs && npm run typedoc && touch docs/.nojekyll",
+    "preversion": "auto-changelog  --config .auto-changelog.json --unreleased --commit-limit false --stdout --template preview.hbs",
+    "version": "auto-changelog -p --config .auto-changelog.json --unreleased && git add CHANGELOG.md"
   },
   "devDependencies": {
     "@types/express": "^4.11.1",
@@ -33,7 +35,7 @@
     "mock-http-server": "^1.0.0",
     "patch-package": "^6.2.2",
     "prettier": "^1.14.3",
-    "release-it": "^13.5.1",
+    "auto-changelog": "^2.2.1",
     "rimraf": "^2.6.2",
     "ts-jest": "^23.0.1",
     "tslint": "^5.11.0",
