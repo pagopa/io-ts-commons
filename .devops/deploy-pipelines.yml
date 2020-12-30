@@ -22,8 +22,6 @@ parameters:
       - minor
       - patch
     default: minor
-    
-
 
 # Only manual activations are intended
 trigger: none
@@ -46,7 +44,6 @@ stages:
   # Activated when ONE OF these are met:
   # - is on branch master 
   # - is a tag in the form v{version}-RELEASE
-  # - is a branch tagged as "TEST-PIPELINE"  (in that case, Publish stage will be skipped)
   - stage: Release
     condition:
       and(
@@ -102,35 +99,22 @@ stages:
             inputs:
               SourceFolder: '$(System.DefaultWorkingDirectory)'
               TargetFolder: '$(System.DefaultWorkingDirectory)/bundle'
+              # The list of files to be considered is determined by the "files" entry in package.json
               Contents: |
-                **/*
-                !.git/**/*
-                !**/*.js.map
-                !**/*.ts
-                !src/**/*
-                !.vscode/**/*
-                !.devops/**/*
-                !.prettierrc
-                !.gitignore
-                !jest.config.js
-                !test
-                !tsconfig.json
-                !tslint.json
-                !yarn.lock
-                !Dangerfile.js
-                !CODEOWNERS
-                !__*/**/*
+                README.md
+                LICENSE
+                CHANGELOG.md
+                package.json
+                dist/**/*
             displayName: 'Copy bundle files'
           
           - publish: $(System.DefaultWorkingDirectory)/bundle
             artifact: Bundle
 
   # Publish
-  # skip this step for -TEST-PIPELINE branches
   - stage: Publish
     dependsOn:
       - Prepare_artifact
-
     jobs:
       - job: publish
         steps:   
@@ -144,3 +128,4 @@ stages:
               command: publish
               verbose: true
               publishEndpoint: $(NPM_CONNECTION)
+              workingDir: '$(Pipeline.Workspace)/Bundle'

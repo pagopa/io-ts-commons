@@ -11,7 +11,7 @@
     "lib/"
   ],
   "scripts": {
-    "prepare": "rimraf lib && npm run build",
+    "prebuild": "rimraf lib",
     "build": "tsc",
     "postversion": "git push && git push --tags",
     "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 jest",
