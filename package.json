@@ -12,7 +12,6 @@
   ],
   "scripts": {
     "build": "tsc",
-    "postversion": "git push && git push --tags",
     "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 jest",
     "lint": "tslint --project .",
     "check-typings": "tsc -p typings-checker",
