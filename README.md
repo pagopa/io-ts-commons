@@ -20,6 +20,30 @@ In the following there are instructions to build the app in your computer for de
 
 ### Pre-requisites
 
+We build a script for helping setting up the laptop, you can find it [here](https://github.com/pagopa/developer-laptop)
+
+Otherwise, please follow the following steps:
+
+#### Install NodeJS
+To run the project you need to install a properly version of NodeJS.
+
+On macOS and Linux we recommend the use of a virtual environment, such as nodenv for managing multiple versions of NodeJS.
+The node version used in this project is stored in .node-version.
+
+If you already have nodenv installed and configured on your system, the correct version node will be set when you access the app directory.
+
+To install, follow the steps described below.
+
+#### Install brew
+
+If you do not have it already, install brew following the installation instructions in the [home page](https://brew.sh/).
+
+#### Install nodenv
+
+```
+brew install nodenv
+```
+
 #### Install yarn
 
 For the management of javascript dependencies we use Yarn.
@@ -37,7 +61,6 @@ Install the libraries used by the project:
 ```
 $ yarn install --frozen-lockfile
 ```
-
 
 ### Run Tests
 
