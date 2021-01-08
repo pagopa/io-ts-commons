@@ -1,5 +1,5 @@
 {
-  "name": "italia-ts-commons",
+  "name": "@pagopa/ts-commons",
   "version": "8.6.0",
   "description": "Shared TypeScript code for the IO project",
   "main": "lib/index.js",
