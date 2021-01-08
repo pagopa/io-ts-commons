@@ -20,7 +20,7 @@ In the following there are instructions to build the app in your computer for de
 
 ### Pre-requisites
 
-We build a script for helping setting up the laptop, you can find it [here](https://github.com/pagopa/developer-laptop)
+We built a script for helping setting up the laptop, you can find it [here](https://github.com/pagopa/developer-laptop)
 
 Otherwise, please follow the following steps:
 
