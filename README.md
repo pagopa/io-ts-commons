@@ -16,13 +16,41 @@ Documentation is available [here](https://pagopa.github.io/io-ts-commons/)
 
 ## Contributing
 
-### Updating/publishing online docs
+In the following there are instructions to build the app in your computer for development purposes.
+
+### Pre-requisites
+
+#### Install yarn
+
+For the management of javascript dependencies we use Yarn.
+
+Yarn is a node application. IF you have already installed in your system version of node compatible with yarn, you can install it as a global command with:
 
 ```
-$ yarn docs
+npm install -g yarn
 ```
 
-Then git add/commit/push.
+### Install dependencies
+
+Install the libraries used by the project:
+
+```
+$ yarn install --frozen-lockfile
+```
+
+
+### Run Tests
+
+#### Run Unit Tests 
+
+```
+$ yarn test
+```
+#### Run Lint Check
+
+```
+$ yarn lint
+```
 
 ### Releasing a version
 
