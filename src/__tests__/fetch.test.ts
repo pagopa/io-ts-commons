@@ -162,17 +162,19 @@ describe("retriableFetch", () => {
     }
   });
 
-  it('should retry on transient error', async () => {
-    
+  it("should retry on transient error", async () => {
     const delay = 10 as Millisecond;
     const retries = 3;
     const constantBackoff = () => delay;
     const retryLogic = withRetries<Error, Response>(retries, constantBackoff);
-    const retryWithTransientError = retryLogicForTransientResponseError(_ => _.status === 404, retryLogic);
+    const retryWithTransientError = retryLogicForTransientResponseError(
+      _ => _.status === 404,
+      retryLogic
+    );
     const fetchWithRetries = retriableFetch(retryWithTransientError)(fetch);
 
     // start the fetch request
-    await expect(fetchWithRetries(longDelayUrl)).rejects.toEqual('max-retries');
+    await expect(fetchWithRetries(longDelayUrl)).rejects.toEqual("max-retries");
     expect(server.requests().length).toEqual(3);
   });
 });
