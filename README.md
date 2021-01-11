@@ -6,7 +6,7 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/c9be630a66618bde8e4a/maintainability)](https://codeclimate.com/github/teamdigitale/italia-ts-commons/maintainability)
 
-# PagoPA TypeScript Commons
+# TypeScript Commons
 
 This module provides code shared by the projects of the
 [IO App](https://github.com/pagopa/io)
