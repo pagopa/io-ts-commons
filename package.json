@@ -17,7 +17,7 @@
     "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 jest",
     "lint": "tslint --project .",
     "check-typings": "tsc -p typings-checker",
-    "typedoc": "typedoc --out docs/ --exclude '**/__tests__/*' --module commonjs --theme minimal src",
+    "typedoc": "typedoc --out docs/ --exclude '**/__tests__/*' --theme minimal src",
     "docs": "rimraf docs && npm run typedoc && touch docs/.nojekyll"
   },
   "devDependencies": {
@@ -37,7 +37,7 @@
     "rimraf": "^2.6.2",
     "ts-jest": "^23.0.1",
     "tslint": "^5.11.0",
-    "typedoc": "^0.14.2",
+    "typedoc": "^0.20.14",
     "typescript": "^3.6.0"
   },
   "dependencies": {

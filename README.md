@@ -75,6 +75,13 @@ $ yarn test
 $ yarn lint
 ```
 
+### Updating/publishing online docs
+
+```
+$ yarn docs
+```
+
+
 ### Releasing a version
 
 Release has been automatized by using Azure Pipelines.
