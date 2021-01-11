@@ -1,11 +1,11 @@
 import ServerMock = require("mock-http-server");
 import nodeFetch from "node-fetch";
-
 import {
   AbortableFetch,
   retriableFetch,
   setFetchTimeout,
-  toFetch
+  toFetch,
+  retryLogicForTransientResponseError
 } from "../fetch";
 import { DeferredPromise, timeoutPromise } from "../promises";
 import { MaxRetries, RetryAborted, withRetries } from "../tasks";
@@ -160,5 +160,19 @@ describe("retriableFetch", () => {
       expect(server.requests().length).toEqual(5);
       expect(e).toEqual(RetryAborted);
     }
+  });
+
+  it('should retry on transient error', async () => {
+    
+    const delay = 10 as Millisecond;
+    const retries = 3;
+    const constantBackoff = () => delay;
+    const retryLogic = withRetries<Error, Response>(retries, constantBackoff);
+    const retryWithTransientError = retryLogicForTransientResponseError(_ => _.status === 404, retryLogic);
+    const fetchWithRetries = retriableFetch(retryWithTransientError)(fetch);
+
+    // start the fetch request
+    await expect(fetchWithRetries(longDelayUrl)).rejects.toEqual('max-retries');
+    expect(server.requests().length).toEqual(3);
   });
 });
