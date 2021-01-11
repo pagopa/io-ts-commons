@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>@pagopa/ts-commons | @pagopa/ts-commons</title>
+	<title>OptionValidation | @pagopa/ts-commons</title>
 	<meta name="description" content="Documentation for @pagopa/ts-commons">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -2646,7 +2646,7 @@ img {
 		<div class="container">
 			<div class="table-wrap">
 				<div class="table-cell">
-					<strong><a href="index.html">@pagopa/ts-commons</a></strong>
+					<strong><a href="../index.html">@pagopa/ts-commons</a></strong>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -2676,122 +2676,287 @@ img {
 </header>
 <nav class="tsd-navigation secondary">
 	<ul>
+		<li class="current tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
+			<a href="optionvalidation.optionvalidation-1.html" class="tsd-kind-icon">Option<wbr>Validation</a>
+			<ul>
+				<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter">
+					<a href="optionvalidation.optionvalidation-1.html#constructor" class="tsd-kind-icon">constructor</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="optionvalidation.optionvalidation-1.html#_a" class="tsd-kind-icon">_A</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="optionvalidation.optionvalidation-1.html#_l" class="tsd-kind-icon">_L</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="optionvalidation.optionvalidation-1.html#_uri" class="tsd-kind-icon">_URI</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="optionvalidation.optionvalidation-1.html#value" class="tsd-kind-icon">value</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<a href="optionvalidation.optionvalidation-1.html#fold" class="tsd-kind-icon">fold</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<a href="optionvalidation.optionvalidation-1.html#map" class="tsd-kind-icon">map</a>
+				</li>
+			</ul>
+		</li>
+		<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+			<a href="../modules/optionvalidation.html#uri" class="tsd-kind-icon">URI</a>
+		</li>
+		<li class=" tsd-kind-variable tsd-parent-kind-module">
+			<a href="../modules/optionvalidation.html#uri-1" class="tsd-kind-icon">URI</a>
+		</li>
+		<li class=" tsd-kind-variable tsd-parent-kind-module">
+			<a href="../modules/optionvalidation.html#optionvalidation-2" class="tsd-kind-icon">option<wbr>Validation</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+			<a href="../modules/optionvalidation.html#getapplicative" class="tsd-kind-icon">get<wbr>Applicative</a>
+		</li>
 	</ul>
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
-		<div class="tsd-panel tsd-typography">
-			<p><a href="https://dev.azure.com/pagopa-io/io-ts-commons/_build/latest?definitionId=74&amp;branchName=refs%2Fpull%2F343%2Fmerge"><img src="https://dev.azure.com/pagopa-io/io-ts-commons/_apis/build/status/pagopa.io-ts-commons.code-review?branchName=refs%2Fpull%2F343%2Fmerge" alt="Build Status"></a></p>
-			<p><a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons?ref=badge_shield"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons.svg?type=shield" alt="FOSSA Status"></a></p>
-			<p><a href="https://codecov.io/gh/teamdigitale/italia-ts-commons"><img src="https://codecov.io/gh/teamdigitale/italia-ts-commons/branch/master/graph/badge.svg" alt="codecov"></a></p>
-			<p><a href="https://codeclimate.com/github/teamdigitale/italia-ts-commons/maintainability"><img src="https://api.codeclimate.com/v1/badges/c9be630a66618bde8e4a/maintainability" alt="Maintainability"></a></p>
-			<a href="#pagopa-typescript-commons" id="pagopa-typescript-commons" style="color: inherit; text-decoration: none;">
-				<h1>PagoPA TypeScript Commons</h1>
-			</a>
-			<p>This module provides code shared by the projects of the
-				<a href="https://github.com/pagopa/io">IO App</a>
-			initiative.</p>
-			<p>Documentation is available <a href="https://pagopa.github.io/io-ts-commons/">here</a></p>
-			<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
-				<h2>Contributing</h2>
-			</a>
-			<p>In the following there are instructions to build the app in your computer for development purposes.</p>
-			<a href="#pre-requisites" id="pre-requisites" style="color: inherit; text-decoration: none;">
-				<h3>Pre-requisites</h3>
-			</a>
-			<p>We built a script for helping setting up the laptop, you can find it <a href="https://github.com/pagopa/developer-laptop">here</a></p>
-			<p>Otherwise, please follow the following steps:</p>
-			<a href="#install-nodejs" id="install-nodejs" style="color: inherit; text-decoration: none;">
-				<h4>Install NodeJS</h4>
-			</a>
-			<p>To run the project you need to install a properly version of NodeJS.</p>
-			<p>On macOS and Linux we recommend the use of a virtual environment, such as nodenv for managing multiple versions of NodeJS.
-			The node version used in this project is stored in .node-version.</p>
-			<p>If you already have nodenv installed and configured on your system, the correct version node will be set when you access the app directory.</p>
-			<p>To install, follow the steps described below.</p>
-			<a href="#install-brew" id="install-brew" style="color: inherit; text-decoration: none;">
-				<h4>Install brew</h4>
-			</a>
-			<p>If you do not have it already, install brew following the installation instructions in the <a href="https://brew.sh/">home page</a>.</p>
-			<a href="#install-nodenv" id="install-nodenv" style="color: inherit; text-decoration: none;">
-				<h4>Install nodenv</h4>
-			</a>
-			<pre><code><span style="color: #001080">brew</span><span style="color: #000000"> </span><span style="color: #001080">install</span><span style="color: #000000"> </span><span style="color: #001080">nodenv</span>
-</code></pre>
-			<a href="#install-yarn" id="install-yarn" style="color: inherit; text-decoration: none;">
-				<h4>Install yarn</h4>
-			</a>
-			<p>For the management of javascript dependencies we use Yarn.</p>
-			<p>Yarn is a node application. IF you have already installed in your system version of node compatible with yarn, you can install it as a global command with:</p>
-			<pre><code><span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">install</span><span style="color: #000000"> -</span><span style="color: #001080">g</span><span style="color: #000000"> </span><span style="color: #001080">yarn</span>
-</code></pre>
-			<a href="#install-dependencies" id="install-dependencies" style="color: inherit; text-decoration: none;">
-				<h3>Install dependencies</h3>
-			</a>
-			<p>Install the libraries used by the project:</p>
-			<pre><code><span style="color: #001080">$</span><span style="color: #000000"> </span><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">install</span><span style="color: #000000"> --</span><span style="color: #001080">frozen</span><span style="color: #000000">-</span><span style="color: #001080">lockfile</span>
-</code></pre>
-			<a href="#run-tests" id="run-tests" style="color: inherit; text-decoration: none;">
-				<h3>Run Tests</h3>
-			</a>
-			<a href="#run-unit-tests" id="run-unit-tests" style="color: inherit; text-decoration: none;">
-				<h4>Run Unit Tests</h4>
-			</a>
-			<pre><code><span style="color: #001080">$</span><span style="color: #000000"> </span><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">test</span>
-</code></pre>
-			<a href="#run-lint-check" id="run-lint-check" style="color: inherit; text-decoration: none;">
-				<h4>Run Lint Check</h4>
-			</a>
-			<pre><code><span style="color: #001080">$</span><span style="color: #000000"> </span><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">lint</span>
-</code></pre>
-			<a href="#releasing-a-version" id="releasing-a-version" style="color: inherit; text-decoration: none;">
-				<h3>Releasing a version</h3>
-			</a>
-			<p>Release has been automatized by using Azure Pipelines.</p>
-			<p>To release a new version please go to <a href="https://dev.azure.com/pagopa-io/io-ts-commons">io-ts-commons project on Azure</a> and manually run <em>pagopa.io-ts-commons.deploy</em> the pipeline.
-			Be aware to choose the right release version between major|minor|patch</p>
-			<a href="#license" id="license" style="color: inherit; text-decoration: none;">
-				<h2>License</h2>
-			</a>
-			<p><a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons?ref=badge_large"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons.svg?type=large" alt="FOSSA Status"></a></p>
-		</div>
-		<div style="position:relative;"><a name="typedoc-main-index" class="tsd-anchor"></a></div>
+		<section class="tsd-panel tsd-type-parameters">
+			<h3>Type parameters</h3>
+			<ul class="tsd-type-parameters">
+				<li>
+					<h4>L</h4>
+				</li>
+				<li>
+					<h4>A</h4>
+				</li>
+			</ul>
+		</section>
+		<section class="tsd-panel tsd-hierarchy">
+			<h3>Hierarchy</h3>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">OptionValidation</span>
+				</li>
+			</ul>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
-						<h3>Modules</h3>
+						<h3>Constructors</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-module"><a href="modules/_types_abort_controller.html" class="tsd-kind-icon">@types/abort-<wbr>controller</a></li>
-							<li class="tsd-kind-module"><a href="modules/_types_mock_http_server.html" class="tsd-kind-icon">@types/mock-<wbr>http-<wbr>server</a></li>
-							<li class="tsd-kind-module"><a href="modules/optioneither.html" class="tsd-kind-icon">Option<wbr>Either</a></li>
-							<li class="tsd-kind-module"><a href="modules/optionvalidation.html" class="tsd-kind-icon">Option<wbr>Validation</a></li>
-							<li class="tsd-kind-module"><a href="modules/agent.html" class="tsd-kind-icon">agent</a></li>
-							<li class="tsd-kind-module"><a href="modules/appinsights.html" class="tsd-kind-icon">appinsights</a></li>
-							<li class="tsd-kind-module"><a href="modules/backoff.html" class="tsd-kind-icon">backoff</a></li>
-							<li class="tsd-kind-module"><a href="modules/dates.html" class="tsd-kind-icon">dates</a></li>
-							<li class="tsd-kind-module"><a href="modules/encrypt.html" class="tsd-kind-icon">encrypt</a></li>
-							<li class="tsd-kind-module"><a href="modules/environment.html" class="tsd-kind-icon">environment</a></li>
-							<li class="tsd-kind-module"><a href="modules/express.html" class="tsd-kind-icon">express</a></li>
-							<li class="tsd-kind-module"><a href="modules/fetch.html" class="tsd-kind-icon">fetch</a></li>
-							<li class="tsd-kind-module"><a href="modules/index.html" class="tsd-kind-icon">index</a></li>
-							<li class="tsd-kind-module"><a href="modules/numbers.html" class="tsd-kind-icon">numbers</a></li>
-							<li class="tsd-kind-module"><a href="modules/pot.html" class="tsd-kind-icon">pot</a></li>
-							<li class="tsd-kind-module"><a href="modules/promises.html" class="tsd-kind-icon">promises</a></li>
-							<li class="tsd-kind-module"><a href="modules/reporters.html" class="tsd-kind-icon">reporters</a></li>
-							<li class="tsd-kind-module"><a href="modules/request_middleware.html" class="tsd-kind-icon">request_<wbr>middleware</a></li>
-							<li class="tsd-kind-module"><a href="modules/requests.html" class="tsd-kind-icon">requests</a></li>
-							<li class="tsd-kind-module"><a href="modules/responses.html" class="tsd-kind-icon">responses</a></li>
-							<li class="tsd-kind-module"><a href="modules/strings.html" class="tsd-kind-icon">strings</a></li>
-							<li class="tsd-kind-module"><a href="modules/tasks.html" class="tsd-kind-icon">tasks</a></li>
-							<li class="tsd-kind-module"><a href="modules/tuples.html" class="tsd-kind-icon">tuples</a></li>
-							<li class="tsd-kind-module"><a href="modules/types.html" class="tsd-kind-icon">types</a></li>
-							<li class="tsd-kind-module"><a href="modules/units.html" class="tsd-kind-icon">units</a></li>
-							<li class="tsd-kind-module"><a href="modules/url.html" class="tsd-kind-icon">url</a></li>
+							<li class="tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter"><a href="optionvalidation.optionvalidation-1.html#constructor" class="tsd-kind-icon">constructor</a></li>
+						</ul>
+					</section>
+					<section class="tsd-index-section ">
+						<h3>Properties</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="optionvalidation.optionvalidation-1.html#_a" class="tsd-kind-icon">_A</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="optionvalidation.optionvalidation-1.html#_l" class="tsd-kind-icon">_L</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="optionvalidation.optionvalidation-1.html#_uri" class="tsd-kind-icon">_URI</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="optionvalidation.optionvalidation-1.html#value" class="tsd-kind-icon">value</a></li>
+						</ul>
+					</section>
+					<section class="tsd-index-section ">
+						<h3>Methods</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="optionvalidation.optionvalidation-1.html#fold" class="tsd-kind-icon">fold</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="optionvalidation.optionvalidation-1.html#map" class="tsd-kind-icon">map</a></li>
 						</ul>
 					</section>
 				</div>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Constructors</h2>
+			<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter">
+				<a name="constructor" class="tsd-anchor"></a>
+				<h3>constructor</h3>
+				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter">
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Option<wbr>Validation&lt;L, A&gt;<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Option</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Validation</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">L</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="optionvalidation.optionvalidation-1.html" class="tsd-signature-type" data-tsd-kind="Class">OptionValidation</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">L</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/OptionValidation.ts#L31">src/OptionValidation.ts:31</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>L</h4>
+							</li>
+							<li>
+								<h4>A</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>value: <span class="tsd-signature-type">Option</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Validation</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">L</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="optionvalidation.optionvalidation-1.html" class="tsd-signature-type" data-tsd-kind="Class">OptionValidation</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">L</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Properties</h2>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="_a" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> _A</h3>
+				<div class="tsd-signature tsd-kind-icon">_A<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">A</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/OptionValidation.ts#L29">src/OptionValidation.ts:29</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="_l" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> _L</h3>
+				<div class="tsd-signature tsd-kind-icon">_L<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">L</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/OptionValidation.ts#L30">src/OptionValidation.ts:30</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="_uri" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> _URI</h3>
+				<div class="tsd-signature tsd-kind-icon">_URI<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;OptionValidation&quot;</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/OptionValidation.ts#L31">src/OptionValidation.ts:31</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="value" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> value</h3>
+				<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Option</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Validation</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">L</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<aside class="tsd-sources">
+				</aside>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+				<a name="fold" class="tsd-anchor"></a>
+				<h3>fold</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<li class="tsd-signature tsd-kind-icon">fold&lt;R&gt;<span class="tsd-signature-symbol">(</span>failure<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>l<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">L</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">R</span>, success<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Option</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/OptionValidation.ts#L36">src/OptionValidation.ts:36</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>R</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>failure: <span class="tsd-signature-symbol">(</span>l<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">L</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">R</span></h5>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter-signature">
+										<ul class="tsd-signatures tsd-kind-type-literal">
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>l<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">L</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">R</span></li>
+										</ul>
+										<ul class="tsd-descriptions">
+											<li class="tsd-description">
+												<h4 class="tsd-parameters-title">Parameters</h4>
+												<ul class="tsd-parameters">
+													<li>
+														<h5>l: <span class="tsd-signature-type">L</span></h5>
+													</li>
+												</ul>
+												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">R</span></h4>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<h5>success: <span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">R</span></h5>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter-signature">
+										<ul class="tsd-signatures tsd-kind-type-literal">
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">R</span></li>
+										</ul>
+										<ul class="tsd-descriptions">
+											<li class="tsd-description">
+												<h4 class="tsd-parameters-title">Parameters</h4>
+												<ul class="tsd-parameters">
+													<li>
+														<h5>a: <span class="tsd-signature-type">A</span></h5>
+													</li>
+												</ul>
+												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">R</span></h4>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Option</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+				<a name="map" class="tsd-anchor"></a>
+				<h3>map</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<li class="tsd-signature tsd-kind-icon">map&lt;B&gt;<span class="tsd-signature-symbol">(</span>f<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">B</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="optionvalidation.optionvalidation-1.html" class="tsd-signature-type" data-tsd-kind="Class">OptionValidation</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">L</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">B</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/OptionValidation.ts#L33">src/OptionValidation.ts:33</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>B</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>f: <span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">B</span></h5>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter-signature">
+										<ul class="tsd-signatures tsd-kind-type-literal">
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">B</span></li>
+										</ul>
+										<ul class="tsd-descriptions">
+											<li class="tsd-description">
+												<h4 class="tsd-parameters-title">Parameters</h4>
+												<ul class="tsd-parameters">
+													<li>
+														<h5>a: <span class="tsd-signature-type">A</span></h5>
+													</li>
+												</ul>
+												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">B</span></h4>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="optionvalidation.optionvalidation-1.html" class="tsd-signature-type" data-tsd-kind="Class">OptionValidation</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">L</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">B</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
 			</section>
 		</section>
 		<footer class="with-border-bottom">
@@ -2810,10 +2975,11 @@ img {
 						<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
 					</ul>
 					<ul class="tsd-legend">
-						<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+						<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+						<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 					</ul>
 					<ul class="tsd-legend">
-						<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+						<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
 					</ul>
 				</div>
 			</div>
