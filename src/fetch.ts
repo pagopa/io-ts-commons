@@ -1,10 +1,9 @@
 /**
  * Helpers for dealing with fetch requests
  */
-
+import { left, right } from "fp-ts/lib/Either";
 import { fromEither, TaskEither, tryCatch } from "fp-ts/lib/TaskEither";
 import { timeoutPromise } from "./promises";
-import { left, right } from "fp-ts/lib/Either";
 import {
   MaxRetries,
   RetriableTask,
