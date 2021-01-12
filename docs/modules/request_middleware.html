@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>@pagopa/ts-commons | @pagopa/ts-commons</title>
+	<title>request_middleware | @pagopa/ts-commons</title>
 	<meta name="description" content="Documentation for @pagopa/ts-commons">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -2646,7 +2646,7 @@ img {
 		<div class="container">
 			<div class="table-wrap">
 				<div class="table-cell">
-					<strong><a href="index.html">@pagopa/ts-commons</a></strong>
+					<strong><a href="../index.html">@pagopa/ts-commons</a></strong>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -2676,122 +2676,758 @@ img {
 </header>
 <nav class="tsd-navigation secondary">
 	<ul>
+		<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+			<a href="request_middleware.html#irequestmiddleware" class="tsd-kind-icon">IRequest<wbr>Middleware</a>
+		</li>
+		<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+			<a href="request_middleware.html#requesthandler" class="tsd-kind-icon">Request<wbr>Handler</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+			<a href="request_middleware.html#withrequestmiddlewares" class="tsd-kind-icon">with<wbr>Request<wbr>Middlewares</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+			<a href="request_middleware.html#wraprequesthandler" class="tsd-kind-icon">wrap<wbr>Request<wbr>Handler</a>
+		</li>
 	</ul>
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
-		<div class="tsd-panel tsd-typography">
-			<p><a href="https://dev.azure.com/pagopa-io/io-ts-commons/_build/latest?definitionId=74&amp;branchName=refs%2Fpull%2F343%2Fmerge"><img src="https://dev.azure.com/pagopa-io/io-ts-commons/_apis/build/status/pagopa.io-ts-commons.code-review?branchName=refs%2Fpull%2F343%2Fmerge" alt="Build Status"></a></p>
-			<p><a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons?ref=badge_shield"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons.svg?type=shield" alt="FOSSA Status"></a></p>
-			<p><a href="https://codecov.io/gh/teamdigitale/italia-ts-commons"><img src="https://codecov.io/gh/teamdigitale/italia-ts-commons/branch/master/graph/badge.svg" alt="codecov"></a></p>
-			<p><a href="https://codeclimate.com/github/teamdigitale/italia-ts-commons/maintainability"><img src="https://api.codeclimate.com/v1/badges/c9be630a66618bde8e4a/maintainability" alt="Maintainability"></a></p>
-			<a href="#pagopa-typescript-commons" id="pagopa-typescript-commons" style="color: inherit; text-decoration: none;">
-				<h1>PagoPA TypeScript Commons</h1>
-			</a>
-			<p>This module provides code shared by the projects of the
-				<a href="https://github.com/pagopa/io">IO App</a>
-			initiative.</p>
-			<p>Documentation is available <a href="https://pagopa.github.io/io-ts-commons/">here</a></p>
-			<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
-				<h2>Contributing</h2>
-			</a>
-			<p>In the following there are instructions to build the app in your computer for development purposes.</p>
-			<a href="#pre-requisites" id="pre-requisites" style="color: inherit; text-decoration: none;">
-				<h3>Pre-requisites</h3>
-			</a>
-			<p>We built a script for helping setting up the laptop, you can find it <a href="https://github.com/pagopa/developer-laptop">here</a></p>
-			<p>Otherwise, please follow the following steps:</p>
-			<a href="#install-nodejs" id="install-nodejs" style="color: inherit; text-decoration: none;">
-				<h4>Install NodeJS</h4>
-			</a>
-			<p>To run the project you need to install a properly version of NodeJS.</p>
-			<p>On macOS and Linux we recommend the use of a virtual environment, such as nodenv for managing multiple versions of NodeJS.
-			The node version used in this project is stored in .node-version.</p>
-			<p>If you already have nodenv installed and configured on your system, the correct version node will be set when you access the app directory.</p>
-			<p>To install, follow the steps described below.</p>
-			<a href="#install-brew" id="install-brew" style="color: inherit; text-decoration: none;">
-				<h4>Install brew</h4>
-			</a>
-			<p>If you do not have it already, install brew following the installation instructions in the <a href="https://brew.sh/">home page</a>.</p>
-			<a href="#install-nodenv" id="install-nodenv" style="color: inherit; text-decoration: none;">
-				<h4>Install nodenv</h4>
-			</a>
-			<pre><code><span style="color: #001080">brew</span><span style="color: #000000"> </span><span style="color: #001080">install</span><span style="color: #000000"> </span><span style="color: #001080">nodenv</span>
-</code></pre>
-			<a href="#install-yarn" id="install-yarn" style="color: inherit; text-decoration: none;">
-				<h4>Install yarn</h4>
-			</a>
-			<p>For the management of javascript dependencies we use Yarn.</p>
-			<p>Yarn is a node application. IF you have already installed in your system version of node compatible with yarn, you can install it as a global command with:</p>
-			<pre><code><span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">install</span><span style="color: #000000"> -</span><span style="color: #001080">g</span><span style="color: #000000"> </span><span style="color: #001080">yarn</span>
-</code></pre>
-			<a href="#install-dependencies" id="install-dependencies" style="color: inherit; text-decoration: none;">
-				<h3>Install dependencies</h3>
-			</a>
-			<p>Install the libraries used by the project:</p>
-			<pre><code><span style="color: #001080">$</span><span style="color: #000000"> </span><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">install</span><span style="color: #000000"> --</span><span style="color: #001080">frozen</span><span style="color: #000000">-</span><span style="color: #001080">lockfile</span>
-</code></pre>
-			<a href="#run-tests" id="run-tests" style="color: inherit; text-decoration: none;">
-				<h3>Run Tests</h3>
-			</a>
-			<a href="#run-unit-tests" id="run-unit-tests" style="color: inherit; text-decoration: none;">
-				<h4>Run Unit Tests</h4>
-			</a>
-			<pre><code><span style="color: #001080">$</span><span style="color: #000000"> </span><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">test</span>
-</code></pre>
-			<a href="#run-lint-check" id="run-lint-check" style="color: inherit; text-decoration: none;">
-				<h4>Run Lint Check</h4>
-			</a>
-			<pre><code><span style="color: #001080">$</span><span style="color: #000000"> </span><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">lint</span>
-</code></pre>
-			<a href="#releasing-a-version" id="releasing-a-version" style="color: inherit; text-decoration: none;">
-				<h3>Releasing a version</h3>
-			</a>
-			<p>Release has been automatized by using Azure Pipelines.</p>
-			<p>To release a new version please go to <a href="https://dev.azure.com/pagopa-io/io-ts-commons">io-ts-commons project on Azure</a> and manually run <em>pagopa.io-ts-commons.deploy</em> the pipeline.
-			Be aware to choose the right release version between major|minor|patch</p>
-			<a href="#license" id="license" style="color: inherit; text-decoration: none;">
-				<h2>License</h2>
-			</a>
-			<p><a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons?ref=badge_large"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fteamdigitale%2Fitalia-ts-commons.svg?type=large" alt="FOSSA Status"></a></p>
-		</div>
-		<div style="position:relative;"><a name="typedoc-main-index" class="tsd-anchor"></a></div>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
-						<h3>Modules</h3>
+						<h3>Type aliases</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-module"><a href="modules/_types_abort_controller.html" class="tsd-kind-icon">@types/abort-<wbr>controller</a></li>
-							<li class="tsd-kind-module"><a href="modules/_types_mock_http_server.html" class="tsd-kind-icon">@types/mock-<wbr>http-<wbr>server</a></li>
-							<li class="tsd-kind-module"><a href="modules/optioneither.html" class="tsd-kind-icon">Option<wbr>Either</a></li>
-							<li class="tsd-kind-module"><a href="modules/optionvalidation.html" class="tsd-kind-icon">Option<wbr>Validation</a></li>
-							<li class="tsd-kind-module"><a href="modules/agent.html" class="tsd-kind-icon">agent</a></li>
-							<li class="tsd-kind-module"><a href="modules/appinsights.html" class="tsd-kind-icon">appinsights</a></li>
-							<li class="tsd-kind-module"><a href="modules/backoff.html" class="tsd-kind-icon">backoff</a></li>
-							<li class="tsd-kind-module"><a href="modules/dates.html" class="tsd-kind-icon">dates</a></li>
-							<li class="tsd-kind-module"><a href="modules/encrypt.html" class="tsd-kind-icon">encrypt</a></li>
-							<li class="tsd-kind-module"><a href="modules/environment.html" class="tsd-kind-icon">environment</a></li>
-							<li class="tsd-kind-module"><a href="modules/express.html" class="tsd-kind-icon">express</a></li>
-							<li class="tsd-kind-module"><a href="modules/fetch.html" class="tsd-kind-icon">fetch</a></li>
-							<li class="tsd-kind-module"><a href="modules/index.html" class="tsd-kind-icon">index</a></li>
-							<li class="tsd-kind-module"><a href="modules/numbers.html" class="tsd-kind-icon">numbers</a></li>
-							<li class="tsd-kind-module"><a href="modules/pot.html" class="tsd-kind-icon">pot</a></li>
-							<li class="tsd-kind-module"><a href="modules/promises.html" class="tsd-kind-icon">promises</a></li>
-							<li class="tsd-kind-module"><a href="modules/reporters.html" class="tsd-kind-icon">reporters</a></li>
-							<li class="tsd-kind-module"><a href="modules/request_middleware.html" class="tsd-kind-icon">request_<wbr>middleware</a></li>
-							<li class="tsd-kind-module"><a href="modules/requests.html" class="tsd-kind-icon">requests</a></li>
-							<li class="tsd-kind-module"><a href="modules/responses.html" class="tsd-kind-icon">responses</a></li>
-							<li class="tsd-kind-module"><a href="modules/strings.html" class="tsd-kind-icon">strings</a></li>
-							<li class="tsd-kind-module"><a href="modules/tasks.html" class="tsd-kind-icon">tasks</a></li>
-							<li class="tsd-kind-module"><a href="modules/tuples.html" class="tsd-kind-icon">tuples</a></li>
-							<li class="tsd-kind-module"><a href="modules/types.html" class="tsd-kind-icon">types</a></li>
-							<li class="tsd-kind-module"><a href="modules/units.html" class="tsd-kind-icon">units</a></li>
-							<li class="tsd-kind-module"><a href="modules/url.html" class="tsd-kind-icon">url</a></li>
+							<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="request_middleware.html#irequestmiddleware" class="tsd-kind-icon">IRequest<wbr>Middleware</a></li>
+							<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="request_middleware.html#requesthandler" class="tsd-kind-icon">Request<wbr>Handler</a></li>
+						</ul>
+					</section>
+					<section class="tsd-index-section ">
+						<h3>Functions</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter"><a href="request_middleware.html#withrequestmiddlewares" class="tsd-kind-icon">with<wbr>Request<wbr>Middlewares</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter"><a href="request_middleware.html#wraprequesthandler" class="tsd-kind-icon">wrap<wbr>Request<wbr>Handler</a></li>
 						</ul>
 					</section>
 				</div>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Type aliases</h2>
+			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+				<a name="irequestmiddleware" class="tsd-anchor"></a>
+				<h3>IRequest<wbr>Middleware</h3>
+				<div class="tsd-signature tsd-kind-icon">IRequest<wbr>Middleware&lt;R, T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">express.Request</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Either</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/request_middleware.ts#L45">src/request_middleware.ts:45</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Interface for implementing a request middleware.</p>
+					</div>
+					<p>A RequestMiddleware is just a function that validates a request or
+						extracts some object out of it.
+						The middleware returns a promise that will resolve to a value that gets
+						passed to the handler.
+						In case the validation fails, the middleware rejects the promise (the
+						value of the error is discarded). In this case the processing of the
+						following middlewares will not happen.
+						Finally, when called, the middleware has full access to the request and
+						the response objects. Access to the response object is particulary useful
+					for returning error messages when the validation fails.</p>
+				</div>
+				<h4 class="tsd-type-parameters-title">Type parameters</h4>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>R</h4>
+					</li>
+					<li>
+						<h4>T</h4>
+					</li>
+				</ul>
+				<div class="tsd-type-declaration">
+					<h4>Type declaration</h4>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-signature">
+							<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">express.Request</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Either</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+							</ul>
+							<ul class="tsd-descriptions">
+								<li class="tsd-description">
+									<h4 class="tsd-parameters-title">Parameters</h4>
+									<ul class="tsd-parameters">
+										<li>
+											<h5>request: <span class="tsd-signature-type">express.Request</span></h5>
+										</li>
+									</ul>
+									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Either</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+				<a name="requesthandler" class="tsd-anchor"></a>
+				<h3>Request<wbr>Handler</h3>
+				<div class="tsd-signature tsd-kind-icon">Request<wbr>Handler&lt;R&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">express.Request</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/request_middleware.ts#L7">src/request_middleware.ts:7</a></li>
+					</ul>
+				</aside>
+				<h4 class="tsd-type-parameters-title">Type parameters</h4>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>R</h4>
+					</li>
+				</ul>
+				<div class="tsd-type-declaration">
+					<h4>Type declaration</h4>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-signature">
+							<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">express.Request</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+							</ul>
+							<ul class="tsd-descriptions">
+								<li class="tsd-description">
+									<h4 class="tsd-parameters-title">Parameters</h4>
+									<ul class="tsd-parameters">
+										<li>
+											<h5>request: <span class="tsd-signature-type">express.Request</span></h5>
+										</li>
+									</ul>
+									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Functions</h2>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+				<a name="withrequestmiddlewares" class="tsd-anchor"></a>
+				<h3>with<wbr>Request<wbr>Middlewares</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+					<li class="tsd-signature tsd-kind-icon">with<wbr>Request<wbr>Middlewares&lt;R1, T1&gt;<span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span>&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">with<wbr>Request<wbr>Middlewares&lt;R1, R2, T1, T2&gt;<span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span>, v2<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span>&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">with<wbr>Request<wbr>Middlewares&lt;R1, R2, R3, T1, T2, T3&gt;<span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span>, v2<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">&gt;</span>, v3<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span>&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">with<wbr>Request<wbr>Middlewares&lt;R1, R2, R3, R4, T1, T2, T3, T4&gt;<span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span>, v2<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">&gt;</span>, v3<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">&gt;</span>, v4<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T4</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span>&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">with<wbr>Request<wbr>Middlewares&lt;R1, R2, R3, R4, R5, T1, T2, T3, T4, T5&gt;<span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span>, v2<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">&gt;</span>, v3<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">&gt;</span>, v4<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T4</span><span class="tsd-signature-symbol">&gt;</span>, v5<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T5</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span>&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span>, v5<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T5</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">with<wbr>Request<wbr>Middlewares&lt;R1, R2, R3, R4, R5, R6, T1, T2, T3, T4, T5, T6&gt;<span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span>, v2<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">&gt;</span>, v3<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">&gt;</span>, v4<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T4</span><span class="tsd-signature-symbol">&gt;</span>, v5<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T5</span><span class="tsd-signature-symbol">&gt;</span>, v6<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R6</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T6</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span>&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span>, v5<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T5</span>, v6<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T6</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R6</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/request_middleware.ts#L57">src/request_middleware.ts:57</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>R1</h4>
+							</li>
+							<li>
+								<h4>T1</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>v1: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns &lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-has-type-parameter">
+									<li class="tsd-signature tsd-kind-icon">&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-type-parameters-title">Type parameters</h4>
+										<ul class="tsd-type-parameters">
+											<li>
+												<h4>RH</h4>
+											</li>
+										</ul>
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>handler: <span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+												<ul class="tsd-parameters">
+													<li class="tsd-parameter-signature">
+														<ul class="tsd-signatures tsd-kind-type-literal">
+															<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+														</ul>
+														<ul class="tsd-descriptions">
+															<li class="tsd-description">
+																<h4 class="tsd-parameters-title">Parameters</h4>
+																<ul class="tsd-parameters">
+																	<li>
+																		<h5>v1: <span class="tsd-signature-type">T1</span></h5>
+																	</li>
+																</ul>
+																<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/request_middleware.ts#L61">src/request_middleware.ts:61</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>R1</h4>
+							</li>
+							<li>
+								<h4>R2</h4>
+							</li>
+							<li>
+								<h4>T1</h4>
+							</li>
+							<li>
+								<h4>T2</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>v1: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v2: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns &lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-has-type-parameter">
+									<li class="tsd-signature tsd-kind-icon">&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-type-parameters-title">Type parameters</h4>
+										<ul class="tsd-type-parameters">
+											<li>
+												<h4>RH</h4>
+											</li>
+										</ul>
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>handler: <span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+												<ul class="tsd-parameters">
+													<li class="tsd-parameter-signature">
+														<ul class="tsd-signatures tsd-kind-type-literal">
+															<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+														</ul>
+														<ul class="tsd-descriptions">
+															<li class="tsd-description">
+																<h4 class="tsd-parameters-title">Parameters</h4>
+																<ul class="tsd-parameters">
+																	<li>
+																		<h5>v1: <span class="tsd-signature-type">T1</span></h5>
+																	</li>
+																	<li>
+																		<h5>v2: <span class="tsd-signature-type">T2</span></h5>
+																	</li>
+																</ul>
+																<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/request_middleware.ts#L68">src/request_middleware.ts:68</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>R1</h4>
+							</li>
+							<li>
+								<h4>R2</h4>
+							</li>
+							<li>
+								<h4>R3</h4>
+							</li>
+							<li>
+								<h4>T1</h4>
+							</li>
+							<li>
+								<h4>T2</h4>
+							</li>
+							<li>
+								<h4>T3</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>v1: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v2: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v3: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns &lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-has-type-parameter">
+									<li class="tsd-signature tsd-kind-icon">&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-type-parameters-title">Type parameters</h4>
+										<ul class="tsd-type-parameters">
+											<li>
+												<h4>RH</h4>
+											</li>
+										</ul>
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>handler: <span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+												<ul class="tsd-parameters">
+													<li class="tsd-parameter-signature">
+														<ul class="tsd-signatures tsd-kind-type-literal">
+															<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+														</ul>
+														<ul class="tsd-descriptions">
+															<li class="tsd-description">
+																<h4 class="tsd-parameters-title">Parameters</h4>
+																<ul class="tsd-parameters">
+																	<li>
+																		<h5>v1: <span class="tsd-signature-type">T1</span></h5>
+																	</li>
+																	<li>
+																		<h5>v2: <span class="tsd-signature-type">T2</span></h5>
+																	</li>
+																	<li>
+																		<h5>v3: <span class="tsd-signature-type">T3</span></h5>
+																	</li>
+																</ul>
+																<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/request_middleware.ts#L77">src/request_middleware.ts:77</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>R1</h4>
+							</li>
+							<li>
+								<h4>R2</h4>
+							</li>
+							<li>
+								<h4>R3</h4>
+							</li>
+							<li>
+								<h4>R4</h4>
+							</li>
+							<li>
+								<h4>T1</h4>
+							</li>
+							<li>
+								<h4>T2</h4>
+							</li>
+							<li>
+								<h4>T3</h4>
+							</li>
+							<li>
+								<h4>T4</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>v1: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v2: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v3: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v4: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T4</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns &lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-has-type-parameter">
+									<li class="tsd-signature tsd-kind-icon">&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-type-parameters-title">Type parameters</h4>
+										<ul class="tsd-type-parameters">
+											<li>
+												<h4>RH</h4>
+											</li>
+										</ul>
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>handler: <span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+												<ul class="tsd-parameters">
+													<li class="tsd-parameter-signature">
+														<ul class="tsd-signatures tsd-kind-type-literal">
+															<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+														</ul>
+														<ul class="tsd-descriptions">
+															<li class="tsd-description">
+																<h4 class="tsd-parameters-title">Parameters</h4>
+																<ul class="tsd-parameters">
+																	<li>
+																		<h5>v1: <span class="tsd-signature-type">T1</span></h5>
+																	</li>
+																	<li>
+																		<h5>v2: <span class="tsd-signature-type">T2</span></h5>
+																	</li>
+																	<li>
+																		<h5>v3: <span class="tsd-signature-type">T3</span></h5>
+																	</li>
+																	<li>
+																		<h5>v4: <span class="tsd-signature-type">T4</span></h5>
+																	</li>
+																</ul>
+																<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/request_middleware.ts#L87">src/request_middleware.ts:87</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>R1</h4>
+							</li>
+							<li>
+								<h4>R2</h4>
+							</li>
+							<li>
+								<h4>R3</h4>
+							</li>
+							<li>
+								<h4>R4</h4>
+							</li>
+							<li>
+								<h4>R5</h4>
+							</li>
+							<li>
+								<h4>T1</h4>
+							</li>
+							<li>
+								<h4>T2</h4>
+							</li>
+							<li>
+								<h4>T3</h4>
+							</li>
+							<li>
+								<h4>T4</h4>
+							</li>
+							<li>
+								<h4>T5</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>v1: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v2: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v3: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v4: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T4</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v5: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T5</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns &lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span>, v5<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T5</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-has-type-parameter">
+									<li class="tsd-signature tsd-kind-icon">&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span>, v5<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T5</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-type-parameters-title">Type parameters</h4>
+										<ul class="tsd-type-parameters">
+											<li>
+												<h4>RH</h4>
+											</li>
+										</ul>
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>handler: <span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span>, v5<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T5</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+												<ul class="tsd-parameters">
+													<li class="tsd-parameter-signature">
+														<ul class="tsd-signatures tsd-kind-type-literal">
+															<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span>, v5<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T5</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+														</ul>
+														<ul class="tsd-descriptions">
+															<li class="tsd-description">
+																<h4 class="tsd-parameters-title">Parameters</h4>
+																<ul class="tsd-parameters">
+																	<li>
+																		<h5>v1: <span class="tsd-signature-type">T1</span></h5>
+																	</li>
+																	<li>
+																		<h5>v2: <span class="tsd-signature-type">T2</span></h5>
+																	</li>
+																	<li>
+																		<h5>v3: <span class="tsd-signature-type">T3</span></h5>
+																	</li>
+																	<li>
+																		<h5>v4: <span class="tsd-signature-type">T4</span></h5>
+																	</li>
+																	<li>
+																		<h5>v5: <span class="tsd-signature-type">T5</span></h5>
+																	</li>
+																</ul>
+																<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/request_middleware.ts#L98">src/request_middleware.ts:98</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>R1</h4>
+							</li>
+							<li>
+								<h4>R2</h4>
+							</li>
+							<li>
+								<h4>R3</h4>
+							</li>
+							<li>
+								<h4>R4</h4>
+							</li>
+							<li>
+								<h4>R5</h4>
+							</li>
+							<li>
+								<h4>R6</h4>
+							</li>
+							<li>
+								<h4>T1</h4>
+							</li>
+							<li>
+								<h4>T2</h4>
+							</li>
+							<li>
+								<h4>T3</h4>
+							</li>
+							<li>
+								<h4>T4</h4>
+							</li>
+							<li>
+								<h4>T5</h4>
+							</li>
+							<li>
+								<h4>T6</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>v1: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T1</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v2: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T2</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v3: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T3</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v4: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T4</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v5: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T5</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li>
+								<h5>v6: <a href="request_middleware.html#irequestmiddleware" class="tsd-signature-type" data-tsd-kind="Type alias">IRequestMiddleware</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R6</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T6</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns &lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span>, v5<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T5</span>, v6<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T6</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R6</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-has-type-parameter">
+									<li class="tsd-signature tsd-kind-icon">&lt;RH&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span>, v5<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T5</span>, v6<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T6</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R6</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-type-parameters-title">Type parameters</h4>
+										<ul class="tsd-type-parameters">
+											<li>
+												<h4>RH</h4>
+											</li>
+										</ul>
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>handler: <span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span>, v5<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T5</span>, v6<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T6</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+												<ul class="tsd-parameters">
+													<li class="tsd-parameter-signature">
+														<ul class="tsd-signatures tsd-kind-type-literal">
+															<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>v1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T1</span>, v2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T2</span>, v3<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T3</span>, v4<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T4</span>, v5<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T5</span>, v6<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T6</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+														</ul>
+														<ul class="tsd-descriptions">
+															<li class="tsd-description">
+																<h4 class="tsd-parameters-title">Parameters</h4>
+																<ul class="tsd-parameters">
+																	<li>
+																		<h5>v1: <span class="tsd-signature-type">T1</span></h5>
+																	</li>
+																	<li>
+																		<h5>v2: <span class="tsd-signature-type">T2</span></h5>
+																	</li>
+																	<li>
+																		<h5>v3: <span class="tsd-signature-type">T3</span></h5>
+																	</li>
+																	<li>
+																		<h5>v4: <span class="tsd-signature-type">T4</span></h5>
+																	</li>
+																	<li>
+																		<h5>v5: <span class="tsd-signature-type">T5</span></h5>
+																	</li>
+																	<li>
+																		<h5>v6: <span class="tsd-signature-type">T6</span></h5>
+																	</li>
+																</ul>
+																<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/responses.iresponse.html" class="tsd-signature-type" data-tsd-kind="Interface">IResponse</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RH</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R2</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R3</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R4</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R5</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">R6</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+				<a name="wraprequesthandler" class="tsd-anchor"></a>
+				<h3>wrap<wbr>Request<wbr>Handler</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+					<li class="tsd-signature tsd-kind-icon">wrap<wbr>Request<wbr>Handler&lt;R&gt;<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">express.RequestHandler</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/pagopa/io-ts-commons/blob/1c92142/src/request_middleware.ts#L16">src/request_middleware.ts:16</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Transforms a typesafe RequestHandler into an Express Request Handler.</p>
+							</div>
+							<p>Failed promises will be mapped to 500 errors handled by ResponseErrorGeneric.</p>
+						</div>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>R</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>handler: <a href="request_middleware.html#requesthandler" class="tsd-signature-type" data-tsd-kind="Type alias">RequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">express.RequestHandler</span></h4>
+					</li>
+				</ul>
 			</section>
 		</section>
 		<footer class="with-border-bottom">
