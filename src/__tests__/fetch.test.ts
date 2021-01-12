@@ -8,8 +8,15 @@ import {
   retryLogicForTransientResponseError
 } from "../fetch";
 import { DeferredPromise, timeoutPromise } from "../promises";
-import { MaxRetries, RetryAborted, withRetries } from "../tasks";
+import {
+  MaxRetries,
+  RetriableTask,
+  RetryAborted,
+  TransientError,
+  withRetries
+} from "../tasks";
 import { Millisecond } from "../units";
+import { fromPredicate } from "fp-ts/lib/TaskEither";
 
 // tslint:disable-next-line: no-any no-object-mutation
 (global as any).fetch = nodeFetch;
@@ -176,5 +183,66 @@ describe("retriableFetch", () => {
     // start the fetch request
     await expect(fetchWithRetries(longDelayUrl)).rejects.toEqual("max-retries");
     expect(server.requests().length).toEqual(3);
+  });
+
+  it("should execute fetch again for every transient error", async () => {
+    const mockResponse200 = ({ status: 200 } as unknown) as Response;
+    const mockResponse404 = ({ status: 404 } as unknown) as Response;
+    const mockFetch = jest.fn<
+      ReturnType<typeof fetch>,
+      Parameters<typeof fetch>
+    >(async _ => mockResponse200);
+
+    const delay = 10 as Millisecond;
+    const retries = 3;
+    const numberOfTransientErrors = retries - 1; // below maximum retries
+
+    // fetch returns a transient error for numberOfTransientErrors of times
+    Array.from({ length: numberOfTransientErrors }).forEach(_ =>
+      mockFetch.mockImplementationOnce(async _ => mockResponse404)
+    );
+
+    const constantBackoff = () => delay;
+    const retryLogic = withRetries<Error, Response>(retries, constantBackoff);
+    const retryWithTransientError = retryLogicForTransientResponseError(
+      _ => _.status === 404,
+      retryLogic
+    );
+    const fetchWithRetries = retriableFetch(retryWithTransientError)(mockFetch);
+
+    const req = fetchWithRetries(longDelayUrl);
+
+    // expect the final result to be the success response
+    await expect(req).resolves.toBe(mockResponse200);
+
+    // expect fetch to be called once for every transient error plus the successful response
+    expect(mockFetch).toHaveBeenCalledTimes(numberOfTransientErrors + 1);
+  });
+
+  it("should not retry if it is not a transient error", async () => {
+    const mockResponse200 = ({ status: 200 } as unknown) as Response;
+    const mockFetch = jest.fn<
+      ReturnType<typeof fetch>,
+      Parameters<typeof fetch>
+    >(async _ => mockResponse200);
+
+    const delay = 10 as Millisecond;
+    const retries = 3;
+
+    const constantBackoff = () => delay;
+    const retryLogic = withRetries<Error, Response>(retries, constantBackoff);
+    const retryWithTransientError = retryLogicForTransientResponseError(
+      _ => _.status === 404,
+      retryLogic
+    );
+    const fetchWithRetries = retriableFetch(retryWithTransientError)(mockFetch);
+
+    const req = fetchWithRetries(longDelayUrl /** any url */);
+
+    // expect the final result to be the success response
+    await expect(req).resolves.toBe(mockResponse200);
+
+    // expect fetch to be called once for every transient error plus the successful response
+    expect(mockFetch).toHaveBeenCalledTimes(1);
   });
 });
