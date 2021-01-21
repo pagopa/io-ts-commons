@@ -126,14 +126,10 @@ export const getFetch = (
 ): typeof fetch => {
   const httpAgent = getHttpFetch(env, extraOptions);
   const httpsAgent = getHttpsFetch(env, extraOptions);
-  return (
-    input: Parameters<typeof fetch>[0],
-    init: Parameters<typeof fetch>[1]
-  ): ReturnType<typeof fetch> => {
+  return (input, init) => {
     const url = typeof input === "string" ? input : input.url;
-    if (url.startsWith("https://")) {
-      return httpsAgent(input, init);
-    }
-    return httpAgent(input, init);
+    return url.startsWith("https://")
+      ? httpsAgent(input, init)
+      : httpAgent(input, init);
   };
 };
