@@ -1,6 +1,6 @@
 import { IncomingMessage } from "http";
 import ServerMock = require("mock-http-server");
-import { getHttpFetch, getHttpsFetch } from "../agent";
+import { getHttpFetch, getHttpsFetch, getFetch } from "../agent";
 
 const HTTP_TEST_HOST = "localhost";
 const HTTP_TEST_PORT = 40004;
@@ -93,40 +93,41 @@ const envWithKeepalive = {
 const anHttpUrl = `http://${HTTP_TEST_HOST}:${HTTP_TEST_PORT}/agent`;
 const anHttpsUrl = `https://${HTTPS_TEST_HOST}:${HTTPS_TEST_PORT}/agent`;
 
-describe("HttpAgentKeepAlive", () => {
-  const server = createServerMock();
-  beforeAll(server.start);
-  afterAll(server.stop);
+const server = createServerMock();
+beforeAll(server.start);
+afterAll(server.stop);
 
-  it("should use keepalive for http request", async () => {
-    const fetch = getHttpFetch(envWithKeepalive);
-    const res = await fetch(anHttpUrl);
+describe.each`
+  name                        | protocol   | agentFactory     | testUrl
+  ${"http with http url"}     | ${"http"}  | ${getHttpFetch}  | ${anHttpUrl}
+  ${"https with http url"}    | ${"https"} | ${getHttpsFetch} | ${anHttpsUrl}
+  ${"generic with http url"}  | ${"http"}  | ${getFetch}      | ${anHttpUrl}
+  ${"generic with https url"} | ${"https"} | ${getFetch}      | ${anHttpsUrl}
+`("HttpAgentKeepAlive $name", ({ protocol, agentFactory, testUrl }) => {
+  it(`should use keepalive for ${protocol} request`, async () => {
+    const fetch = agentFactory(envWithKeepalive);
+    const res = await fetch(testUrl);
     expect(res.headers.get("connection")).toContain("keep-alive");
-    const res2 = await fetch(anHttpUrl);
+    const res2 = await fetch(testUrl);
     expect(await res2.json()).toEqual(await res.json());
   });
 
-  it("should not use keepalive for http request", async () => {
-    const fetch = getHttpFetch({});
-    const res = await fetch(anHttpUrl);
+  it(`should not use keepalive for ${protocol} request`, async () => {
+    const fetch = agentFactory({});
+    const res = await fetch(testUrl);
     expect(res.headers.get("connection")).toContain("close");
-    const res2 = await fetch(anHttpUrl);
+    const res2 = await fetch(testUrl);
     expect(await res2.json()).not.toEqual(await res.json());
   });
+});
 
-  it("should use keepalive for https request", async () => {
-    const fetch = getHttpsFetch(envWithKeepalive);
-    const res = await fetch(anHttpsUrl);
+describe("HttpAgentKeepAlive generic", () => {
+  it(`does not use the same agent for urls with different protocols`, async () => {
+    const fetch = getFetch(envWithKeepalive);
+    const res = await fetch(anHttpUrl);
     expect(res.headers.get("connection")).toContain("keep-alive");
     const res2 = await fetch(anHttpsUrl);
-    expect(await res2.json()).toEqual(await res.json());
-  });
-
-  it("should not use keepalive for https request", async () => {
-    const fetch = getHttpsFetch({});
-    const res = await fetch(anHttpsUrl);
-    expect(res.headers.get("connection")).toContain("close");
-    const res2 = await fetch(anHttpsUrl);
+    // as urls are different, diffent agents would be used
     expect(await res2.json()).not.toEqual(await res.json());
   });
 });

@@ -117,3 +117,23 @@ export const getHttpsFetch = (
       })
     : // tslint:disable-next-line: no-any
       (nodeFetch as any);
+
+// Wraps both HTTP and HTTPS agents and serve the correct one based on the protocol of the request url
+// Note: extra options are valid only when FETCH_KEEPALIVE_ENABLED=true
+export const getFetch = (
+  env: typeof process.env,
+  extraOptions: agentkeepalive.HttpOptions /* same as agentkeepalive.HttpsOptions */ = {}
+): typeof fetch => {
+  const httpAgent = getHttpFetch(env, extraOptions);
+  const httpsAgent = getHttpsFetch(env, extraOptions);
+  return (
+    input: Parameters<typeof fetch>[0],
+    init: Parameters<typeof fetch>[1]
+  ): ReturnType<typeof fetch> => {
+    const url = typeof input === "string" ? input : input.url;
+    if (url.startsWith("https://")) {
+      return httpsAgent(input, init);
+    }
+    return httpAgent(input, init);
+  };
+};
