@@ -89,7 +89,7 @@ stages:
               # The branch/tag name is calculated from the source branch
               #  ex: Build.SourceBranch=refs/heads/master --> master
               #  ex: Build.SourceBranch=refs/tags/v1.2.3-RELEASE --> v1.2.3-RELEASE
-              gitReference: ${ gitReference }
+              gitReference: $(gitReference)
 
           - script: |
               yarn build
