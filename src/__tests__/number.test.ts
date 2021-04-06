@@ -7,7 +7,8 @@ import {
   NonNegativeNumber,
   NumberFromString,
   WithinRangeInteger,
-  WithinRangeNumber
+  WithinRangeNumber,
+  NonNegativeIntegerFromString
 } from "../numbers";
 
 describe("NonNegativeInteger", () => {
@@ -98,5 +99,17 @@ describe("NumberFromString", () => {
   it("should fail with an invalid number string", async () => {
     const validation = NumberFromString.decode("123.AA");
     expect(isRight(validation)).toBeFalsy();
+  });
+});
+
+describe("NonNegativeIntegerFromString", () => {
+  it("should get integer 1 from string '1'", async () => {
+    const n = NonNegativeIntegerFromString.decode("1");
+    expect(n.isRight()).toBeTruthy();
+    expect(n.value).toEqual(1);
+  });
+  it("should get error from string '-1'", () => {
+    const n = NonNegativeIntegerFromString.decode("-1");
+    expect(n.isLeft()).toBeTruthy();
   });
 });
