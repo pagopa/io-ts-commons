@@ -113,3 +113,13 @@ export const IntegerFromString = t.refinement(
   "IntegerFromString"
 );
 export type IntegerFromString = t.TypeOf<typeof IntegerFromString>;
+
+/**
+ * Parses a string into a non negative integer
+ */
+export const NonNegativeIntegerFromString = tag<INonNegativeIntegerTag>()(
+  t.refinement(IntegerFromString, i => i >= 0, "NonNegativeIntegerFromString")
+);
+type NonNegativeIntegerFromString = t.TypeOf<
+  typeof NonNegativeIntegerFromString
+>;
