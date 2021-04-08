@@ -4,9 +4,11 @@ import nodeFetch from "node-fetch";
 // whether we want to reuse sockets in the fetch client
 // this is expecially useful to avoid SNAT exhaustion in Azure
 // see https://blog.botframework.com/2018/03/05/fix-snat-exhaustion-node-js-bots/
+// eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
 export const isFetchKeepaliveEnabled = (env: typeof process.env) =>
   env.FETCH_KEEPALIVE_ENABLED === "true";
 
+// eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
 export const getKeepAliveAgentOptions = (env: typeof process.env) => ({
   freeSocketTimeout:
     env.FETCH_KEEPALIVE_FREE_SOCKET_TIMEOUT === undefined
@@ -40,10 +42,12 @@ export const getKeepAliveAgentOptions = (env: typeof process.env) => ({
 // @see https://github.com/node-modules/agentkeepalive/issues/76
 
 // HTTP-only agent, with optional keepalive agent
+// eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
 export const newHttpAgent = (httpOptions: agentkeepalive.HttpOptions) =>
   new agentkeepalive(httpOptions);
 
 // HTTPs-only agent, with optional keepalive agent
+// eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
 export const newHttpsAgent = (httpsOptions: agentkeepalive.HttpsOptions) =>
   new agentkeepalive.HttpsAgent(httpsOptions);
 
@@ -55,6 +59,7 @@ const getKeepaliveHttpFetch: (
   // see https://github.com/node-modules/agentkeepalive#new-agentoptions
   const httpAgent = newHttpAgent(httpOptions);
 
+  // eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
   return (input, init) => {
     const initWithKeepalive = {
       ...(init === undefined ? {} : init),
@@ -76,7 +81,7 @@ const getKeepaliveHttpsFetch: (
   // see https://github.com/node-modules/agentkeepalive#new-agentoptions
   const httpAgent = newHttpsAgent(httpsOptions);
 
-  // eslint-disable-next-line sonarjs/no-identical-functions
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, sonarjs/no-identical-functions
   return (input, init) => {
     const initWithKeepalive = {
       ...(init === undefined ? {} : init),
@@ -126,6 +131,7 @@ export const getFetch = (
 ): typeof fetch => {
   const httpAgent = getHttpFetch(env, extraOptions);
   const httpsAgent = getHttpsFetch(env, extraOptions);
+  // eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
   return (input, init) => {
     const url = typeof input === "string" ? input : input.url;
     return url.startsWith("https://")

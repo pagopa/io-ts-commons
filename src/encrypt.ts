@@ -8,6 +8,7 @@ const IV_LENGTH = 16;
 // aes-128-cbc uses a 128 bit key (16 bytes * 8)
 const AES_KEY_LENGTH = 16;
 
+// eslint-disable-next-line  @typescript-eslint/naming-convention
 export const EncryptedPayload = t.interface({
   // encrypted text (Base64)
   cypherText: t.string,
@@ -16,11 +17,13 @@ export const EncryptedPayload = t.interface({
   iv: t.string,
 
   // AES Key encrypted with RSA public key (Base64)
+  // eslint-disable-next-line  sort-keys
   encryptedKey: t.string
 });
 
 export type EncryptedPayload = t.TypeOf<typeof EncryptedPayload>;
 
+// eslint-disable-next-line  prefer-arrow/prefer-arrow-functions
 export function toEncryptedPayload(
   rsaPubKey: string,
   plainText: string
@@ -45,6 +48,7 @@ export function toEncryptedPayload(
   }, toError);
 }
 
+// eslint-disable-next-line  prefer-arrow/prefer-arrow-functions
 export function toPlainText(
   rsaPrivateKey: string,
   encryptedPayload: EncryptedPayload

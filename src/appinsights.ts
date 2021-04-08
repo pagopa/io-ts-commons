@@ -13,12 +13,14 @@ interface IInsightsRequestData {
   readonly baseType: "RequestData";
   readonly baseData: {
     readonly ver: number;
+    // eslint-disable-next-line  @typescript-eslint/ban-types
     readonly properties: {};
+    // eslint-disable-next-line  @typescript-eslint/ban-types
     readonly measurements: {};
     readonly id: string;
     readonly name: string;
-    // eslint-disable-next-line @typescript-eslint/prefer-readonly
-    readonly url: string;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    url: string;
     readonly source?: string;
     readonly duration: string;
     readonly responseCode: string;
@@ -36,7 +38,6 @@ export type ApplicationInsightsConfig = IInsightsTracingConfig &
   Partial<
     Pick<
       Config,
-      // eslint-disable-next-line sonar/max-union-size
       "httpAgent" | "httpsAgent" | "samplingPercentage" | "disableAppInsights"
     >
   >;
@@ -44,6 +45,7 @@ export type ApplicationInsightsConfig = IInsightsTracingConfig &
 /**
  * Internal usage, do not export
  */
+// eslint-disable-next-line  prefer-arrow/prefer-arrow-functions
 function startAppInsights(
   instrumentationKey: string,
   aiConfig: ApplicationInsightsConfig
@@ -67,9 +69,11 @@ function startAppInsights(
     .start();
 
   appInsights.defaultClient.addTelemetryProcessor(
+    // eslint-disable-next-line  @typescript-eslint/no-use-before-define
     removeQueryParamsPreprocessor
   );
 
+  // eslint-disable-next-line  @typescript-eslint/no-use-before-define
   appInsights.defaultClient.addTelemetryProcessor(disableSamplingByTag);
 
   // Configure the data context of the telemetry client
@@ -109,6 +113,7 @@ function startAppInsights(
   return appInsights.defaultClient;
 }
 
+// eslint-disable-next-line  prefer-arrow/prefer-arrow-functions
 export function removeQueryParamsPreprocessor(
   envelope: appInsights.Contracts.Envelope,
   _?: {
@@ -125,6 +130,7 @@ export function removeQueryParamsPreprocessor(
   return true;
 }
 
+// eslint-disable-next-line  prefer-arrow/prefer-arrow-functions
 export function disableSamplingByTag(
   envelope: appInsights.Contracts.Envelope,
   _?: {
@@ -159,6 +165,7 @@ export function disableSamplingByTag(
  * the call with the parent request.
  *
  */
+// eslint-disable-next-line  prefer-arrow/prefer-arrow-functions
 export function initAppInsights(
   aiInstrumentationKey: string,
   config?: ApplicationInsightsConfig,
