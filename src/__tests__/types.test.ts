@@ -29,7 +29,7 @@ describe("readonlySetType", () => {
   const aSetOfStrings = readonlySetType(t.string, "Set of strings");
 
   it("should validate", () => {
-    // tslint:disable-next-line:no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fixtures: ReadonlyArray<any> = [[], ["a"], new Set("x")];
 
     fixtures.forEach(f => {
@@ -116,7 +116,7 @@ describe("withDefault (single value)", () => {
   });
 
   it("should evaluate to the default value/2", () => {
-    // tslint:disable-next-line:no-null-keyword
+    // eslint-disable-next-line no-null/no-null
     const r = defaultString.decode(null);
     expect(isRight(r));
     expect(r.value).toEqual("DEFAULT");
@@ -137,7 +137,7 @@ describe("withDefault (composed partial)", () => {
   });
 
   it("should evaluate to the default value/4", () => {
-    // tslint:disable-next-line:no-null-keyword
+    // eslint-disable-next-line no-null/no-null
     const r = defaultObject.decode({ k: undefined });
     expect(isRight(r));
     expect(r.value).toEqual({ k: "DEFAULT" });

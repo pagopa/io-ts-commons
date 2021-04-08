@@ -5,3 +5,7 @@ yarn-error.log
 coverage
 .vscode
 .DS_Store
+
+# eslint section
+!.eslintrc.js
+.eslintcache

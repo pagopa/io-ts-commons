@@ -31,7 +31,7 @@ type GetSimpleT = IGetApiRequestType<
 
 const getSimpleT: GetSimpleT = {
   headers: () => ({
-    // tslint:disable-next-line: no-duplicate-string
+    // eslint-disable-next-line sonarjs/no-duplicate-string
     Authorization: "Bearer: 123"
   }),
   method: "get",

@@ -39,7 +39,7 @@ describe("exponentialBackoff", () => {
     const delaysNoJitter = tries.map(backoffNoJitter);
     const delaysWithJitter = tries.map(backoffWithJitter);
 
-    // tslint:disable-next-line:no-let
+    // eslint-disable-next-line functional/no-let
     for (let i = 0; i < tries.length; i++) {
       const diff = delaysWithJitter[i] - delaysNoJitter[i];
       expect(diff).toBeGreaterThanOrEqual(0);

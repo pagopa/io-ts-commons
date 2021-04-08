@@ -2,7 +2,7 @@
  * Type safe wrapper around the fetch API
  */
 
-// tslint:disable:variable-name
+// eslint-disable camelcase
 
 // TODO: support for optional query parameters
 // TODO: when query/headers type is "never", it should not allow any query/header to be produced
@@ -19,11 +19,11 @@ export type RequestMethod = "get" | "post" | "put" | "delete";
 /**
  * Describes the possible header keys of a request
  */
-// tslint:disable-next-line:no-duplicate-string
+// eslint-disable-next-line sonarjs/no-duplicate-string
 export type RequestHeaderKey =
   | "Accept-Encoding"
   | "Authorization"
-  | "Content-Type" // tslint:disable-line:no-duplicate-string
+  | "Content-Type" // eslint-disable-line sonarjs/no-duplicate-string
   | "Host"
   | "If-None-Match"
   | "Ocp-Apim-Subscription-Key"
@@ -65,9 +65,9 @@ export function composeHeaderProducers<
     const headers0 = p0(params);
     const headers1 = p1(params);
     return {
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(headers0 as any),
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(headers1 as any)
     };
   };
@@ -238,7 +238,7 @@ export type TypeofApiResponse<T> = T extends ApiRequestType<
  */
 export type TypeOfApiResponseStatus<T> = TypeofApiResponse<
   T
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 > extends IResponseType<infer S, any>
   ? S
   : never;
@@ -335,7 +335,7 @@ export class ApiRequestBuilder<
   /**
    * Creates a new empty request with the PUT method.
    */
-  /* tslint:disable-next-line:no-identical-functions */
+  /* eslint-disable-next-line sonarjs/no-identical-functions */
   public static ofPut(): EmptyApiRequestBuilder<"put", {}, "Content-Type"> {
     return new ApiRequestBuilder<
       "put",
@@ -368,13 +368,13 @@ export class ApiRequestBuilder<
     ApiRequestTypeForMethod<M, P & P1, KH, Q | Q1, R>
   > {
     const newQuery = (p: P & P1) => ({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(this._request.query(p) as any),
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(query(p) as any)
     });
     return new ApiRequestBuilder({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(this._request as any),
       query: newQuery
     });
@@ -394,13 +394,13 @@ export class ApiRequestBuilder<
     ApiRequestTypeForMethod<M, P & P1, KH | KH1, Q, R>
   > {
     const newHeaders = (p: P & P1) => ({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(this._request.headers(p) as any),
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(headers(p) as any)
     });
     return new ApiRequestBuilder({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(this._request as any),
       headers: newHeaders
     });
@@ -420,7 +420,7 @@ export class ApiRequestBuilder<
     ApiRequestTypeForMethod<M, P, KH, Q, R1>
   > {
     return new ApiRequestBuilder({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(this._request as any),
       response_decoder
     });
@@ -447,7 +447,7 @@ function queryStringFromParams<P extends string>(
  * Returns an async method that implements the provided ApiRequestType backed
  * by the "fetch" API.
  */
-// tslint:disable-next-line:cognitive-complexity
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export function createFetchRequestForApi<
   P,
   KH extends RequestHeaderKey,
@@ -551,7 +551,7 @@ export function ioResponseDecoder<
 >(
   status: S,
   type: t.Type<R, O>,
-  // tslint:disable-next-line: no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   preprocessor: (i: any) => any = _ => _
 ): ResponseDecoder<IResponseType<S, R, H>> {
   return async (response: Response) => {
@@ -562,7 +562,7 @@ export function ioResponseDecoder<
     const json = await response.json();
     const validated = type.decode(preprocessor(json));
     return validated.map(value => ({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       headers: response.headers as any,
       status,
       value
@@ -584,7 +584,7 @@ export function basicErrorResponseDecoder<
       return undefined;
     }
     return right<t.Errors, IResponseType<S, string, H>>({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       headers: response.headers as any,
       status,
       value: response.statusText
@@ -606,7 +606,7 @@ export type BasicResponseType<R, H extends string = never> =
  */
 export function basicResponseDecoder<R, O = R, H extends string = never>(
   type: t.Type<R, O>,
-  // tslint:disable-next-line: no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   preprocessor?: (i: any) => any
 ): ResponseDecoder<BasicResponseType<R, H>> {
   return composeResponseDecoders(
@@ -631,7 +631,7 @@ export function constantResponseDecoder<
       return undefined;
     }
     return right<t.Errors, IResponseType<S, T, H>>({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       headers: response.headers as any,
       status,
       value
@@ -646,11 +646,9 @@ export function constantResponseDecoder<
 export function ParamAuthorizationBearerHeaderProducer<
   P extends { readonly token: string }
 >(): RequestHeaderProducer<P, "Authorization"> {
-  return (p: P): RequestHeaders<"Authorization"> => {
-    return {
-      Authorization: `Bearer ${p.token}`
-    };
-  };
+  return (p: P): RequestHeaders<"Authorization"> => ({
+    Authorization: `Bearer ${p.token}`
+  });
 }
 
 /**
@@ -748,5 +746,5 @@ export type AddResponseType<
 export type OmitStatusFromResponse<
   T,
   S extends number
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 > = T extends IResponseType<S, any> ? never : T;

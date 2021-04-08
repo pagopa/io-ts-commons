@@ -13,20 +13,17 @@ export type RequestHandler<R> = (
  *
  * Failed promises will be mapped to 500 errors handled by ResponseErrorGeneric.
  */
-export function wrapRequestHandler<R>(
+export const wrapRequestHandler = <R>(
   handler: RequestHandler<R>
-): express.RequestHandler {
-  return (request, response, _) => {
-    return handler(request).then(
-      r => {
-        r.apply(response);
-      },
-      e => {
-        ResponseErrorInternal(e).apply(response);
-      }
-    );
-  };
-}
+): express.RequestHandler => (request, response, _): Promise<void> =>
+  handler(request).then(
+    r => {
+      r.apply(response);
+    },
+    e => {
+      ResponseErrorInternal(e).apply(response);
+    }
+  );
 
 /**
  * Interface for implementing a request middleware.
@@ -71,8 +68,7 @@ export function withRequestMiddlewares<R1, R2, R3, T1, T2, T3>(
   v3: IRequestMiddleware<R3, T3>
 ): <RH>(
   handler: (v1: T1, v2: T2, v3: T3) => Promise<IResponse<RH>>
-) => // tslint:disable-next-line:max-union-size
-RequestHandler<RH | R1 | R2 | R3>;
+) => RequestHandler<RH | R1 | R2 | R3>;
 
 export function withRequestMiddlewares<R1, R2, R3, R4, T1, T2, T3, T4>(
   v1: IRequestMiddleware<R1, T1>,
@@ -81,8 +77,7 @@ export function withRequestMiddlewares<R1, R2, R3, R4, T1, T2, T3, T4>(
   v4: IRequestMiddleware<R4, T4>
 ): <RH>(
   handler: (v1: T1, v2: T2, v3: T3, v4: T4) => Promise<IResponse<RH>>
-) => // tslint:disable-next-line:max-union-size
-RequestHandler<RH | R1 | R2 | R3 | R4>;
+) => RequestHandler<RH | R1 | R2 | R3 | R4>;
 
 export function withRequestMiddlewares<R1, R2, R3, R4, R5, T1, T2, T3, T4, T5>(
   v1: IRequestMiddleware<R1, T1>,
@@ -92,8 +87,7 @@ export function withRequestMiddlewares<R1, R2, R3, R4, R5, T1, T2, T3, T4, T5>(
   v5: IRequestMiddleware<R5, T5>
 ): <RH>(
   handler: (v1: T1, v2: T2, v3: T3, v4: T4, v5: T5) => Promise<IResponse<RH>>
-) => // tslint:disable-next-line:max-union-size
-RequestHandler<RH | R1 | R2 | R3 | R4 | R5>;
+) => RequestHandler<RH | R1 | R2 | R3 | R4 | R5>;
 
 export function withRequestMiddlewares<
   R1,
@@ -124,8 +118,7 @@ export function withRequestMiddlewares<
     v5: T5,
     v6: T6
   ) => Promise<IResponse<RH>>
-) => // tslint:disable-next-line:max-union-size
-RequestHandler<RH | R1 | R2 | R3 | R4 | R5 | R6>;
+) => RequestHandler<RH | R1 | R2 | R3 | R4 | R5 | R6>;
 
 /**
  * Returns a request handler wrapped with the provided middlewares.
@@ -139,7 +132,7 @@ RequestHandler<RH | R1 | R2 | R3 | R4 | R5 | R6>;
  * That final response gets sent to the client.
  */
 // TODO: Refactor this function to reduce its Cognitive Complexity
-/* tslint:disable-next-line:cognitive-complexity */
+// eslint-disable-next-line sonarjs/cognitive-complexity, max-params, prefer-arrow/prefer-arrow-functions
 export function withRequestMiddlewares<
   R1,
   R2,
@@ -169,8 +162,7 @@ export function withRequestMiddlewares<
     v5?: T5,
     v6?: T6
   ) => Promise<IResponse<RH>>
-) => // tslint:disable-next-line:max-union-size
-RequestHandler<R1 | R2 | R3 | R4 | R5 | R6 | RH> {
+) => RequestHandler<R1 | R2 | R3 | R4 | R5 | R6 | RH> {
   return <RH>(
     handler: (
       v1: T1,
@@ -180,12 +172,13 @@ RequestHandler<R1 | R2 | R3 | R4 | R5 | R6 | RH> {
       v5?: T5,
       v6?: T6
     ) => Promise<IResponse<RH>>
+    // eslint-disable-next-line arrow-body-style, sonarjs/cognitive-complexity
   ) => {
     // The outer promise with resolve to a type that can either be the the type returned
     // by the handler or one of the types returned by any of the middlewares (i.e., when
     // a middleware returns an error response).
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return request =>
-      // tslint:disable-next-line:max-union-size
       new Promise<IResponse<R1 | R2 | R3 | R4 | R5 | R6 | RH>>(
         (resolve, reject) => {
           // we execute each middleware in sequence, stopping at the first middleware that is

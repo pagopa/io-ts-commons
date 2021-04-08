@@ -68,7 +68,7 @@ export const WithinRangeInteger = <
   tag<T>()(
     t.refinement(
       t.Integer,
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       s => s >= l && s < h,
       `integer >= ${l} and < ${h}`
     )
@@ -94,12 +94,11 @@ export type NonNegativeInteger = t.TypeOf<typeof NonNegativeInteger>;
 export const NumberFromString = new t.Type<number, string>(
   "NumberFromString",
   t.number.is,
-  (m, c) => {
-    return t.string.validate(m, c).chain(s => {
+  (m, c) =>
+    t.string.validate(m, c).chain(s => {
       const n = +s;
       return isNaN(n) ? t.failure(s, c) : t.success(n);
-    });
-  },
+    }),
   String
 );
 export type NumberFromString = t.TypeOf<typeof NumberFromString>;

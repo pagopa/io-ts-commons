@@ -1,6 +1,6 @@
 import * as appInsights from "applicationinsights";
 import { DistributedTracingModes } from "applicationinsights";
-// tslint:disable-next-line: no-submodule-imports
+// eslint-disable-next-line import/no-internal-modules
 import Config = require("applicationinsights/out/Library/Config");
 import {
   getKeepAliveAgentOptions,
@@ -10,32 +10,33 @@ import {
 } from "./agent";
 
 interface IInsightsRequestData {
-  baseType: "RequestData";
-  baseData: {
-    ver: number;
-    properties: {};
-    measurements: {};
-    id: string;
-    name: string;
-    url: string;
-    source?: string;
-    duration: string;
-    responseCode: string;
-    success: boolean;
+  readonly baseType: "RequestData";
+  readonly baseData: {
+    readonly ver: number;
+    readonly properties: {};
+    readonly measurements: {};
+    readonly id: string;
+    readonly name: string;
+    // eslint-disable-next-line @typescript-eslint/prefer-readonly
+    readonly url: string;
+    readonly source?: string;
+    readonly duration: string;
+    readonly responseCode: string;
+    readonly success: boolean;
   };
 }
 
 export interface IInsightsTracingConfig {
-  isTracingDisabled?: boolean;
-  cloudRole?: string;
-  applicationVersion?: string;
+  readonly isTracingDisabled?: boolean;
+  readonly cloudRole?: string;
+  readonly applicationVersion?: string;
 }
 
 export type ApplicationInsightsConfig = IInsightsTracingConfig &
   Partial<
     Pick<
       Config,
-      // tslint:disable-next-line: max-union-size
+      // eslint-disable-next-line sonar/max-union-size
       "httpAgent" | "httpsAgent" | "samplingPercentage" | "disableAppInsights"
     >
   >;
@@ -75,14 +76,14 @@ function startAppInsights(
   // refering to the current application version with a specific CloudRole
 
   if (aiConfig.applicationVersion !== undefined) {
-    // tslint:disable-next-line: no-object-mutation
+    // eslint-disable-next-line functional/immutable-data
     appInsights.defaultClient.context.tags[
       appInsights.defaultClient.context.keys.applicationVersion
     ] = aiConfig.applicationVersion;
   }
 
   if (aiConfig.cloudRole !== undefined) {
-    // tslint:disable-next-line: no-object-mutation
+    // eslint-disable-next-line functional/immutable-data
     appInsights.defaultClient.context.tags[
       appInsights.defaultClient.context.keys.cloudRole
     ] = aiConfig.cloudRole;
@@ -91,17 +92,17 @@ function startAppInsights(
   // override some default values when provided
   const config = appInsights.defaultClient.config;
 
-  // tslint:disable-next-line: no-object-mutation
+  // eslint-disable-next-line functional/immutable-data
   config.httpAgent = aiConfig.httpAgent ?? config.httpAgent;
 
-  // tslint:disable-next-line: no-object-mutation
+  // eslint-disable-next-line functional/immutable-data
   config.httpsAgent = aiConfig.httpsAgent ?? config.httpsAgent;
 
-  // tslint:disable-next-line: no-object-mutation
+  // eslint-disable-next-line functional/immutable-data
   config.samplingPercentage =
     aiConfig.samplingPercentage ?? config.samplingPercentage;
 
-  // tslint:disable-next-line: no-object-mutation
+  // eslint-disable-next-line functional/immutable-data
   config.disableAppInsights =
     aiConfig.disableAppInsights ?? config.disableAppInsights;
 
@@ -111,12 +112,12 @@ function startAppInsights(
 export function removeQueryParamsPreprocessor(
   envelope: appInsights.Contracts.Envelope,
   _?: {
-    [name: string]: unknown;
+    readonly [name: string]: unknown;
   }
 ): boolean {
   if (envelope.data.baseType === "RequestData") {
     const originalUrl = (envelope.data as IInsightsRequestData).baseData.url;
-    // tslint:disable-next-line: no-object-mutation
+    // eslint-disable-next-line functional/immutable-data
     (envelope.data as IInsightsRequestData).baseData.url = originalUrl.split(
       "?"
     )[0];
@@ -127,11 +128,11 @@ export function removeQueryParamsPreprocessor(
 export function disableSamplingByTag(
   envelope: appInsights.Contracts.Envelope,
   _?: {
-    [name: string]: unknown;
+    readonly [name: string]: unknown;
   }
 ): boolean {
   if (envelope.tags.samplingEnabled === "false") {
-    // tslint:disable-next-line: no-object-mutation
+    // eslint-disable-next-line functional/immutable-data
     envelope.sampleRate = 100;
   }
   return true;

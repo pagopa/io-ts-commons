@@ -1,4 +1,4 @@
-// tslint:disable:no-duplicate-string
+// eslint-disable sonarjs/no-duplicate-string
 
 import { right } from "fp-ts/lib/Either";
 import * as t from "io-ts";

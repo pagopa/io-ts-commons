@@ -1,4 +1,4 @@
-// tslint:disable:member-access interface-name object-literal-sort-keys
+// eslint-disable @typescript-eslint/explicit-member-accessibility, @typescript-eslint/interface-name-prefix, sort-keys
 
 /**
  * An optional value that can be valid
@@ -82,28 +82,21 @@ export class OptionEither<L, A> {
 const map = <L, A, B>(
   fa: OptionEither<L, A>,
   f: (a: A) => B
-): OptionEither<L, B> => {
-  return fa.map(f);
-};
+): OptionEither<L, B> => fa.map(f);
 
 const eitherTright = eitherT.right(option.option);
-const of = <L, A>(a: A): OptionEither<L, A> => {
-  return new OptionEither(eitherTright(option.some(a)));
-};
+const of = <L, A>(a: A): OptionEither<L, A> =>
+  new OptionEither(eitherTright(option.some(a)));
 
 const ap = <L, A, B>(
   fab: OptionEither<L, (a: A) => B>,
   fa: OptionEither<L, A>
-): OptionEither<L, B> => {
-  return fa.ap(fab);
-};
+): OptionEither<L, B> => fa.ap(fab);
 
 const chain = <L, A, B>(
   fa: OptionEither<L, A>,
   f: (a: A) => OptionEither<L, B>
-): OptionEither<L, B> => {
-  return fa.chain(f);
-};
+): OptionEither<L, B> => fa.chain(f);
 
 export const optionEither: Monad2<URI> = {
   URI,

@@ -13,7 +13,7 @@ import {
 import { ITuple2, Tuple2 } from "./tuples";
 import { Millisecond } from "./units";
 
-// tslint:disable-next-line: no-submodule-imports
+// eslint-disable-next-line import/no-internal-modules
 import "abort-controller/polyfill";
 
 /**
@@ -101,16 +101,14 @@ export const retriableFetch: (
   // wraps the fetch call with a TaskEither type, mapping certain promise
   // rejections to TransientError(s)
   const fetchTask = tryCatch<Error | TransientError, Response>(
-    () => {
-      return f(input, init);
-    },
+    () => f(input, init),
     reason => {
       // map rejection reason to a transient or permanent error
       if (
         `${reason}`.toLowerCase().indexOf("aborted") >= 0 ||
         (reason as Error).name === "Aborted" ||
         (reason as Error).name === "Network request failed" ||
-        // tslint:disable-next-line:no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (reason as any).type === "aborted"
       ) {
         // We return a TransientError in case the request got aborted by
