@@ -145,7 +145,7 @@ export interface IResponseSuccessXml<T>
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseSuccessXml = <T>(o: T): IResponseSuccessXml<T> => ({
-  // eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: res =>
     res
       .status(HttpStatusCodeEnum.HTTP_STATUS_200)
@@ -171,7 +171,7 @@ export const ResponseSuccessAccepted = <V>(
   detail?: string,
   payload?: V
 ): IResponseSuccessAccepted<V> => ({
-  // eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: res =>
     payload === undefined
       ? res.send(HttpStatusCodeEnum.HTTP_STATUS_202)
@@ -193,11 +193,11 @@ export type IResponsePermanentRedirect = IResponse<
  *
  * @param o The object to return to the client
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponsePermanentRedirect = (
   location: UrlFromString
 ): IResponsePermanentRedirect => ({
-  // eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: res => res.redirect(HttpStatusCodeEnum.HTTP_STATUS_301, location.href),
   detail: location.href,
   kind: "IResponsePermanentRedirect"
@@ -213,11 +213,11 @@ export type IResponseSeeOtherRedirect = IResponse<"IResponseSeeOtherRedirect">;
  *
  * @param location The url to redirect the client to
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseSeeOtherRedirect = (
   location: UrlFromString
 ): IResponseSeeOtherRedirect => ({
-  // eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: res => res.redirect(HttpStatusCodeEnum.HTTP_STATUS_303, location.href),
   detail: location.href,
   kind: "IResponseSeeOtherRedirect"
@@ -235,13 +235,13 @@ export interface IResponseSuccessRedirectToResource<T, V>
 /**
  * Returns a successful response returning a redirect to a resource.
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseSuccessRedirectToResource = <T, V>(
   resource: T,
   url: string,
   payload: V
 ): IResponseSuccessRedirectToResource<T, V> => ({
-  // eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: res =>
     res
       .set("Location", url)
@@ -269,7 +269,7 @@ export type IResponseErrorGeneric = IResponse<"IResponseErrorGeneric">;
  * See https://zalando.github.io/restful-api-guidelines/index.html#176
  *
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseErrorGeneric = (
   status: HttpStatusCode,
   title: string,
@@ -283,7 +283,7 @@ export const ResponseErrorGeneric = (
     type: problemType
   };
   return {
-    // eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     apply: res =>
       res
         .status(status)
@@ -304,7 +304,7 @@ export type IResponseErrorNotFound = IResponse<"IResponseErrorNotFound">;
  *
  * @param title The error message
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseErrorNotFound = (
   title: string,
   detail: string
@@ -322,7 +322,7 @@ export type IResponseErrorValidation = IResponse<"IResponseErrorValidation">;
 /**
  * Returns a response describing a validation error.
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseErrorValidation = (
   title: string,
   detail: string
@@ -335,12 +335,12 @@ export const ResponseErrorValidation = (
 /**
  * Returns a response describing a validation error.
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseErrorFromValidationErrors = <S, A>(
   type: t.Type<A, S>
 ): ((
   errors: ReadonlyArray<t.ValidationError>
-) => // eslint-disable-next-line  @typescript-eslint/explicit-function-return-type
+) => // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 IResponseErrorValidation) => errors => {
   const detail = errorsToReadableMessages(errors).join("\n");
   return ResponseErrorValidation(`Invalid ${type.name}`, detail);
@@ -356,7 +356,7 @@ export type IResponseErrorForbiddenNotAuthorized = IResponse<
 /**
  * The user is not allowed here.
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseErrorForbiddenNotAuthorized: IResponseErrorForbiddenNotAuthorized = {
   ...ResponseErrorGeneric(
     HttpStatusCodeEnum.HTTP_STATUS_403,
@@ -376,7 +376,7 @@ export type IResponseErrorForbiddenNotAuthorizedForProduction = IResponse<
 /**
  * The user is not allowed to issue production requests.
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseErrorForbiddenNotAuthorizedForProduction: IResponseErrorForbiddenNotAuthorizedForProduction = {
   ...ResponseErrorGeneric(
     HttpStatusCodeEnum.HTTP_STATUS_403,
@@ -396,7 +396,7 @@ export type IResponseErrorForbiddenNotAuthorizedForRecipient = IResponse<
 /**
  * The user is not allowed to issue requests for the recipient.
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseErrorForbiddenNotAuthorizedForRecipient: IResponseErrorForbiddenNotAuthorizedForRecipient = {
   ...ResponseErrorGeneric(
     HttpStatusCodeEnum.HTTP_STATUS_403,
@@ -416,7 +416,7 @@ export type IResponseErrorForbiddenNotAuthorizedForDefaultAddresses = IResponse<
 /**
  * The user is not allowed to send messages with default addresses.
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseErrorForbiddenNotAuthorizedForDefaultAddresses: IResponseErrorForbiddenNotAuthorizedForDefaultAddresses = {
   ...ResponseErrorGeneric(
     HttpStatusCodeEnum.HTTP_STATUS_403,
@@ -436,7 +436,7 @@ export type IResponseErrorForbiddenAnonymousUser = IResponse<
 /**
  * The user is anonymous.
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseErrorForbiddenAnonymousUser: IResponseErrorForbiddenAnonymousUser = {
   ...ResponseErrorGeneric(
     HttpStatusCodeEnum.HTTP_STATUS_403,
@@ -456,7 +456,7 @@ export type IResponseErrorForbiddenNoAuthorizationGroups = IResponse<
 /**
  * The user is not part of any valid authorization groups.
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResponseErrorForbiddenNoAuthorizationGroups: IResponseErrorForbiddenNoAuthorizationGroups = {
   ...ResponseErrorGeneric(
     HttpStatusCodeEnum.HTTP_STATUS_403,
@@ -476,7 +476,7 @@ export type IResponseErrorConflict = IResponse<"IResponseErrorConflict">;
  *
  * @param detail The error message
  */
-// eslint-disable-next-line  prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
 export function ResponseErrorConflict(detail: string): IResponseErrorConflict {
   return {
     ...ResponseErrorGeneric(
@@ -500,7 +500,7 @@ export type IResponseErrorTooManyRequests = IResponse<
  *
  * @param detail The error message
  */
-// eslint-disable-next-line  prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
 export function ResponseErrorTooManyRequests(
   detail?: string
 ): IResponseErrorTooManyRequests {
@@ -524,7 +524,7 @@ export type IResponseErrorInternal = IResponse<"IResponseErrorInternal">;
  *
  * @param detail The error message
  */
-// eslint-disable-next-line  prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
 export function ResponseErrorInternal(detail: string): IResponseErrorInternal {
   return {
     ...ResponseErrorGeneric(
@@ -548,7 +548,7 @@ export type IResponseErrorServiceUnavailable = IResponse<
  *
  * @param detail The error message
  */
-// eslint-disable-next-line  prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
 export function ResponseErrorServiceUnavailable(
   detail: string
 ): IResponseErrorInternal {
@@ -571,7 +571,7 @@ export interface IResponseErrorGone extends IResponse<"IResponseErrorGone"> {
 /**
  * Returns a response with status 410 and a detail msg.
  */
-// eslint-disable-next-line  prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
 export function ResponseErrorGone(detail: string): IResponseErrorGone {
   return {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

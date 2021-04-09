@@ -161,7 +161,7 @@ export const isLoading = <A>( // eslint-disable-next-line @typescript-eslint/no-
   p.kind === "PotNoneLoading" || p.kind === "PotSomeLoading";
 
 export const isUpdating = <A>(
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   p: Pot<A, any> // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): p is NoneUpdating<A> | SomeUpdating<A> =>
   p.kind === "PotNoneUpdating" || p.kind === "PotSomeUpdating";
@@ -172,7 +172,7 @@ export const isError = <A, E = unknown>(
   p.kind === "PotNoneError" || p.kind === "PotSomeError";
 
 export const toLoading = <T>(
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   p: Pot<T, any>
 ): SomeLoading<T> | NoneLoading => // eslint-disable-next-line @typescript-eslint/no-explicit-any
   isSome(p) ? someLoading(p.value) : noneLoading;
@@ -199,9 +199,9 @@ export const fold = <A, E, O>(
   foldSomeLoading: (value: A) => O,
   foldSomeUpdating: (value: A, newValue: A) => O,
   foldSomeError: (value: A, error: E) => O
-  // eslint-disable-next-line  max-params
+  // eslint-disable-next-line max-params
 ): O => {
-  // eslint-disable-next-line  default-case
+  // eslint-disable-next-line default-case
   switch (p.kind) {
     case "PotNone":
       return foldNone();
@@ -262,49 +262,49 @@ export const mapNullable = <A, B, E = unknown>(
   return filter(mapped, _ => _ !== undefined && _ !== null) as Pot<B, E>;
 };
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getOrElse = <A>(p: Pot<A, any>, o: A): A =>
   isSome(p) ? p.value : o;
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getOrElseWithUpdating = <A>(p: Pot<A, any>, o: A): A =>
   isUpdating(p) ? p.newValue : isSome(p) ? p.value : o;
 
 export const orElse = <A, E = unknown>(p: Pot<A, E>, o: Pot<A, E>): Pot<A, E> =>
   isSome(p) ? p : o;
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toUndefined = <A>(p: Pot<A, any>): A | undefined =>
   isSome(p) ? p.value : undefined;
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toOption = <A>(p: Pot<A, any>): option.Option<A> =>
   option.fromNullable(toUndefined(p));
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PotKinds = { [index in Pot<any, any>["kind"]]: 0 };
 
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const PotKinds: PotKinds = {
-  // eslint-disable-next-line  @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotNone: 0,
-  // eslint-disable-next-line  @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotNoneError: 0,
-  // eslint-disable-next-line  @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotNoneLoading: 0,
-  // eslint-disable-next-line  @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotNoneUpdating: 0,
-  // eslint-disable-next-line  @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotSome: 0,
-  // eslint-disable-next-line  @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotSomeError: 0,
-  // eslint-disable-next-line  @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotSomeLoading: 0,
-  // eslint-disable-next-line  @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotSomeUpdating: 0
 };
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isPot = (value: any): value is Pot<any, any> =>
   value !== null &&
   typeof value === "object" &&

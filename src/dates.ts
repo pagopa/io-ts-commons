@@ -7,7 +7,7 @@ const isDate = (v: t.mixed): v is Date => v instanceof Date;
  * Accepts short formats (ie. "2018-10-13")
  * with or without time and timezone parts.
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const DateFromString = new t.Type<Date, string>(
   "DateFromString",
   isDate,
@@ -39,7 +39,7 @@ const UTC_ISO8601_FULL_REGEX = PatternString(
  *
  * ie. "2018-10-13T00:00:00.000Z"
  */
-// eslint-disable-next-line  @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const UTCISODateFromString = new t.Type<Date, string>(
   "UTCISODateFromString",
   isDate,
