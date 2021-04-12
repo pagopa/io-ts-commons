@@ -1,6 +1,6 @@
 {
   "name": "@pagopa/ts-commons",
-  "version": "9.1.0",
+  "version": "9.2.0",
   "description": "Shared TypeScript code for the IO project",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
