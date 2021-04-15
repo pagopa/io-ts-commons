@@ -12,7 +12,6 @@ const isUrl = (v: t.mixed): v is ValidUrl =>
  *
  * ie. UrlFromString.decode("http://example.com")
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const UrlFromString = new t.Type<ValidUrl, string>(
   "UrlFromString",
   isUrl,
@@ -29,14 +28,12 @@ export const UrlFromString = new t.Type<ValidUrl, string>(
 
 export type UrlFromString = t.TypeOf<typeof UrlFromString>;
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const HttpsUrlFromString = t.refinement(
   UrlFromString,
   o => o.protocol === "https:"
 );
 export type HttpsUrlFromString = t.Type<typeof HttpsUrlFromString>;
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const HttpUrlFromString = t.refinement(
   UrlFromString,
   o => o.protocol === "http:"

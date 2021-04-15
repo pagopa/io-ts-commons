@@ -8,7 +8,6 @@ const IV_LENGTH = 16;
 // aes-128-cbc uses a 128 bit key (16 bytes * 8)
 const AES_KEY_LENGTH = 16;
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const EncryptedPayload = t.interface({
   // encrypted text (Base64)
   cypherText: t.string,

@@ -21,7 +21,5 @@ module.exports = {
     "extends": [
         "@pagopa/eslint-config/strong",
     ],
-    "rules": {
-        "jsdoc/check-indentation": "off"
-    }
+    "rules": {}
 }

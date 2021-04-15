@@ -10,6 +10,7 @@ import * as option from "fp-ts/lib/Option";
 /**
  * Empty value, not yet retrieved.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface None {
   readonly kind: "PotNone";
 }
@@ -21,6 +22,7 @@ export const none: None = {
 /**
  * Empty value, loading.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface NoneLoading {
   readonly kind: "PotNoneLoading";
 }
@@ -32,6 +34,7 @@ export const noneLoading: NoneLoading = {
 /**
  * Empty value, updating a new value to remote store.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface NoneUpdating<T> {
   readonly kind: "PotNoneUpdating";
   readonly newValue: T;
@@ -45,6 +48,7 @@ export const noneUpdating = <T>(newValue: T): NoneUpdating<T> => ({
 /**
  * Empty value, loading failed.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface NoneError<E> {
   readonly kind: "PotNoneError";
   readonly error: E;
@@ -58,6 +62,7 @@ export const noneError = <E>(error: E): NoneError<E> => ({
 /**
  * Loaded value.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface Some<T> {
   readonly kind: "PotSome";
   readonly value: T;
@@ -71,6 +76,7 @@ export const some = <T>(value: T): Some<T> => ({
 /**
  * Loaded value, loading a new value from remote.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface SomeLoading<T> {
   readonly kind: "PotSomeLoading";
   readonly value: T;
@@ -84,6 +90,7 @@ export const someLoading = <T>(value: T): SomeLoading<T> => ({
 /**
  * Loaded value, updating a new value to remote store.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface SomeUpdating<T> {
   readonly kind: "PotSomeUpdating";
   readonly value: T;
@@ -99,6 +106,7 @@ export const someUpdating = <T>(value: T, newValue: T): SomeUpdating<T> => ({
 /**
  * Loaded value, loading an updated value failed.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface SomeError<T, E> {
   readonly kind: "PotSomeError";
   readonly value: T;
@@ -284,23 +292,14 @@ export const toOption = <A>(p: Pot<A, any>): option.Option<A> =>
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PotKinds = { [index in Pot<any, any>["kind"]]: 0 };
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const PotKinds: PotKinds = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotNone: 0,
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotNoneError: 0,
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotNoneLoading: 0,
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotNoneUpdating: 0,
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotSome: 0,
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotSomeError: 0,
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotSomeLoading: 0,
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   PotSomeUpdating: 0
 };
 

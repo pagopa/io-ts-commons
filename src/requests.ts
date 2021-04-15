@@ -142,7 +142,6 @@ export interface IBaseApiRequestType<
   readonly url: (params: P) => string;
   readonly query: (params: P) => RequestQuery<Q>;
   readonly headers: RequestHeaderProducer<P, H>;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly response_decoder: ResponseDecoder<R>;
 }
 
@@ -293,7 +292,7 @@ const emptyBaseRequest = {
   headers: () => ({}),
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   query: () => ({}),
-  // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   response_decoder: () => Promise.reject({}),
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   url: () => ""
@@ -303,7 +302,7 @@ const emptyBasePutOrPostRequest = {
   ...emptyBaseRequest,
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   body: () => JSON.stringify({}),
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   headers: () => ({ "Content-Type": "application/json" })
 };
 
@@ -439,7 +438,6 @@ export class ApiRequestBuilder<
    * Adds response decoder
    */
   public withResponseDecoder<R1>(
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     response_decoder: ResponseDecoder<R1>
   ): ApiRequestBuilder<
     M,
@@ -452,7 +450,6 @@ export class ApiRequestBuilder<
     return new ApiRequestBuilder({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request as any),
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       response_decoder
     });
   }
@@ -563,9 +560,8 @@ export function createFetchRequestForApi<
 /**
  * An header producer that sets the Content-Type to application/json
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const ApiHeaderJson: RequestHeaderProducer<{}, "Content-Type"> = () => ({
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   "Content-Type": "application/json"
 });
 
@@ -685,12 +681,11 @@ export function constantResponseDecoder<
  * Returns a RequestHeaderProducer that produces an Authorization header of type
  * "bearer token" taking the value from the "token" parameter of each request.
  */
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function ParamAuthorizationBearerHeaderProducer<
   P extends { readonly token: string }
 >(): RequestHeaderProducer<P, "Authorization"> {
   return (p: P): RequestHeaders<"Authorization"> => ({
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     Authorization: `Bearer ${p.token}`
   });
 }
@@ -699,13 +694,12 @@ export function ParamAuthorizationBearerHeaderProducer<
  * Returns a RequestHeaderProducer that produces an Authorization header of type
  * "bearer token" with a fixed token value.
  */
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function AuthorizationBearerHeaderProducer<P>(
   token: string
 ): RequestHeaderProducer<P, "Authorization"> {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return () => ({
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     Authorization: `Bearer ${token}`
   });
 }

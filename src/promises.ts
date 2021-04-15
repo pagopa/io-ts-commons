@@ -38,7 +38,6 @@ export const withTimeout = <T>(
  *
  * @return Array  A triplet with [Promise<T>, resolve(T), reject()]
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const DeferredPromise = <T>(): ITuple3<
   Promise<T>,
   (v: T) => void,

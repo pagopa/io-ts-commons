@@ -1,4 +1,4 @@
-// eslint-disable @typescript-eslint/explicit-member-accessibility, @typescript-eslint/interface-name-prefix, sort-keys
+/* eslint-disable @typescript-eslint/explicit-member-accessibility, sort-keys */
 
 /**
  * An optional value that can be valid
@@ -11,8 +11,8 @@ import { Monad2 } from "fp-ts/lib/Monad";
 import * as option from "fp-ts/lib/Option";
 
 declare module "fp-ts/lib/HKT" {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   interface URI2HKT2<L, A> {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     readonly OptionEither: OptionEither<L, A>;
   }
 }
@@ -26,11 +26,11 @@ export type URI = typeof URI;
 const eitherTfold = eitherT.fold(option.option);
 
 export class OptionEither<L, A> {
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility, @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   readonly _A!: A;
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility, @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   readonly _L!: L;
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility, @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   readonly _URI!: URI;
 
   // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
@@ -115,7 +115,6 @@ const chain = <L, A, B>(
 ): OptionEither<L, B> => fa.chain(f);
 
 export const optionEither: Monad2<URI> = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   URI,
   map,
   // eslint-disable-next-line sort-keys

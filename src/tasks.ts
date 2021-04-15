@@ -19,21 +19,18 @@ export const delayTask = <A>(n: Millisecond, a: A): Task<A> =>
  * task can be executed again.
  */
 export type TransientError = "transient";
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const TransientError: TransientError = "transient";
 
 /**
  * A RetriableTask failed too many times.
  */
 export type MaxRetries = "max-retries";
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const MaxRetries: MaxRetries = "max-retries";
 
 /**
  * A RetriableTask has been aborted.
  */
 export type RetryAborted = "retry-aborted";
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const RetryAborted: RetryAborted = "retry-aborted";
 
 /**

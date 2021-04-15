@@ -15,7 +15,6 @@ export interface IWithinRangeNumberTag<L extends number, H extends number> {
 /**
  * A number guaranteed to be within the range [L,H)
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const WithinRangeNumber = <
   L extends number,
   H extends number,
@@ -38,7 +37,6 @@ export interface INonNegativeNumberTag {
 /**
  * A non negative number
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const NonNegativeNumber = tag<INonNegativeNumberTag>()(
   t.refinement(t.number, s => s >= 0, "number >= 0")
 );
@@ -59,7 +57,6 @@ export interface IWithinRangeIntegerTag<L extends number, H extends number> {
 /**
  * An integer guaranteed to be within the range [L,H)
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const WithinRangeInteger = <
   L extends number,
   H extends number,
@@ -86,7 +83,6 @@ export interface INonNegativeIntegerTag {
 /**
  * A non negative integer
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const NonNegativeInteger = tag<INonNegativeIntegerTag>()(
   t.refinement(t.Integer, s => s >= 0, "integer >= 0")
 );
@@ -95,7 +91,6 @@ export type NonNegativeInteger = t.TypeOf<typeof NonNegativeInteger>;
 /**
  * Parses a string into a decimal
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const NumberFromString = new t.Type<number, string>(
   "NumberFromString",
   t.number.is,
@@ -111,7 +106,6 @@ export type NumberFromString = t.TypeOf<typeof NumberFromString>;
 /**
  * Parses a string into an integer
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const IntegerFromString = t.refinement(
   NumberFromString,
   t.Integer.predicate,
@@ -122,7 +116,6 @@ export type IntegerFromString = t.TypeOf<typeof IntegerFromString>;
 /**
  * Parses a string into a non negative integer
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const NonNegativeIntegerFromString = tag<INonNegativeIntegerTag>()(
   t.refinement(IntegerFromString, i => i >= 0, "NonNegativeIntegerFromString")
 );

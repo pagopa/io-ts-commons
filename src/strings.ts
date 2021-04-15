@@ -10,7 +10,6 @@ export interface INonEmptyStringTag {
 /**
  * A non-empty string
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const NonEmptyString = tag<INonEmptyStringTag>()(
   t.refinement(t.string, s => s.length > 0, "non empty string")
 );
@@ -26,7 +25,6 @@ export interface IWithinRangeStringTag<L extends number, H extends number> {
 /**
  * A string guaranteed to have a length within the range [L,H)
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const WithinRangeString = <
   L extends number,
   H extends number,
@@ -54,7 +52,6 @@ export interface IPatternStringTag<P extends string> {
 /**
  * A string that matches a pattern.
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const PatternString = <P extends string, T extends IPatternStringTag<P>>(
   p: P
 ): Tagged<T, string> =>
@@ -75,17 +72,13 @@ export interface IEmailStringTag {
 /**
  * A string that represents a valid email address.
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const EmailString = tag<IEmailStringTag>()(
   t.refinement(
     t.string,
     s =>
       validator.isEmail(s, {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         allow_display_name: false,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         allow_utf8_local_part: false,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         require_tld: true
       }),
     "string that represents an email address"
@@ -101,7 +94,6 @@ export interface IIPStringTag {
 /**
  * A string that represents an IP (v4 or v6).
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const IPString = tag<IIPStringTag>()(
   t.refinement(t.string, validator.isIP, "string that represents an IP address")
 );
@@ -139,7 +131,6 @@ export type CIDR = t.TypeOf<typeof CIDR>;
 /**
  * A valid Fiscal Number (for persons)
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const FiscalCode = PatternString(
   "^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]$"
 );
@@ -150,7 +141,6 @@ export type FiscalCode = t.TypeOf<typeof FiscalCode>;
  * A sandbox Fiscal Code (used for development)
  * Note that this pattern doesn't generate valid fiscal codes
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const SandboxFiscalCode = PatternString(
   "^[A-Z]{6}[0-9]{2}A[0-9]{2}Y[0-9]{3}X$"
 );
@@ -160,7 +150,6 @@ export type SandboxFiscalCode = t.TypeOf<typeof SandboxFiscalCode>;
 /**
  * A valid Fiscal Number (for organizations)
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const OrganizationFiscalCode = PatternString("^[0-9]{11}$");
 
 export type OrganizationFiscalCode = t.TypeOf<typeof OrganizationFiscalCode>;

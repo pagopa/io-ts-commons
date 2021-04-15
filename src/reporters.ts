@@ -44,7 +44,6 @@ export const readableReport = (
  * A validation error reporter that translates validation errors to more
  * readable messages.
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ReadableReporter: Reporter<ReadonlyArray<string>> = {
   report: validation => validation.fold(errorsToReadableMessages, success)
 };

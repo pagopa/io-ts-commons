@@ -31,7 +31,7 @@ export type AbortableFetch = (
  *
  * See https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
  */
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions, @typescript-eslint/naming-convention
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function AbortableFetch(
   origFetch: typeof fetch = fetch
 ): AbortableFetch {

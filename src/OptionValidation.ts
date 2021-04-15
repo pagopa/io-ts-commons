@@ -1,4 +1,4 @@
-// eslint-disable @typescript-eslint/explicit-member-accessibility, @typescript-eslint/interface-name-prefix, sort-keys
+/* eslint-disable @typescript-eslint/explicit-member-accessibility, sort-keys */
 
 import {
   Applicative2C,
@@ -11,8 +11,8 @@ import { Semigroup } from "fp-ts/lib/Semigroup";
 import * as validation from "fp-ts/lib/Validation";
 
 declare module "fp-ts/lib/HKT" {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   interface URI2HKT2<L, A> {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     readonly OptionValidation: OptionValidation<L, A>;
   }
 }
@@ -27,11 +27,11 @@ export const URI = "OptionValidation";
 export type URI = typeof URI;
 
 export class OptionValidation<L, A> {
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility, @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   readonly _A!: A;
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility, @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   readonly _L!: L;
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility, @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   readonly _URI!: URI;
   // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   constructor(readonly value: option.Option<validation.Validation<L, A>>) {}
@@ -50,7 +50,6 @@ const map = <L, A, B>(
   f: (a: A) => B
 ): OptionValidation<L, B> => fa.map(f);
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const getApplicative = <L>(S: Semigroup<L>): Applicative2C<URI, L> => {
   const optionValidationApplicative = getApplicativeComposition(
     option.option,
@@ -66,9 +65,7 @@ export const getApplicative = <L>(S: Semigroup<L>): Applicative2C<URI, L> => {
   ): OptionValidation<L, B> =>
     new OptionValidation(optionValidationApplicative.ap(fab.value, fa.value));
   return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     URI,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     _L: phantom,
     map,
     of,
@@ -78,7 +75,6 @@ export const getApplicative = <L>(S: Semigroup<L>): Applicative2C<URI, L> => {
 };
 
 export const optionValidation: Functor2<URI> = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   URI,
   map
 };

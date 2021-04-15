@@ -2,16 +2,13 @@ import * as t from "io-ts";
 import { enumType } from "./types";
 
 export enum NodeEnvironmentEnum {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   DEVELOPMENT = "dev",
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   PRODUCTION = "production"
 }
 
 /**
  * A type for describing the node runtime environment
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const NodeEnvironment = enumType<NodeEnvironmentEnum>(
   NodeEnvironmentEnum,
   "NodeEnvironment"
