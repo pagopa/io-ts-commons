@@ -1,10 +1,10 @@
-import * as t from "io-ts";
 import * as url from "url";
+import * as t from "io-ts";
 
 export type ValidUrl = url.Url & { readonly href: string };
 
 const isUrl = (v: t.mixed): v is ValidUrl =>
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t.object.is(v) && t.string.is((v as any).href);
 
 /**

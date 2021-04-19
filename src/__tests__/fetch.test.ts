@@ -11,13 +11,13 @@ import { DeferredPromise, timeoutPromise } from "../promises";
 import { MaxRetries, RetryAborted, withRetries } from "../tasks";
 import { Millisecond } from "../units";
 
-// tslint:disable-next-line: no-any no-object-mutation
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/immutable-data
 (global as any).fetch = nodeFetch;
 
 const TEST_HOST = "localhost";
 const TEST_PORT = 40000;
 
-// tslint:disable-next-line:no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createServerMock(): any {
   const server = new ServerMock(
     { host: TEST_HOST, port: TEST_PORT },
@@ -60,7 +60,7 @@ describe("AbortableFetch", () => {
     await timeoutPromise(100 as Millisecond);
     abortController.abort();
 
-    // tslint:disable-next-line: no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     expect(responsePromise).rejects.toEqual(
       expect.objectContaining({
         message: "The user aborted a request."
@@ -148,7 +148,7 @@ describe("retriableFetch", () => {
     )(timeoutFetch);
 
     // stop retrying after 100ms
-    // tslint:disable-next-line: no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     timeoutPromise(100 as Millisecond).then(() => resolveShouldAbort(true));
 
     try {

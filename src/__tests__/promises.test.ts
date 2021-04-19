@@ -1,11 +1,11 @@
-// tslint:disable no-any
+// eslint-disable @typescript-eslint/no-explicit-any
 
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { DeferredPromise, withTimeout } from "../promises";
 
 describe("withTimeout", () => {
   it("should resolve to completion", async () => {
-    // tslint:disable-next-line:promise-must-complete no-empty
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises, no-empty, no-empty-function
     const neverCompletesP = new Promise<void>(() => {});
 
     const r = await withTimeout(
@@ -21,7 +21,7 @@ describe("withTimeout", () => {
   });
 
   it("should timeout", async () => {
-    // tslint:disable-next-line:promise-must-complete no-empty
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises, no-empty, no-empty-function
     const neverCompletesP = new Promise<void>(() => {});
 
     const r = await withTimeout(neverCompletesP, 1000 as any, _ =>
@@ -39,14 +39,14 @@ describe("DeferredPromise", () => {
   it("should resolve asyncronously", async () => {
     const { e1: p, e2: res } = DeferredPromise<number>();
     res(1);
-    // tslint:disable-next-line: no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     expect(p).resolves.toEqual(1);
   });
 
   it("should reject asyncronously", async () => {
     const { e1: p, e3: rej } = DeferredPromise<number>();
     rej(new Error("failed"));
-    // tslint:disable-next-line: no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     expect(p).rejects.toEqual(new Error("failed"));
   });
 });

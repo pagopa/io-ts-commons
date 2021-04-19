@@ -1,5 +1,5 @@
-/* tslint:disable:no-any */
-/* tslint:disable:object-literal-sort-keys */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable sort-keys */
 
 import * as t from "io-ts";
 

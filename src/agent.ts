@@ -4,9 +4,11 @@ import nodeFetch from "node-fetch";
 // whether we want to reuse sockets in the fetch client
 // this is expecially useful to avoid SNAT exhaustion in Azure
 // see https://blog.botframework.com/2018/03/05/fix-snat-exhaustion-node-js-bots/
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const isFetchKeepaliveEnabled = (env: typeof process.env) =>
   env.FETCH_KEEPALIVE_ENABLED === "true";
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const getKeepAliveAgentOptions = (env: typeof process.env) => ({
   freeSocketTimeout:
     env.FETCH_KEEPALIVE_FREE_SOCKET_TIMEOUT === undefined
@@ -40,10 +42,12 @@ export const getKeepAliveAgentOptions = (env: typeof process.env) => ({
 // @see https://github.com/node-modules/agentkeepalive/issues/76
 
 // HTTP-only agent, with optional keepalive agent
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const newHttpAgent = (httpOptions: agentkeepalive.HttpOptions) =>
   new agentkeepalive(httpOptions);
 
 // HTTPs-only agent, with optional keepalive agent
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const newHttpsAgent = (httpsOptions: agentkeepalive.HttpsOptions) =>
   new agentkeepalive.HttpsAgent(httpsOptions);
 
@@ -55,6 +59,7 @@ const getKeepaliveHttpFetch: (
   // see https://github.com/node-modules/agentkeepalive#new-agentoptions
   const httpAgent = newHttpAgent(httpOptions);
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return (input, init) => {
     const initWithKeepalive = {
       ...(init === undefined ? {} : init),
@@ -63,7 +68,7 @@ const getKeepaliveHttpFetch: (
     // need to cast to any since node-fetch has a slightly different type
     // signature that DOM's fetch
     // TODO: possibly avoid using DOM's fetch type altoghether?
-    // tslint:disable-next-line: no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return nodeFetch(input as any, initWithKeepalive as any) as any;
   };
 };
@@ -76,7 +81,7 @@ const getKeepaliveHttpsFetch: (
   // see https://github.com/node-modules/agentkeepalive#new-agentoptions
   const httpAgent = newHttpsAgent(httpsOptions);
 
-  // tslint:disable-next-line: no-identical-functions
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, sonarjs/no-identical-functions
   return (input, init) => {
     const initWithKeepalive = {
       ...(init === undefined ? {} : init),
@@ -85,7 +90,7 @@ const getKeepaliveHttpsFetch: (
     // need to cast to any since node-fetch has a slightly different type
     // signature that DOM's fetch
     // TODO: possibly avoid using DOM's fetch type altoghether?
-    // tslint:disable-next-line: no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return nodeFetch(input as any, initWithKeepalive as any) as any;
   };
 };
@@ -101,7 +106,7 @@ export const getHttpFetch = (
         ...getKeepAliveAgentOptions(env),
         ...extraOptions
       })
-    : // tslint:disable-next-line: no-any
+    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (nodeFetch as any);
 
 // HTTPs-only fetch, with optional keepalive agent
@@ -115,7 +120,7 @@ export const getHttpsFetch = (
         ...getKeepAliveAgentOptions(env),
         ...extraOptions
       })
-    : // tslint:disable-next-line: no-any
+    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (nodeFetch as any);
 
 // Wraps both HTTP and HTTPS agents and serve the correct one based on the protocol of the request url
@@ -126,6 +131,7 @@ export const getFetch = (
 ): typeof fetch => {
   const httpAgent = getHttpFetch(env, extraOptions);
   const httpsAgent = getHttpsFetch(env, extraOptions);
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return (input, init) => {
     const url = typeof input === "string" ? input : input.url;
     return url.startsWith("https://")

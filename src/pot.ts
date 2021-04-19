@@ -1,15 +1,16 @@
 /**
  * A type for handling the states of remote (potential) data.
  */
-// tslint:disable:no-any
-// tslint:disable:parameters-max-number
-// tslint:disable:interface-name
+// eslint-disable @typescript-eslint/no-explicit-any
+// eslint-disable max-params
+// eslint-disable @typescript-eslint/interface-name-prefix
 
 import * as option from "fp-ts/lib/Option";
 
 /**
  * Empty value, not yet retrieved.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface None {
   readonly kind: "PotNone";
 }
@@ -21,6 +22,7 @@ export const none: None = {
 /**
  * Empty value, loading.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface NoneLoading {
   readonly kind: "PotNoneLoading";
 }
@@ -32,6 +34,7 @@ export const noneLoading: NoneLoading = {
 /**
  * Empty value, updating a new value to remote store.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface NoneUpdating<T> {
   readonly kind: "PotNoneUpdating";
   readonly newValue: T;
@@ -45,6 +48,7 @@ export const noneUpdating = <T>(newValue: T): NoneUpdating<T> => ({
 /**
  * Empty value, loading failed.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface NoneError<E> {
   readonly kind: "PotNoneError";
   readonly error: E;
@@ -58,6 +62,7 @@ export const noneError = <E>(error: E): NoneError<E> => ({
 /**
  * Loaded value.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface Some<T> {
   readonly kind: "PotSome";
   readonly value: T;
@@ -71,6 +76,7 @@ export const some = <T>(value: T): Some<T> => ({
 /**
  * Loaded value, loading a new value from remote.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface SomeLoading<T> {
   readonly kind: "PotSomeLoading";
   readonly value: T;
@@ -84,6 +90,7 @@ export const someLoading = <T>(value: T): SomeLoading<T> => ({
 /**
  * Loaded value, updating a new value to remote store.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface SomeUpdating<T> {
   readonly kind: "PotSomeUpdating";
   readonly value: T;
@@ -99,6 +106,7 @@ export const someUpdating = <T>(value: T, newValue: T): SomeUpdating<T> => ({
 /**
  * Loaded value, loading an updated value failed.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 interface SomeError<T, E> {
   readonly kind: "PotSomeError";
   readonly value: T;
@@ -124,24 +132,24 @@ export type Pot<T, E> =
 export type PotType<T> = T extends Some<infer A0>
   ? A0
   : T extends SomeLoading<infer A1>
-  ? A1
+  ? A1 // eslint-disable-next-line @typescript-eslint/no-explicit-any
   : T extends SomeError<infer A2, any>
   ? A2
   : never;
 
 export type PotErrorType<T> = T extends NoneError<infer E0>
-  ? E0
+  ? E0 // eslint-disable-next-line @typescript-eslint/no-explicit-any
   : T extends SomeError<any, infer E1>
   ? E1
   : never;
 
-export const toSomeLoading = <T>(
+export const toSomeLoading = <T>( // eslint-disable-next-line @typescript-eslint/no-explicit-any
   p: Some<T> | SomeError<T, any>
 ): SomeLoading<T> => someLoading(p.value);
 
 export const isSome = <A, E = unknown>(
   p: Pot<A, E>
-): p is Some<A> | SomeLoading<A> | SomeUpdating<A> | SomeError<A, E> => // tslint:disable-line:max-union-size
+): p is Some<A> | SomeLoading<A> | SomeUpdating<A> | SomeError<A, E> =>
   p.kind === "PotSome" ||
   p.kind === "PotSomeLoading" ||
   p.kind === "PotSomeUpdating" ||
@@ -149,19 +157,20 @@ export const isSome = <A, E = unknown>(
 
 export const isNone = <A, E = unknown>(
   p: Pot<A, E>
-): p is None | NoneLoading | NoneUpdating<A> | NoneError<E> => // tslint:disable-line:max-union-size
+): p is None | NoneLoading | NoneUpdating<A> | NoneError<E> =>
   p.kind === "PotNone" ||
   p.kind === "PotNoneLoading" ||
   p.kind === "PotNoneUpdating" ||
   p.kind === "PotNoneError";
 
-export const isLoading = <A>(
+export const isLoading = <A>( // eslint-disable-next-line @typescript-eslint/no-explicit-any
   p: Pot<A, any>
 ): p is NoneLoading | SomeLoading<A> =>
   p.kind === "PotNoneLoading" || p.kind === "PotSomeLoading";
 
 export const isUpdating = <A>(
-  p: Pot<A, any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  p: Pot<A, any> // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): p is NoneUpdating<A> | SomeUpdating<A> =>
   p.kind === "PotNoneUpdating" || p.kind === "PotSomeUpdating";
 
@@ -170,10 +179,13 @@ export const isError = <A, E = unknown>(
 ): p is NoneError<E> | SomeError<A, E> =>
   p.kind === "PotNoneError" || p.kind === "PotSomeError";
 
-export const toLoading = <T>(p: Pot<T, any>): SomeLoading<T> | NoneLoading =>
+export const toLoading = <T>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  p: Pot<T, any>
+): SomeLoading<T> | NoneLoading => // eslint-disable-next-line @typescript-eslint/no-explicit-any
   isSome(p) ? someLoading(p.value) : noneLoading;
 
-export const toUpdating = <T>(
+export const toUpdating = <T>( // eslint-disable-next-line @typescript-eslint/no-explicit-any
   p: Pot<T, any>,
   newValue: T
 ): SomeUpdating<T> | NoneUpdating<T> =>
@@ -195,7 +207,9 @@ export const fold = <A, E, O>(
   foldSomeLoading: (value: A) => O,
   foldSomeUpdating: (value: A, newValue: A) => O,
   foldSomeError: (value: A, error: E) => O
+  // eslint-disable-next-line max-params
 ): O => {
+  // eslint-disable-next-line default-case
   switch (p.kind) {
     case "PotNone":
       return foldNone();
@@ -256,21 +270,26 @@ export const mapNullable = <A, B, E = unknown>(
   return filter(mapped, _ => _ !== undefined && _ !== null) as Pot<B, E>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getOrElse = <A>(p: Pot<A, any>, o: A): A =>
   isSome(p) ? p.value : o;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getOrElseWithUpdating = <A>(p: Pot<A, any>, o: A): A =>
   isUpdating(p) ? p.newValue : isSome(p) ? p.value : o;
 
 export const orElse = <A, E = unknown>(p: Pot<A, E>, o: Pot<A, E>): Pot<A, E> =>
   isSome(p) ? p : o;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toUndefined = <A>(p: Pot<A, any>): A | undefined =>
   isSome(p) ? p.value : undefined;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toOption = <A>(p: Pot<A, any>): option.Option<A> =>
   option.fromNullable(toUndefined(p));
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PotKinds = { [index in Pot<any, any>["kind"]]: 0 };
 
 const PotKinds: PotKinds = {
@@ -284,11 +303,9 @@ const PotKinds: PotKinds = {
   PotSomeUpdating: 0
 };
 
-export const isPot = (value: any): value is Pot<any, any> => {
-  return (
-    value !== null &&
-    typeof value === "object" &&
-    value.kind !== undefined &&
-    value.kind in PotKinds
-  );
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isPot = (value: any): value is Pot<any, any> =>
+  value !== null &&
+  typeof value === "object" &&
+  value.kind !== undefined &&
+  value.kind in PotKinds;

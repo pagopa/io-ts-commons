@@ -74,7 +74,7 @@ const createServerMock = () => {
     method: "GET",
     path: "/agent",
     reply: {
-      // tslint:disable-next-line: no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       body: (req: IncomingMessage, reply: any) => {
         reply(JSON.stringify({ port: req.connection.remotePort }));
       },

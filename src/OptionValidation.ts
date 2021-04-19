@@ -1,4 +1,4 @@
-// tslint:disable:member-access interface-name object-literal-sort-keys
+/* eslint-disable @typescript-eslint/explicit-member-accessibility, sort-keys */
 
 import {
   Applicative2C,
@@ -11,6 +11,7 @@ import { Semigroup } from "fp-ts/lib/Semigroup";
 import * as validation from "fp-ts/lib/Validation";
 
 declare module "fp-ts/lib/HKT" {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   interface URI2HKT2<L, A> {
     readonly OptionValidation: OptionValidation<L, A>;
   }
@@ -26,13 +27,19 @@ export const URI = "OptionValidation";
 export type URI = typeof URI;
 
 export class OptionValidation<L, A> {
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   readonly _A!: A;
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   readonly _L!: L;
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   readonly _URI!: URI;
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   constructor(readonly value: option.Option<validation.Validation<L, A>>) {}
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   map<B>(f: (a: A) => B): OptionValidation<L, B> {
     return new OptionValidation(optionValidationFunctor.map(this.value, f));
   }
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   fold<R>(failure: (l: L) => R, success: (a: A) => R): option.Option<R> {
     return this.value.map(v => v.fold(failure, success));
   }
@@ -41,9 +48,7 @@ export class OptionValidation<L, A> {
 const map = <L, A, B>(
   fa: OptionValidation<L, A>,
   f: (a: A) => B
-): OptionValidation<L, B> => {
-  return fa.map(f);
-};
+): OptionValidation<L, B> => fa.map(f);
 
 export const getApplicative = <L>(S: Semigroup<L>): Applicative2C<URI, L> => {
   const optionValidationApplicative = getApplicativeComposition(
@@ -57,16 +62,14 @@ export const getApplicative = <L>(S: Semigroup<L>): Applicative2C<URI, L> => {
   const ap = <A, B>(
     fab: OptionValidation<L, (a: A) => B>,
     fa: OptionValidation<L, A>
-  ): OptionValidation<L, B> => {
-    return new OptionValidation(
-      optionValidationApplicative.ap(fab.value, fa.value)
-    );
-  };
+  ): OptionValidation<L, B> =>
+    new OptionValidation(optionValidationApplicative.ap(fab.value, fa.value));
   return {
     URI,
     _L: phantom,
     map,
     of,
+    // eslint-disable-next-line sort-keys
     ap
   };
 };

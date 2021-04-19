@@ -1,4 +1,4 @@
-/* tslint:disable:no-identical-functions */
+/* eslint-disable sonarjs/no-identical-functions */
 
 import { isRight } from "fp-ts/lib/Either";
 import {

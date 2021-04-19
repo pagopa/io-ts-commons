@@ -17,7 +17,7 @@ describe("Create an App Insights Telemetry Client", () => {
   const expectedAppInsightsKey = "SECRET-KEY";
 
   it("should create a new App Insights Telemetry Client with tracing enabled", () => {
-    // tslint:disable-next-line: no-unused-expression
+    // eslint-disable-next-line no-new, no-unused-expressions
     const telemetryClient = initAppInsights(expectedAppInsightsKey, {
       applicationVersion: "1.1.1",
       cloudRole: "ai.role"
@@ -29,7 +29,7 @@ describe("Create an App Insights Telemetry Client", () => {
   });
 
   it("should create a new App Insights Telemetry Client with tracing disabled", () => {
-    // tslint:disable-next-line: no-unused-expression
+    // eslint-disable-next-line no-new, no-unused-expressions
     const telemetryClient = initAppInsights(expectedAppInsightsKey, {
       applicationVersion: "1.1.1",
       cloudRole: "ai.role",
@@ -41,7 +41,7 @@ describe("Create an App Insights Telemetry Client", () => {
     expect(telemetryClient).toEqual(appInsights.defaultClient);
   });
   it("should set some default settings in case they are not provided", () => {
-    // tslint:disable-next-line: no-unused-expression
+    // eslint-disable-next-line no-new, no-unused-expressions
     const telemetryClient = initAppInsights(
       expectedAppInsightsKey,
       {},
@@ -56,11 +56,11 @@ describe("Create an App Insights Telemetry Client", () => {
     expect(telemetryClient.config.samplingPercentage).toBe(100);
   });
   it("should set client configuration settings", () => {
-    // tslint:disable-next-line: no-unused-expression
+    // eslint-disable-next-line no-new, no-unused-expressions
     const telemetryClient = initAppInsights(expectedAppInsightsKey, {
       applicationVersion: "1.1.1",
       cloudRole: "ai.role",
-      // tslint:disable-next-line: no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       httpAgent: {} as any,
       samplingPercentage: 20
     });

@@ -14,7 +14,7 @@ describe("toExpressHandler", () => {
     const handler = toExpressHandler(async req => {
       return mockResponse(req.params.test);
     });
-    // tslint:disable-next-line:no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handler(mockRequest as any, {} as any);
     expect(mockResponse).toHaveBeenCalledTimes(1);
   });

@@ -9,21 +9,20 @@ import { Millisecond } from "./units";
 /**
  * Returns a Promise that resolves after millis milliseconds
  */
-export function timeoutPromise(millis: Millisecond): Promise<void> {
-  return new Promise(resolve => {
+export const timeoutPromise = (millis: Millisecond): Promise<void> =>
+  new Promise(resolve => {
     setTimeout(() => resolve(), millis);
   });
-}
 
 /**
  * Wraps a Promise with a timeout, resolves to Left<"timeout"> on timeout or
  * Right<T> on completion.
  */
-export function withTimeout<T>(
+export const withTimeout = <T>(
   p: Promise<T>,
   millis: Millisecond,
   timeoutP: (_: Millisecond) => Promise<void> = timeoutPromise
-): Promise<Either<"timeout", T>> {
+): Promise<Either<"timeout", T>> => {
   const t = timeoutP(millis);
   return new Promise((resolve, reject) => {
     // on timeout
@@ -31,7 +30,7 @@ export function withTimeout<T>(
     // on completion
     p.then(v => resolve(right<"timeout", T>(v))).catch(reject);
   });
-}
+};
 
 /**
  * Creates a Promise whose resolve and reject implementations are not yet
@@ -39,23 +38,23 @@ export function withTimeout<T>(
  *
  * @return Array  A triplet with [Promise<T>, resolve(T), reject()]
  */
-export function DeferredPromise<T>(): ITuple3<
+export const DeferredPromise = <T>(): ITuple3<
   Promise<T>,
   (v: T) => void,
   (e: Error) => void
-> {
-  // tslint:disable-next-line:no-let
+> => {
+  // eslint-disable-next-line functional/no-let
   let resolvePromise: (v: T) => void = () => {
     throw new Error("Promise.resolve not yet initialized");
   };
-  // tslint:disable-next-line:no-let
+  // eslint-disable-next-line functional/no-let
   let rejectPromise: (e: Error) => void = () => {
     throw new Error("Promise.reject not yet initialized");
   };
-  // tslint:disable-next-line:promise-must-complete
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   const promise = new Promise<T>((resolve, reject) => {
     resolvePromise = resolve;
     rejectPromise = reject;
   });
   return Tuple3(promise, resolvePromise, rejectPromise);
-}
+};

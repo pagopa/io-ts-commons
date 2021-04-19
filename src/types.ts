@@ -29,7 +29,7 @@ export type Tagged<T, A, O = A, I = t.mixed> = t.Type<A & T, O & T, I>;
 export const tag = <T>() => <A, O = A, I = t.mixed>(
   type: t.Type<A, O, I>
 ): Tagged<T, A, O, I> =>
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   type as any;
 
 /**
@@ -48,18 +48,18 @@ export type UntagBasicType<A> = A extends string
 /**
  * Returns the passed tagged basic value after converting it to its basic type.
  */
-export function untag<T>(a: T): UntagBasicType<T> {
-  // tslint:disable-next-line:no-any
-  return a as any;
-}
+export const untag = <T>(a: T): UntagBasicType<T> =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  a as any;
 
 /**
  * Returns an object where the keys are the values
  * of the object passed as input and all values are undefined
  */
-const getObjectValues = (e: object) =>
+// eslint-disable-next-line @typescript-eslint/ban-types
+const getObjectValues = (e: object): Record<string, undefined> =>
   Object.keys(e).reduce(
-    // tslint:disable-next-line:no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (o, k) => ({ ...o, [(e as any)[k]]: undefined }),
     {} as Record<string, undefined>
   );
@@ -67,8 +67,9 @@ const getObjectValues = (e: object) =>
 /**
  * Creates an io-ts Type from an enum
  */
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const enumType = <E>(e: object, name: string): t.Type<E> =>
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t.keyof(getObjectValues(e), name) as any;
 
 /**
@@ -103,13 +104,14 @@ export type LimitedFields<T, F extends keyof T> = { [P in F]: T[P] };
 /**
  *  True when the input is an object (and not array).
  */
-export const isObject = (o: {}) =>
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const isObject = (o: {}): boolean =>
   o instanceof Object && o.constructor === Object;
 
 /**
  * Return an object filtering out keys that point to undefined values.
  */
-export function withoutUndefinedValues<T, K extends keyof T>(obj: T): T {
+export const withoutUndefinedValues = <T, K extends keyof T>(obj: T): T => {
   // note that T has been already validated by the type system and we can
   // be sure now that only attributes that may be undefined can be actually
   // filtered out by the following code, so the output type T is always
@@ -120,14 +122,14 @@ export function withoutUndefinedValues<T, K extends keyof T>(obj: T): T {
     return value !== undefined
       ? {
           // see https://github.com/Microsoft/TypeScript/pull/13288
-          // tslint:disable-next-line:no-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ...(acc as any),
-          // tslint:disable-next-line:no-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           [key]: isObject(value as any) ? withoutUndefinedValues(value) : value
         }
       : acc;
   }, {} as T);
-}
+};
 
 /**
  *  Return a new type that validates successfully only
@@ -138,7 +140,7 @@ export function withoutUndefinedValues<T, K extends keyof T>(obj: T): T {
  *  @\required  required properties
  *  @optional   optional object properties
  */
-export function strictInterfaceWithOptionals<
+export const strictInterfaceWithOptionals = <
   R extends t.Props,
   O extends t.Props
 >(
@@ -148,7 +150,7 @@ export function strictInterfaceWithOptionals<
 ): t.Type<
   t.TypeOfProps<R> & t.TypeOfPartialProps<O>,
   t.OutputOfProps<R> & t.OutputOfPartialProps<O>
-> {
+> => {
   const loose = t.intersection([t.interface(required), t.partial(optional)]);
   const props = Object.assign({}, required, optional);
   return new t.Type(
@@ -156,11 +158,13 @@ export function strictInterfaceWithOptionals<
     (m): m is t.TypeOfProps<R> & t.TypeOfPartialProps<O> =>
       loose.is(m) &&
       // check if all object properties belong to the strict interface
+      // eslint-disable-next-line no-prototype-builtins
       Object.getOwnPropertyNames(m).every(k => props.hasOwnProperty(k)),
     (m, c) =>
       loose.validate(m, c).chain(o => {
         const errors: t.Errors = Object.getOwnPropertyNames(o)
           .map(key =>
+            // eslint-disable-next-line no-prototype-builtins
             !props.hasOwnProperty(key)
               ? t.getValidationError(o[key], t.appendContext(c, key, t.never))
               : undefined
@@ -170,26 +174,28 @@ export function strictInterfaceWithOptionals<
       }),
     loose.encode
   );
-}
+};
 
 /**
  * Sets properties default values when calling t.validate() method on models
  * see https://github.com/gcanti/io-ts/issues/8
  */
-// tslint:disable:no-any
-export function withDefault<T extends t.Any>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const withDefault = <T extends t.Any>(
   type: T,
   defaultValue: t.TypeOf<T>
-): t.Type<t.TypeOf<T>, any> {
-  return new t.Type(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): t.Type<t.TypeOf<T>, any> =>
+  new t.Type(
     type.name,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (v: any): v is T => type.is(v),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (v: any, c: any) =>
-      // tslint:disable-next-line:no-null-keyword
       type.validate(v !== undefined && v !== null ? v : defaultValue, c),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (v: any) => type.encode(v)
   );
-}
 
 /**
  * From T omit a set of properties K
@@ -227,6 +233,7 @@ export const requiredProp1 = <A, O, I, P extends keyof A>(
   p: P,
   name?: string
 ): t.Type<RequiredProp1<A, P>, O, I> =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t.refinement(type, o => o[p] !== undefined, name) as any;
 
 export const replaceProp1 = <
@@ -243,6 +250,7 @@ export const replaceProp1 = <
   typeB: t.Type<A1, O1, I1>,
   name?: string
 ): t.Type<ReplaceProp1<A, P, A1>, O, I> =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t.refinement(type, o => typeB.is(o[p]), name) as any;
 
 /**

@@ -13,7 +13,7 @@ import {
 import { ITuple2, Tuple2 } from "./tuples";
 import { Millisecond } from "./units";
 
-// tslint:disable-next-line: no-submodule-imports
+// eslint-disable-next-line import/no-internal-modules
 import "abort-controller/polyfill";
 
 /**
@@ -31,11 +31,13 @@ export type AbortableFetch = (
  *
  * See https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
  */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function AbortableFetch(
   origFetch: typeof fetch = fetch
 ): AbortableFetch {
   // a fetch-like function that for each request, returns a tuple with the
   // response and the instance of the abortController associated to the request
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return (input, init) => {
     // instantiate an abort controller
     const abortController = new AbortController();
@@ -57,6 +59,7 @@ export function AbortableFetch(
 /**
  * Converts an AbortableFetch back to a simple fetch
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const toFetch = (f: AbortableFetch) => (
   input: Request | string,
   init?: RequestInit
@@ -67,10 +70,12 @@ export const toFetch = (f: AbortableFetch) => (
  *
  * When the timeout expires, the controller's `abort()` method gets called.
  */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function setFetchTimeout(
   timeout: Millisecond,
   abortableFetch: AbortableFetch
 ): AbortableFetch {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return (input, init) => {
     const result = abortableFetch(input, init);
     // abort the fetch request on timeout
@@ -97,20 +102,19 @@ export const retriableFetch: (
 ) => (f: typeof fetch) => typeof fetch = (
   retryWrapper,
   shouldAbort = Promise.resolve(false)
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => f => (input: Request | string, init?: RequestInit) => {
   // wraps the fetch call with a TaskEither type, mapping certain promise
   // rejections to TransientError(s)
   const fetchTask = tryCatch<Error | TransientError, Response>(
-    () => {
-      return f(input, init);
-    },
+    () => f(input, init),
     reason => {
       // map rejection reason to a transient or permanent error
       if (
         `${reason}`.toLowerCase().indexOf("aborted") >= 0 ||
         (reason as Error).name === "Aborted" ||
         (reason as Error).name === "Network request failed" ||
-        // tslint:disable-next-line:no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (reason as any).type === "aborted"
       ) {
         // We return a TransientError in case the request got aborted by

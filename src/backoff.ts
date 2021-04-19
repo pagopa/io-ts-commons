@@ -21,18 +21,21 @@ export const DEFAULT_EXPONENTIAL_BACKOFF_MAX = (32 * 1000) as Millisecond;
  *
  * @param n Is the try count, starts from 0
  */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function calculateExponentialBackoffInterval(
   baseInterval: Millisecond = DEFAULT_EXPONENTIAL_BACKOFF_BASE_INTERVAL,
   multiplier: number = DEFAULT_EXPONENTIAL_BACKOFF_MULTIPLIER,
   maxJitter: Millisecond = DEFAULT_EXPONENTIAL_BACKOFF_MAX_JITTER,
   maxBackoff: Millisecond = DEFAULT_EXPONENTIAL_BACKOFF_MAX
 ): (n: number) => Millisecond {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return count => {
     // The jitter helps to avoid cases where many clients get synchronized by
     // some situation and all retry at once, sending requests in synchronized
     // waves.
     const jitter = Math.random() * maxJitter;
     // The wait time is:
+    // eslint-disable-next-line extra-rules/no-commented-out-code
     // min((b*(m^n)+random_number_milliseconds), maximum_backoff)
     // with n incremented by 1 for each iteration (request).
     const delayInterval = baseInterval * Math.pow(multiplier, count) + jitter;

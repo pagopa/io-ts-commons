@@ -16,11 +16,13 @@ export const EncryptedPayload = t.interface({
   iv: t.string,
 
   // AES Key encrypted with RSA public key (Base64)
+  // eslint-disable-next-line sort-keys
   encryptedKey: t.string
 });
 
 export type EncryptedPayload = t.TypeOf<typeof EncryptedPayload>;
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function toEncryptedPayload(
   rsaPubKey: string,
   plainText: string
@@ -45,6 +47,7 @@ export function toEncryptedPayload(
   }, toError);
 }
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function toPlainText(
   rsaPrivateKey: string,
   encryptedPayload: EncryptedPayload

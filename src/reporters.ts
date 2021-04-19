@@ -10,7 +10,7 @@ import { Reporter } from "io-ts/lib/Reporter";
  *   ".a is not a number"
  *   ".c.b is not a non empty string"
  */
-function getContextPath(context: Context): string {
+const getContextPath = (context: Context): string => {
   if (context.length === 0) {
     return "] (decoder info n/a)";
   }
@@ -22,28 +22,23 @@ function getContextPath(context: Context): string {
   }
 
   return `${keysPath}] is not a valid [${lastType.name}]`;
-}
+};
 
-function getMessage(value: unknown, context: Context): string {
-  return `value [${JSON.stringify(value)}] at [root${getContextPath(context)}`;
-}
+const getMessage = (value: unknown, context: Context): string =>
+  `value [${JSON.stringify(value)}] at [root${getContextPath(context)}`;
 
 /**
  * Translates validation errors to more readable messages.
  */
-export function errorsToReadableMessages(
+export const errorsToReadableMessages = (
   es: ReadonlyArray<ValidationError>
-): ReadonlyArray<string> {
-  return es.map(e => getMessage(e.value, e.context));
-}
+): ReadonlyArray<string> => es.map(e => getMessage(e.value, e.context));
 
-function success(): ReadonlyArray<string> {
-  return ["No errors!"];
-}
+const success = (): ReadonlyArray<string> => ["No errors!"];
 
-export function readableReport(errors: ReadonlyArray<ValidationError>): string {
-  return errorsToReadableMessages(errors).join("\n");
-}
+export const readableReport = (
+  errors: ReadonlyArray<ValidationError>
+): string => errorsToReadableMessages(errors).join("\n");
 
 /**
  * A validation error reporter that translates validation errors to more

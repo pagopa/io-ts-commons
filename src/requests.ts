@@ -2,7 +2,7 @@
  * Type safe wrapper around the fetch API
  */
 
-// tslint:disable:variable-name
+// eslint-disable camelcase
 
 // TODO: support for optional query parameters
 // TODO: when query/headers type is "never", it should not allow any query/header to be produced
@@ -19,11 +19,11 @@ export type RequestMethod = "get" | "post" | "put" | "delete";
 /**
  * Describes the possible header keys of a request
  */
-// tslint:disable-next-line:no-duplicate-string
+// eslint-disable-next-line sonarjs/no-duplicate-string
 export type RequestHeaderKey =
   | "Accept-Encoding"
   | "Authorization"
-  | "Content-Type" // tslint:disable-line:no-duplicate-string
+  | "Content-Type" // eslint-disable-line sonarjs/no-duplicate-string
   | "Host"
   | "If-None-Match"
   | "Ocp-Apim-Subscription-Key"
@@ -52,6 +52,7 @@ export type RequestHeaderProducer<P, KH extends RequestHeaderKey> = (
 /**
  * Composes two RequestHeaderProducer(s)
  */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function composeHeaderProducers<
   PI,
   KI extends RequestHeaderKey,
@@ -61,13 +62,14 @@ export function composeHeaderProducers<
   p0: RequestHeaderProducer<PI, KI>,
   p1: RequestHeaderProducer<PH, KH>
 ): RequestHeaderProducer<PI & PH, KI | KH> {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return params => {
     const headers0 = p0(params);
     const headers1 = p1(params);
     return {
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(headers0 as any),
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(headers1 as any)
     };
   };
@@ -108,11 +110,13 @@ export type ResponseDecoder<R> = (
 /**
  * Composes two ResponseDecoder(s)
  */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function composeResponseDecoders<R1, R2>(
   d1: ResponseDecoder<R1>,
   d2: ResponseDecoder<R2>
 ): ResponseDecoder<R1 | R2> {
   // TODO: make sure R1, R2 don't intersect
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return async response => {
     const r1 = await d1(response);
     return r1 !== undefined ? r1 : await d2(response);
@@ -214,8 +218,11 @@ export type ApiRequestType<
  */
 export type TypeofApiParams<T> = T extends ApiRequestType<
   infer P,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _KH,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _Q,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _R
 >
   ? P
@@ -225,8 +232,11 @@ export type TypeofApiParams<T> = T extends ApiRequestType<
  * The type of the Response of an ApiRequestType
  */
 export type TypeofApiResponse<T> = T extends ApiRequestType<
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _P,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _KH,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _Q,
   infer R
 >
@@ -238,7 +248,7 @@ export type TypeofApiResponse<T> = T extends ApiRequestType<
  */
 export type TypeOfApiResponseStatus<T> = TypeofApiResponse<
   T
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 > extends IResponseType<infer S, any>
   ? S
   : never;
@@ -270,6 +280,7 @@ export type ApiRequestTypeForMethod<
 
 export type EmptyApiRequestBuilder<
   M extends RequestMethod,
+  // eslint-disable-next-line @typescript-eslint/ban-types
   P = {},
   KH extends RequestHeaderKey = never,
   Q extends string = never,
@@ -277,15 +288,21 @@ export type EmptyApiRequestBuilder<
 > = ApiRequestBuilder<M, P, KH, Q, R, ApiRequestTypeForMethod<M, P, KH, Q, R>>;
 
 const emptyBaseRequest = {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   headers: () => ({}),
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   query: () => ({}),
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   response_decoder: () => Promise.reject({}),
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   url: () => ""
 };
 
 const emptyBasePutOrPostRequest = {
   ...emptyBaseRequest,
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   body: () => JSON.stringify({}),
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   headers: () => ({ "Content-Type": "application/json" })
 };
 
@@ -307,10 +324,12 @@ export class ApiRequestBuilder<
   public static ofGet(): EmptyApiRequestBuilder<"get"> {
     return new ApiRequestBuilder<
       "get",
+      // eslint-disable-next-line @typescript-eslint/ban-types
       {},
       never,
       never,
       never,
+      // eslint-disable-next-line @typescript-eslint/ban-types
       ApiRequestTypeForMethod<"get", {}, never, never, never>
     >({ ...emptyBaseRequest, method: "get" });
   }
@@ -318,13 +337,16 @@ export class ApiRequestBuilder<
   /**
    * Creates a new empty request with the POST method.
    */
+  // eslint-disable-next-line @typescript-eslint/ban-types
   public static ofPost(): EmptyApiRequestBuilder<"post", {}, "Content-Type"> {
     return new ApiRequestBuilder<
       "post",
+      // eslint-disable-next-line @typescript-eslint/ban-types
       {},
       "Content-Type",
       never,
       never,
+      // eslint-disable-next-line @typescript-eslint/ban-types
       ApiRequestTypeForMethod<"post", {}, "Content-Type", never, never>
     >({
       ...emptyBasePutOrPostRequest,
@@ -335,14 +357,17 @@ export class ApiRequestBuilder<
   /**
    * Creates a new empty request with the PUT method.
    */
-  /* tslint:disable-next-line:no-identical-functions */
+  /* eslint-disable-next-line sonarjs/no-identical-functions */
+  // eslint-disable-next-line @typescript-eslint/ban-types
   public static ofPut(): EmptyApiRequestBuilder<"put", {}, "Content-Type"> {
     return new ApiRequestBuilder<
       "put",
+      // eslint-disable-next-line @typescript-eslint/ban-types
       {},
       "Content-Type",
       never,
       never,
+      // eslint-disable-next-line @typescript-eslint/ban-types
       ApiRequestTypeForMethod<"put", {}, "Content-Type", never, never>
     >({
       ...emptyBasePutOrPostRequest,
@@ -351,6 +376,7 @@ export class ApiRequestBuilder<
   }
 
   public get(): T {
+    // eslint-disable-next-line no-underscore-dangle
     return this._request;
   }
 
@@ -367,14 +393,15 @@ export class ApiRequestBuilder<
     R,
     ApiRequestTypeForMethod<M, P & P1, KH, Q | Q1, R>
   > {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const newQuery = (p: P & P1) => ({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request.query(p) as any),
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(query(p) as any)
     });
     return new ApiRequestBuilder({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request as any),
       query: newQuery
     });
@@ -393,14 +420,15 @@ export class ApiRequestBuilder<
     R,
     ApiRequestTypeForMethod<M, P & P1, KH | KH1, Q, R>
   > {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const newHeaders = (p: P & P1) => ({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request.headers(p) as any),
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(headers(p) as any)
     });
     return new ApiRequestBuilder({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request as any),
       headers: newHeaders
     });
@@ -420,7 +448,7 @@ export class ApiRequestBuilder<
     ApiRequestTypeForMethod<M, P, KH, Q, R1>
   > {
     return new ApiRequestBuilder({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request as any),
       response_decoder
     });
@@ -431,6 +459,7 @@ export class ApiRequestBuilder<
 // helpers
 //
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 function queryStringFromParams<P extends string>(
   params: RequestQuery<P>
 ): string | undefined {
@@ -447,7 +476,7 @@ function queryStringFromParams<P extends string>(
  * Returns an async method that implements the provided ApiRequestType backed
  * by the "fetch" API.
  */
-// tslint:disable-next-line:cognitive-complexity
+// eslint-disable-next-line sonarjs/cognitive-complexity, prefer-arrow/prefer-arrow-functions
 export function createFetchRequestForApi<
   P,
   KH extends RequestHeaderKey,
@@ -462,6 +491,7 @@ export function createFetchRequestForApi<
 ): (params: P) => Promise<t.Validation<R>> {
   // TODO: handle unsuccessful fetch and HTTP errors
   // @see https://www.pivotaltracker.com/story/show/154661120
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return async params => {
     // Build operationUrl from the params
     const operationUrl = requestType.url(params);
@@ -530,6 +560,7 @@ export function createFetchRequestForApi<
 /**
  * An header producer that sets the Content-Type to application/json
  */
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const ApiHeaderJson: RequestHeaderProducer<{}, "Content-Type"> = () => ({
   "Content-Type": "application/json"
 });
@@ -543,6 +574,7 @@ export const ApiHeaderJson: RequestHeaderProducer<{}, "Content-Type"> = () => ({
  * @param preprocessor A function that takes the object corresponding to the json response as input
  * and returns the processed object (usefull when you want alterate the json body received)
  */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function ioResponseDecoder<
   S extends number,
   R,
@@ -551,9 +583,10 @@ export function ioResponseDecoder<
 >(
   status: S,
   type: t.Type<R, O>,
-  // tslint:disable-next-line: no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
   preprocessor: (i: any) => any = _ => _
 ): ResponseDecoder<IResponseType<S, R, H>> {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return async (response: Response) => {
     if (response.status !== status) {
       // skip this decoder if status doesn't match
@@ -562,7 +595,7 @@ export function ioResponseDecoder<
     const json = await response.json();
     const validated = type.decode(preprocessor(json));
     return validated.map(value => ({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       headers: response.headers as any,
       status,
       value
@@ -574,17 +607,19 @@ export function ioResponseDecoder<
  * A basic ResponseDecoder that returns an Error with the status text if the
  * response status is S.
  */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function basicErrorResponseDecoder<
   S extends number,
   H extends string = never
 >(status: S): ResponseDecoder<IResponseType<S, string, H>> {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return async response => {
     if (response.status !== status) {
       // skip this decoder if status doesn't match
       return undefined;
     }
     return right<t.Errors, IResponseType<S, string, H>>({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       headers: response.headers as any,
       status,
       value: response.statusText
@@ -604,9 +639,10 @@ export type BasicResponseType<R, H extends string = never> =
 /**
  * Returns a ResponseDecoder for BasicResponseType<R>
  */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function basicResponseDecoder<R, O = R, H extends string = never>(
   type: t.Type<R, O>,
-  // tslint:disable-next-line: no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   preprocessor?: (i: any) => any
 ): ResponseDecoder<BasicResponseType<R, H>> {
   return composeResponseDecoders(
@@ -621,17 +657,19 @@ export function basicResponseDecoder<R, O = R, H extends string = never>(
 /**
  * A response decoder that ignores the payload and returns a constant value
  */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function constantResponseDecoder<
   T,
   S extends number,
   H extends string = never
 >(status: S, value: T): ResponseDecoder<IResponseType<S, T, H>> {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return async response => {
     if (response.status !== status) {
       return undefined;
     }
     return right<t.Errors, IResponseType<S, T, H>>({
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       headers: response.headers as any,
       status,
       value
@@ -643,23 +681,24 @@ export function constantResponseDecoder<
  * Returns a RequestHeaderProducer that produces an Authorization header of type
  * "bearer token" taking the value from the "token" parameter of each request.
  */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function ParamAuthorizationBearerHeaderProducer<
   P extends { readonly token: string }
 >(): RequestHeaderProducer<P, "Authorization"> {
-  return (p: P): RequestHeaders<"Authorization"> => {
-    return {
-      Authorization: `Bearer ${p.token}`
-    };
-  };
+  return (p: P): RequestHeaders<"Authorization"> => ({
+    Authorization: `Bearer ${p.token}`
+  });
 }
 
 /**
  * Returns a RequestHeaderProducer that produces an Authorization header of type
  * "bearer token" with a fixed token value.
  */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function AuthorizationBearerHeaderProducer<P>(
   token: string
 ): RequestHeaderProducer<P, "Authorization"> {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return () => ({
     Authorization: `Bearer ${token}`
   });
@@ -667,6 +706,7 @@ export function AuthorizationBearerHeaderProducer<P>(
 
 type MapTypeInApiResponse<T, S extends number, B> = T extends IResponseType<
   S,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _R
 >
   ? IResponseType<S, B>
@@ -694,15 +734,18 @@ export type MapResponseType<
  */
 export type RequestParams<T> = T extends IGetApiRequestType<
   infer P1,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _H1,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _Q1,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _R1
 >
-  ? P1
+  ? P1 // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IPostApiRequestType<infer P2, infer _H2, infer _Q2, infer _R2>
-  ? P2
+  ? P2 // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IPutApiRequestType<infer P3, infer _H3, infer _Q3, infer _R3>
-  ? P3
+  ? P3 // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IDeleteApiRequestType<infer P4, infer _H4, infer _Q4, infer _R4>
   ? P4
   : never;
@@ -711,16 +754,17 @@ export type RequestParams<T> = T extends IGetApiRequestType<
  * Replaces the parameters of the request T with the type P
  */
 export type ReplaceRequestParams<T, P> = T extends IGetApiRequestType<
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _P1,
   infer H1,
   infer Q1,
   infer R1
 >
-  ? IGetApiRequestType<P, H1, Q1, R1>
+  ? IGetApiRequestType<P, H1, Q1, R1> // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IPostApiRequestType<infer _P2, infer H2, infer Q2, infer R2>
-  ? IPostApiRequestType<P, H2, Q2, R2>
+  ? IPostApiRequestType<P, H2, Q2, R2> // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IPutApiRequestType<infer _P3, infer H3, infer Q3, infer R3>
-  ? IPutApiRequestType<P, H3, Q3, R3>
+  ? IPutApiRequestType<P, H3, Q3, R3> // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IDeleteApiRequestType<infer _P4, infer H4, infer Q4, infer R4>
   ? IDeleteApiRequestType<P, H4, Q4, R4>
   : never;
@@ -748,5 +792,5 @@ export type AddResponseType<
 export type OmitStatusFromResponse<
   T,
   S extends number
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 > = T extends IResponseType<S, any> ? never : T;

@@ -43,19 +43,20 @@ export type RetriableTask<E, T> = E extends TransientError
 /**
  * Wraps a RetriableTask with a number of retries
  */
-export function withRetries<E, T>(
+export const withRetries = <E, T>(
   maxRetries: number,
   backoff: (count: number) => Millisecond
-): (
+): ((
   _: RetriableTask<E, T>,
   shouldAbort?: Promise<boolean>
-) => TaskEither<E | MaxRetries | RetryAborted, T> {
-  return (task, shouldAbort = Promise.resolve(false)) => {
+) => TaskEither<E | MaxRetries | RetryAborted, T>) =>
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  (task, shouldAbort = Promise.resolve(false)) => {
     // Whether we must stop retrying
     // the abort process gets triggered when the shouldAbort promise resolves
     // to true. Not that aborting stops the retry process, it does NOT stop
     // the execution of the current task.
-    // tslint:disable-next-line:no-let
+    // eslint-disable-next-line functional/no-let
     let mustAbort = false;
     shouldAbort.then(
       v => {
@@ -100,4 +101,3 @@ export function withRetries<E, T>(
       l === TransientError ? MaxRetries : l
     );
   };
-}
