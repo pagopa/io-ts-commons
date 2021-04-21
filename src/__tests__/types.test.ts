@@ -6,7 +6,6 @@ import { isLeft, isRight } from "fp-ts/lib/Either";
 import { readableReport } from "../reporters";
 
 import { enumType, readonlySetType, withDefault } from "../types";
-import SerializableSet from "json-set-map/build/src/set";
 
 enum aValidEnum {
   "foo" = "fooValue",
