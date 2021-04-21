@@ -1,11 +1,12 @@
 import * as t from "io-ts";
 
-import { strictInterfaceWithOptionals, withoutUndefinedValues } from "../types";
+import { readonlyNonEmptySetType, strictInterfaceWithOptionals, withoutUndefinedValues } from "../types";
 
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { readableReport } from "../reporters";
 
 import { enumType, readonlySetType, withDefault } from "../types";
+import SerializableSet from "json-set-map/build/src/set";
 
 enum aValidEnum {
   "foo" = "fooValue",
@@ -35,6 +36,33 @@ describe("readonlySetType", () => {
     fixtures.forEach(f => {
       const v = aSetOfStrings.decode(f);
       expect(v.isRight()).toBeTruthy();
+    });
+  });
+});
+
+describe("readonlyNonEmptySetType", () => {
+  const aReadonlyNonEmptySet = readonlyNonEmptySetType(t.string, "Set of strings");
+
+  it("should not validate if is an empty set", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fixtures: ReadonlyArray<any> = [[], new Set()];
+
+    fixtures.forEach(f => {
+      const v = aReadonlyNonEmptySet.decode(f);
+      expect(v.isLeft()).toBeTruthy();
+      expect(aReadonlyNonEmptySet.is(f)).toBeFalsy();
+    });
+  });
+
+  it("should validate", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fixtures: ReadonlyArray<any> = [["a"], ["a", "b"], new Set("x")];
+
+    fixtures.forEach(f => {
+      const v = aReadonlyNonEmptySet.decode(f);
+      expect(v.isRight()).toBeTruthy();
+      // We use the decoded value where Array are trasformed to Set
+      expect(aReadonlyNonEmptySet.is(v.value)).toBeTruthy();
     });
   });
 });
