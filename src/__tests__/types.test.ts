@@ -1,6 +1,10 @@
 import * as t from "io-ts";
 
-import { readonlyNonEmptySetType, strictInterfaceWithOptionals, withoutUndefinedValues } from "../types";
+import {
+  readonlyNonEmptySetType,
+  strictInterfaceWithOptionals,
+  withoutUndefinedValues
+} from "../types";
 
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { readableReport } from "../reporters";
@@ -40,7 +44,10 @@ describe("readonlySetType", () => {
 });
 
 describe("readonlyNonEmptySetType", () => {
-  const aReadonlyNonEmptySet = readonlyNonEmptySetType(t.string, "Set of strings");
+  const aReadonlyNonEmptySet = readonlyNonEmptySetType(
+    t.string,
+    "Set of strings"
+  );
 
   it("should not validate if is an empty set", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,6 +58,31 @@ describe("readonlyNonEmptySetType", () => {
       expect(v.isLeft()).toBeTruthy();
       expect(aReadonlyNonEmptySet.is(f)).toBeFalsy();
     });
+  });
+
+  it("should create immutable set from an array", () => {
+    const anArray = ["a", "b"];
+    const anUnexpectedValue = "foo";
+
+    const maybeFromArray = aReadonlyNonEmptySet.decode(anArray);
+
+    anArray.push(anUnexpectedValue);
+
+    if (maybeFromArray.isRight()) {
+      expect(maybeFromArray.value.has(anUnexpectedValue)).toBe(false);
+    }
+  });
+  it("should create immutable set from a set", () => {
+    const aSet = new Set("x");
+    const anUnexpectedValue = "foo";
+
+    const maybeFromSet = aReadonlyNonEmptySet.decode(aSet);
+
+    aSet.add(anUnexpectedValue);
+
+    if (maybeFromSet.isRight()) {
+      expect(maybeFromSet.value.has(anUnexpectedValue)).toBe(false);
+    }
   });
 
   it("should validate", () => {
