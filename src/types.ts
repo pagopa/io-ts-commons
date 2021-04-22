@@ -84,10 +84,10 @@ export const readonlySetType = <E>(
     name,
     (s): s is ReadonlySet<E> => s instanceof Set && arrayType.is(Array.from(s)),
     (s, c) => {
-      if (s instanceof Set && arrayType.is(Array.from(s))) {
-        return t.success(s);
-      }
-      if (arrayType.is(s)) {
+      if (
+        (s instanceof Set && arrayType.is(Array.from(s))) ||
+        arrayType.is(s)
+      ) {
         return t.success(new SerializableSet(Array.from(s)));
       }
       return t.failure(s, c);
@@ -113,7 +113,7 @@ export const readonlyNonEmptySetType = <E>(
       s instanceof Set && arrayType.is(Array.from(s)) && s.size > 0,
     (s, c) => {
       if (s instanceof Set && arrayType.is(Array.from(s)) && s.size > 0) {
-        return t.success(s);
+        return t.success(new SerializableSet(Array.from(s)));
       }
       if (arrayType.is(s) && s.length > 0) {
         return t.success(new SerializableSet(Array.from(s)));
