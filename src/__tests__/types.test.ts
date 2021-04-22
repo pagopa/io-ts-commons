@@ -32,14 +32,13 @@ describe("enumType", () => {
 describe("readonlySetType", () => {
   const aSetOfStrings = readonlySetType(t.string, "Set of strings");
 
-  it("should validate", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fixtures: ReadonlyArray<any> = [[], ["a"], new Set("x")];
-
-    fixtures.forEach(f => {
+  it.each
+  `title | f
+  ${"an empty array"} | ${[]}
+  ${"a not empty array"} | ${["a", "b"]}
+  ${"a non empty set"} | ${new Set("x")}`("should validate $title", ({f}) => {
       const v = aSetOfStrings.decode(f);
       expect(v.isRight()).toBeTruthy();
-    });
   });
 });
 
@@ -49,15 +48,14 @@ describe("readonlyNonEmptySetType", () => {
     "Set of strings"
   );
 
-  it("should not validate if is an empty set", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fixtures: ReadonlyArray<any> = [[], new Set()];
-
-    fixtures.forEach(f => {
+  it.each
+    `title | f
+    ${"an empty set array"} | ${new Set()}
+    ${"an empty array"} | ${[]}`
+  ("should not validate if is $title", ({f}) => {
       const v = aReadonlyNonEmptySet.decode(f);
       expect(v.isLeft()).toBeTruthy();
       expect(aReadonlyNonEmptySet.is(f)).toBeFalsy();
-    });
   });
 
   it("should create immutable set from an array", () => {
@@ -84,17 +82,15 @@ describe("readonlyNonEmptySetType", () => {
       expect(maybeFromSet.value.has(anUnexpectedValue)).toBe(false);
     }
   });
-
-  it("should validate", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fixtures: ReadonlyArray<any> = [["a"], ["a", "b"], new Set("x")];
-
-    fixtures.forEach(f => {
+  it.each
+    `title | f
+    ${"a one element array"} | ${["a"]}
+    ${"a two element array"} | ${["a", "b"]}
+    ${"a non empty set"} | ${new Set("x")}`("should validate $title", ({f}) => {
       const v = aReadonlyNonEmptySet.decode(f);
       expect(v.isRight()).toBeTruthy();
       // We use the decoded value where Array are trasformed to Set
       expect(aReadonlyNonEmptySet.is(v.value)).toBeTruthy();
-    });
   });
 });
 
