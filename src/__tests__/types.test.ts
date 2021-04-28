@@ -1,6 +1,10 @@
 import * as t from "io-ts";
 
-import { strictInterfaceWithOptionals, withoutUndefinedValues } from "../types";
+import {
+  readonlyNonEmptySetType,
+  strictInterfaceWithOptionals,
+  withoutUndefinedValues
+} from "../types";
 
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { readableReport } from "../reporters";
@@ -28,14 +32,65 @@ describe("enumType", () => {
 describe("readonlySetType", () => {
   const aSetOfStrings = readonlySetType(t.string, "Set of strings");
 
-  it("should validate", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fixtures: ReadonlyArray<any> = [[], ["a"], new Set("x")];
-
-    fixtures.forEach(f => {
+  it.each
+  `title | f
+  ${"an empty array"} | ${[]}
+  ${"a not empty array"} | ${["a", "b"]}
+  ${"a non empty set"} | ${new Set("x")}`("should validate $title", ({f}) => {
       const v = aSetOfStrings.decode(f);
       expect(v.isRight()).toBeTruthy();
-    });
+  });
+});
+
+describe("readonlyNonEmptySetType", () => {
+  const aReadonlyNonEmptySet = readonlyNonEmptySetType(
+    t.string,
+    "Set of strings"
+  );
+
+  it.each
+    `title | f
+    ${"an empty set array"} | ${new Set()}
+    ${"an empty array"} | ${[]}`
+  ("should not validate if is $title", ({f}) => {
+      const v = aReadonlyNonEmptySet.decode(f);
+      expect(v.isLeft()).toBeTruthy();
+      expect(aReadonlyNonEmptySet.is(f)).toBeFalsy();
+  });
+
+  it("should create immutable set from an array", () => {
+    const anArray = ["a", "b"];
+    const anUnexpectedValue = "foo";
+
+    const maybeFromArray = aReadonlyNonEmptySet.decode(anArray);
+
+    anArray.push(anUnexpectedValue);
+
+    if (maybeFromArray.isRight()) {
+      expect(maybeFromArray.value.has(anUnexpectedValue)).toBe(false);
+    }
+  });
+  it("should create immutable set from a set", () => {
+    const aSet = new Set("x");
+    const anUnexpectedValue = "foo";
+
+    const maybeFromSet = aReadonlyNonEmptySet.decode(aSet);
+
+    aSet.add(anUnexpectedValue);
+
+    if (maybeFromSet.isRight()) {
+      expect(maybeFromSet.value.has(anUnexpectedValue)).toBe(false);
+    }
+  });
+  it.each
+    `title | f
+    ${"a one element array"} | ${["a"]}
+    ${"a two element array"} | ${["a", "b"]}
+    ${"a non empty set"} | ${new Set("x")}`("should validate $title", ({f}) => {
+      const v = aReadonlyNonEmptySet.decode(f);
+      expect(v.isRight()).toBeTruthy();
+      // We use the decoded value where Array are trasformed to Set
+      expect(aReadonlyNonEmptySet.is(v.value)).toBeTruthy();
   });
 });
 

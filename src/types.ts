@@ -84,10 +84,10 @@ export const readonlySetType = <E>(
     name,
     (s): s is ReadonlySet<E> => s instanceof Set && arrayType.is(Array.from(s)),
     (s, c) => {
-      if (s instanceof Set && arrayType.is(Array.from(s))) {
-        return t.success(s);
-      }
-      if (arrayType.is(s)) {
+      if (
+        (s instanceof Set && arrayType.is(Array.from(s))) ||
+        arrayType.is(s)
+      ) {
         return t.success(new SerializableSet(Array.from(s)));
       }
       return t.failure(s, c);
@@ -95,6 +95,18 @@ export const readonlySetType = <E>(
     t.identity
   );
 };
+
+// eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/no-empty-interface
+export interface ReadOnlyNonEmptySet<T> extends ReadonlySet<T> {}
+
+/**
+ * Creates an io-ts Type from a ReadonlyNonEmptySet
+ */
+export const readonlyNonEmptySetType = <E>(
+  o: t.Type<E, t.mixed>,
+  name: string
+): t.Type<ReadOnlyNonEmptySet<E>, t.mixed> =>
+  t.refinement(readonlySetType(o, name), e => e.size > 0, name);
 
 /**
  * Returns a new type that has only the F fields of type T.
