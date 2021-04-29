@@ -13,9 +13,11 @@ export type RequestHandler<R> = (
  *
  * Failed promises will be mapped to 500 errors handled by ResponseErrorGeneric.
  */
-export const wrapRequestHandler = <R>(
-  handler: RequestHandler<R>
-): express.RequestHandler => (request, response, _): Promise<void> =>
+export const wrapRequestHandler = <R>(handler: RequestHandler<R>) => (
+  request: express.Request,
+  response: express.Response,
+  _: express.NextFunction
+): Promise<void> =>
   handler(request).then(
     r => {
       r.apply(response);
