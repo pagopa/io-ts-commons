@@ -43,7 +43,7 @@
   "dependencies": {
     "abort-controller": "^3.0.0",
     "agentkeepalive": "^4.1.2",
-    "applicationinsights": "^1.7.4",
+    "applicationinsights": "^1.8.10",
     "fp-ts": "1.17.4",
     "io-ts": "1.8.5",
     "json-set-map": "^1.0.2",
