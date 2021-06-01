@@ -122,6 +122,41 @@ export function withRequestMiddlewares<
   ) => Promise<IResponse<RH>>
 ) => RequestHandler<RH | R1 | R2 | R3 | R4 | R5 | R6>;
 
+export function withRequestMiddlewares<
+  R1,
+  R2,
+  R3,
+  R4,
+  R5,
+  R6,
+  R7,
+  T1,
+  T2,
+  T3,
+  T4,
+  T5,
+  T6,
+  T7
+>(
+  v1: IRequestMiddleware<R1, T1>,
+  v2: IRequestMiddleware<R2, T2>,
+  v3: IRequestMiddleware<R3, T3>,
+  v4: IRequestMiddleware<R4, T4>,
+  v5: IRequestMiddleware<R5, T5>,
+  v6: IRequestMiddleware<R6, T6>,
+  v7: IRequestMiddleware<R7, T7>
+): <RH>(
+  handler: (
+    v1: T1,
+    v2: T2,
+    v3: T3,
+    v4: T4,
+    v5: T5,
+    v6: T6,
+    v7: T7
+  ) => Promise<IResponse<RH>>
+) => RequestHandler<RH | R1 | R2 | R3 | R4 | R5 | R6 | R7>;
+
 /**
  * Returns a request handler wrapped with the provided middlewares.
  *
@@ -142,19 +177,22 @@ export function withRequestMiddlewares<
   R4,
   R5,
   R6,
+  R7,
   T1,
   T2,
   T3,
   T4,
   T5,
-  T6
+  T6,
+  T7
 >(
   v1: IRequestMiddleware<R1, T1>,
   v2?: IRequestMiddleware<R2, T2>,
   v3?: IRequestMiddleware<R3, T3>,
   v4?: IRequestMiddleware<R4, T4>,
   v5?: IRequestMiddleware<R5, T5>,
-  v6?: IRequestMiddleware<R6, T6>
+  v6?: IRequestMiddleware<R6, T6>,
+  v7?: IRequestMiddleware<R7, T7>
 ): <RH>(
   handler: (
     v1: T1,
@@ -162,9 +200,10 @@ export function withRequestMiddlewares<
     v3?: T3,
     v4?: T4,
     v5?: T5,
-    v6?: T6
+    v6?: T6,
+    v7?: T7
   ) => Promise<IResponse<RH>>
-) => RequestHandler<R1 | R2 | R3 | R4 | R5 | R6 | RH> {
+) => RequestHandler<R1 | R2 | R3 | R4 | R5 | R6 | R7 | RH> {
   return <RH>(
     handler: (
       v1: T1,
@@ -172,7 +211,8 @@ export function withRequestMiddlewares<
       v3?: T3,
       v4?: T4,
       v5?: T5,
-      v6?: T6
+      v6?: T6,
+      v7?: T7
     ) => Promise<IResponse<RH>>
     // eslint-disable-next-line arrow-body-style, sonarjs/cognitive-complexity
   ) => {
@@ -181,7 +221,7 @@ export function withRequestMiddlewares<
     // a middleware returns an error response).
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return request =>
-      new Promise<IResponse<R1 | R2 | R3 | R4 | R5 | R6 | RH>>(
+      new Promise<IResponse<R1 | R2 | R3 | R4 | R5 | R6 | R7 | RH>>(
         (resolve, reject) => {
           // we execute each middleware in sequence, stopping at the first middleware that is
           // undefined or when a middleware returns an error response.
@@ -225,6 +265,26 @@ export function withRequestMiddlewares<
                                   // 6th middleware returned a response
                                   // stop processing the middlewares
                                   resolve(r6.value);
+                                } else if (v7 !== undefined) {
+                                  v7(request).then(r7 => {
+                                    if (isLeft(r7)) {
+                                      // 7th middleware returned a response
+                                      // stop processing the middlewares
+                                      resolve(r7.value);
+                                    } else {
+                                      // 7th middleware returned a value
+                                      // run handler
+                                      handler(
+                                        r1.value,
+                                        r2.value,
+                                        r3.value,
+                                        r4.value,
+                                        r5.value,
+                                        r6.value,
+                                        r7.value
+                                      ).then(resolve, reject);
+                                    }
+                                  }, reject);
                                 } else {
                                   // 6th middleware returned a value
                                   // run handler

@@ -36,42 +36,53 @@ const request = {
 const response = {} as IResponse<{}>;
 
 describe("withRequestMiddlewares", () => {
-  it("should process a request with a resolving middleware (1)", () => {
-    const mockHandler = jest.fn(() => Promise.resolve(response));
-    const handler = withRequestMiddlewares(ResolvingMiddleware)(mockHandler);
-
-    return handler(request as any).then(r => {
-      expect(mockHandler).toHaveBeenCalledWith("dummy");
-      expect(r).toEqual(response);
-    });
+  it("should allow up to 7 middlewares", () => {
+    expect(withRequestMiddlewares.length).toBe(7);
   });
 
-  it("should process a request with a resolving middleware (2)", () => {
-    const mockHandler = jest.fn(() => Promise.resolve(response));
-    const handler = withRequestMiddlewares(
-      ResolvingMiddleware,
-      ResolvingMiddleware
-    )(mockHandler);
+  // one case for any number of supported middlewares
+  const cases = [...Array(withRequestMiddlewares.length).keys()].map((_, i) => [
+    i + 1
+  ]);
+  it.each(cases)(
+    "should process a request with %i resolving middlewares",
+    n => {
+      const mockHandler = jest.fn(() => Promise.resolve(response));
 
-    return handler(request as any).then(r => {
-      expect(mockHandler).toHaveBeenCalledWith("dummy", "dummy");
-      expect(r).toEqual(response);
-    });
-  });
+      const middlewares = Array(n).fill(ResolvingMiddleware);
+      const expected = Array(n).fill("dummy");
 
-  it("should process a request with a resolving middleware (3)", () => {
-    const mockHandler = jest.fn(() => Promise.resolve(response));
-    const handler = withRequestMiddlewares(
-      ResolvingMiddleware,
-      ResolvingMiddleware,
-      ResolvingMiddleware
-    )(mockHandler);
+      // @ts-ignore because withRequestMiddlewares complaints about middlewares could be any size
+      const handler = withRequestMiddlewares(...middlewares)(mockHandler);
 
-    return handler(request as any).then(r => {
-      expect(mockHandler).toHaveBeenCalledWith("dummy", "dummy", "dummy");
-      expect(r).toEqual(response);
-    });
-  });
+      return handler(request as any).then((r: any) => {
+        expect(mockHandler).toHaveBeenCalledWith(...expected);
+        expect(r).toEqual(response);
+      });
+    }
+  );
+
+  it.each(cases)(
+    "should process a request with %i middlewares whose last one rejects",
+    n => {
+      const mockHandler = jest.fn(() => Promise.resolve(response));
+
+      // Provide a series of resolving middlewares followed by a rejecting one
+      //   by providing the rejecting middleware at last, we ensure it's actually executed and its result matters
+      const middlewares = [
+        ...Array(n - 1).fill(ResolvingMiddleware),
+        RejectingMiddleware
+      ];
+
+      // @ts-ignore because withRequestMiddlewares complaints about middlewares could be any size
+      const handler = withRequestMiddlewares(...middlewares)(mockHandler);
+
+      return handler(request as any).then((r: any) => {
+        expect(mockHandler).not.toHaveBeenCalled();
+        expect(r.kind).toBe("IResponseErrorValidation");
+      });
+    }
+  );
 
   it("should process a request with a rejecting middleware", () => {
     const mockHandler = jest.fn(() => Promise.resolve(response));
