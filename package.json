@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
-    "agentkeepalive": "^4.1.2",
+    "agentkeepalive": "^4.1.4",
     "applicationinsights": "^1.7.4",
     "fp-ts": "1.17.4",
     "io-ts": "1.8.5",
