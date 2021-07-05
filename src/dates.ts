@@ -52,3 +52,23 @@ export const UTCISODateFromString = new t.Type<Date, string>(
 );
 
 export type UTCISODateFromString = t.TypeOf<typeof UTCISODateFromString>;
+
+/**
+ * Accepts only a valid timestamp format (number)
+ *
+ * ie. 1577836800000
+ */
+export const DateFromTimestamp = new t.Type<Date, number>(
+  "DateFromTimestamp",
+  isDate,
+  (v, c) =>
+    isDate(v)
+      ? t.success(v)
+      : t.number.validate(v, c).chain(s => {
+          const d = new Date(s);
+          return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);
+        }),
+  a => a.valueOf()
+);
+
+export type DateFromTimestamp = t.TypeOf<typeof DateFromTimestamp>;
