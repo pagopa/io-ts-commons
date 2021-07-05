@@ -44,6 +44,7 @@ describe("DateFromTimestamp", () => {
     const timestamp = 1577836800000
     const validation = DateFromTimestamp.decode(timestamp);
     expect(isRight(validation)).toBeTruthy();
+    expect(validation.value instanceof Date).toBeTruthy();
     expect(DateFromTimestamp.is(new Date())).toBeTruthy();
 
   });
