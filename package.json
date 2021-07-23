@@ -10,10 +10,6 @@
   "files": [
     "lib/"
   ],
-  "engines" : 
-    { 
-      "node" : ">=12" 
-    },
   "scripts": {
     "build": "tsc",
     "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 jest",
