@@ -1,4 +1,6 @@
 import * as t from "io-ts";
+import * as E from "fp-ts/lib/Either";
+import { pipe } from "fp-ts/lib/function";
 import { PatternString } from "./strings";
 
 const isDate = (v: t.mixed): v is Date => v instanceof Date;
@@ -13,10 +15,13 @@ export const DateFromString = new t.Type<Date, string>(
   (v, c) =>
     isDate(v)
       ? t.success(v)
-      : t.string.validate(v, c).chain(s => {
-          const d = new Date(s);
-          return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);
-        }),
+      : pipe(
+          t.string.validate(v, c),
+          E.chain(s => {
+            const d = new Date(s);
+            return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);
+          })
+        ),
   a => a.toISOString()
 );
 
@@ -44,10 +49,13 @@ export const UTCISODateFromString = new t.Type<Date, string>(
   (v, c) =>
     isDate(v)
       ? t.success(v)
-      : UTC_ISO8601_FULL_REGEX.validate(v, c).chain(s => {
-          const d = new Date(s);
-          return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);
-        }),
+      : pipe(
+          UTC_ISO8601_FULL_REGEX.validate(v, c),
+          E.chain(s => {
+            const d = new Date(s);
+            return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);
+          })
+        ),
   a => a.toISOString()
 );
 
@@ -64,10 +72,13 @@ export const DateFromTimestamp = new t.Type<Date, number>(
   (v, c) =>
     isDate(v)
       ? t.success(v)
-      : t.number.validate(v, c).chain(s => {
-          const d = new Date(s);
-          return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);
-        }),
+      : pipe(
+          t.number.validate(v, c),
+          E.chain(s => {
+            const d = new Date(s);
+            return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);
+          })
+        ),
   a => a.valueOf()
 );
 

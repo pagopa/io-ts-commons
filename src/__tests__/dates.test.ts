@@ -1,4 +1,8 @@
-import { DateFromString, DateFromTimestamp, UTCISODateFromString } from "../dates";
+import {
+  DateFromString,
+  DateFromTimestamp,
+  UTCISODateFromString
+} from "../dates";
 
 import { isLeft, isRight } from "fp-ts/lib/Either";
 
@@ -41,12 +45,13 @@ describe("UTCISODateFromString", () => {
 
 describe("DateFromTimestamp", () => {
   it("should validate a timestamp", async () => {
-    const timestamp = 1577836800000
+    const timestamp = 1577836800000;
     const validation = DateFromTimestamp.decode(timestamp);
     expect(isRight(validation)).toBeTruthy();
-    expect(validation.value instanceof Date).toBeTruthy();
+    if (isRight(validation)) {
+      expect(validation.right instanceof Date).toBeTruthy();
+    }
     expect(DateFromTimestamp.is(new Date())).toBeTruthy();
-
   });
   it("should fail on invalid timestamp", async () => {
     const invalidTimestamps = ["2018-10-13", "1577836800000"];
