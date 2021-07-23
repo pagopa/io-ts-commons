@@ -1,5 +1,5 @@
 import * as t from "io-ts";
-
+import * as E from "fp-ts/lib/Either";
 import {
   readonlyNonEmptySetType,
   strictInterfaceWithOptionals,
@@ -32,13 +32,14 @@ describe("enumType", () => {
 describe("readonlySetType", () => {
   const aSetOfStrings = readonlySetType(t.string, "Set of strings");
 
-  it.each
-  `title | f
-  ${"an empty array"} | ${[]}
-  ${"a not empty array"} | ${["a", "b"]}
-  ${"a non empty set"} | ${new Set("x")}`("should validate $title", ({f}) => {
-      const v = aSetOfStrings.decode(f);
-      expect(v.isRight()).toBeTruthy();
+  it.each`
+    title                  | f
+    ${"an empty array"}    | ${[]}
+    ${"a not empty array"} | ${["a", "b"]}
+    ${"a non empty set"}   | ${new Set("x")}
+  `("should validate $title", ({ f }) => {
+    const v = aSetOfStrings.decode(f);
+    expect(E.isRight(v)).toBeTruthy();
   });
 });
 
@@ -48,14 +49,14 @@ describe("readonlyNonEmptySetType", () => {
     "Set of strings"
   );
 
-  it.each
-    `title | f
+  it.each`
+    title                   | f
     ${"an empty set array"} | ${new Set()}
-    ${"an empty array"} | ${[]}`
-  ("should not validate if is $title", ({f}) => {
-      const v = aReadonlyNonEmptySet.decode(f);
-      expect(v.isLeft()).toBeTruthy();
-      expect(aReadonlyNonEmptySet.is(f)).toBeFalsy();
+    ${"an empty array"}     | ${[]}
+  `("should not validate if is $title", ({ f }) => {
+    const v = aReadonlyNonEmptySet.decode(f);
+    expect(E.isLeft(v)).toBeTruthy();
+    expect(aReadonlyNonEmptySet.is(f)).toBeFalsy();
   });
 
   it("should create immutable set from an array", () => {
@@ -66,8 +67,8 @@ describe("readonlyNonEmptySetType", () => {
 
     anArray.push(anUnexpectedValue);
 
-    if (maybeFromArray.isRight()) {
-      expect(maybeFromArray.value.has(anUnexpectedValue)).toBe(false);
+    if (E.isRight(maybeFromArray)) {
+      expect(maybeFromArray.right.has(anUnexpectedValue)).toBe(false);
     }
   });
   it("should create immutable set from a set", () => {
@@ -78,19 +79,22 @@ describe("readonlyNonEmptySetType", () => {
 
     aSet.add(anUnexpectedValue);
 
-    if (maybeFromSet.isRight()) {
-      expect(maybeFromSet.value.has(anUnexpectedValue)).toBe(false);
+    if (E.isRight(maybeFromSet)) {
+      expect(maybeFromSet.right.has(anUnexpectedValue)).toBe(false);
     }
   });
-  it.each
-    `title | f
+  it.each`
+    title                    | f
     ${"a one element array"} | ${["a"]}
     ${"a two element array"} | ${["a", "b"]}
-    ${"a non empty set"} | ${new Set("x")}`("should validate $title", ({f}) => {
-      const v = aReadonlyNonEmptySet.decode(f);
-      expect(v.isRight()).toBeTruthy();
-      // We use the decoded value where Array are trasformed to Set
-      expect(aReadonlyNonEmptySet.is(v.value)).toBeTruthy();
+    ${"a non empty set"}     | ${new Set("x")}
+  `("should validate $title", ({ f }) => {
+    const v = aReadonlyNonEmptySet.decode(f);
+    expect(E.isRight(v)).toBeTruthy();
+    // We use the decoded value where Array are trasformed to Set
+    if (E.isRight(v)) {
+      expect(aReadonlyNonEmptySet.is(v.right)).toBeTruthy();
+    }
   });
 });
 
@@ -133,7 +137,7 @@ describe("strictInterfaceWithOptionals", () => {
     const validation = aType.decode({ required: true, x: true });
     expect(isLeft(validation)).toBeTruthy();
     if (isLeft(validation)) {
-      const errors = readableReport(validation.value);
+      const errors = readableReport(validation.left);
       expect(errors).toEqual(
         "value [true] at [root.x] is not a known property"
       );
@@ -161,20 +165,26 @@ describe("withDefault (single value)", () => {
   it("should evaluate to the valid value", () => {
     const r = defaultString.decode("hello");
     expect(isRight(r));
-    expect(r.value).toEqual("hello");
+    if (E.isRight(r)) {
+      expect(r.right).toEqual("hello");
+    }
   });
 
   it("should evaluate to the default value/1", () => {
     const r = defaultString.decode(undefined);
     expect(isRight(r));
-    expect(r.value).toEqual("DEFAULT");
+    if (E.isRight(r)) {
+      expect(r.right).toEqual("DEFAULT");
+    }
   });
 
   it("should evaluate to the default value/2", () => {
     // eslint-disable-next-line no-null/no-null
     const r = defaultString.decode(null);
     expect(isRight(r));
-    expect(r.value).toEqual("DEFAULT");
+    if (E.isRight(r)) {
+      expect(r.right).toEqual("DEFAULT");
+    }
   });
 });
 
@@ -182,19 +192,25 @@ describe("withDefault (composed partial)", () => {
   it("should evaluate to the valid value", () => {
     const r = defaultObject.decode({ k: "hello" });
     expect(isRight(r));
-    expect(r.value).toEqual({ k: "hello" });
+    if (E.isRight(r)) {
+      expect(r.right).toEqual({ k: "hello" });
+    }
   });
 
   it("should evaluate to the default value/3", () => {
     const r = defaultObject.decode({});
     expect(isRight(r));
-    expect(r.value).toEqual({ k: "DEFAULT" });
+    if (E.isRight(r)) {
+      expect(r.right).toEqual({ k: "DEFAULT" });
+    }
   });
 
   it("should evaluate to the default value/4", () => {
     // eslint-disable-next-line no-null/no-null
     const r = defaultObject.decode({ k: undefined });
     expect(isRight(r));
-    expect(r.value).toEqual({ k: "DEFAULT" });
+    if (E.isRight(r)) {
+      expect(r.right).toEqual({ k: "DEFAULT" });
+    }
   });
 });
