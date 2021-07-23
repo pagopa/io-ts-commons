@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/no-identical-functions */
 
-import { isRight } from "fp-ts/lib/Either";
+import { isLeft, isRight } from "fp-ts/lib/Either";
 import {
   IntegerFromString,
   NonNegativeInteger,
@@ -72,14 +72,14 @@ describe("IntegerFromString", () => {
     const validation = IntegerFromString.decode("123");
     expect(isRight(validation)).toBeTruthy();
     if (isRight(validation)) {
-      expect(validation.value).toEqual(123);
+      expect(validation.right).toEqual(123);
     }
   });
   it("should parse a valid integer string", async () => {
     const validation = IntegerFromString.decode("123.00");
     expect(isRight(validation)).toBeTruthy();
     if (isRight(validation)) {
-      expect(validation.value).toEqual(123);
+      expect(validation.right).toEqual(123);
     }
   });
   it("should fail with an invalid integer string", async () => {
@@ -93,7 +93,7 @@ describe("NumberFromString", () => {
     const validation = NumberFromString.decode("123.12");
     expect(isRight(validation)).toBeTruthy();
     if (isRight(validation)) {
-      expect(validation.value).toEqual(123.12);
+      expect(validation.right).toEqual(123.12);
     }
   });
   it("should fail with an invalid number string", async () => {
@@ -105,11 +105,13 @@ describe("NumberFromString", () => {
 describe("NonNegativeIntegerFromString", () => {
   it("should get integer 1 from string '1'", async () => {
     const n = NonNegativeIntegerFromString.decode("1");
-    expect(n.isRight()).toBeTruthy();
-    expect(n.value).toEqual(1);
+    expect(isRight(n)).toBeTruthy();
+    if (isRight(n)) {
+      expect(n.right).toEqual(1);
+    }
   });
   it("should get error from string '-1'", () => {
     const n = NonNegativeIntegerFromString.decode("-1");
-    expect(n.isLeft()).toBeTruthy();
+    expect(isLeft(n)).toBeTruthy();
   });
 });
