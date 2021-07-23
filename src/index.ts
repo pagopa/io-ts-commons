@@ -56,11 +56,5 @@ export { pot };
 import * as fetch from "./fetch";
 export { fetch };
 
-// import * as OptionEither from "./OptionEither";
-// export { OptionEither };
-
-// import * as OptionValidation from "./OptionValidation";
-// export { OptionValidation };
-
 import * as agent from "./agent";
 export { agent };
