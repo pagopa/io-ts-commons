@@ -83,14 +83,9 @@ export const withRetries = <E, T>(
           if (l === TransientError) {
             // ...with a TransientError, chain it with a backoff delay
             // an then with another run.
-            const delay = TE.of(
-              pipe(
-                delayTask(backoff(count), true),
-                T.map(d => right(d))
-              )
-            );
             return pipe(
-              delay,
+              delayTask(backoff(count), true),
+              T.map(d => right(d)),
               TE.chain(() => runTaskOnce(count + 1, currentTask))
             );
           }
