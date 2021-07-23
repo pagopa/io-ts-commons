@@ -3,7 +3,9 @@
  */
 
 import * as t from "io-ts";
+import * as E from "fp-ts/lib/Either";
 
+import { pipe } from "fp-ts/lib/function";
 import { tag, Tagged } from "./types";
 
 export interface IWithinRangeNumberTag<L extends number, H extends number> {
@@ -95,10 +97,13 @@ export const NumberFromString = new t.Type<number, string>(
   "NumberFromString",
   t.number.is,
   (m, c) =>
-    t.string.validate(m, c).chain(s => {
-      const n = +s;
-      return isNaN(n) ? t.failure(s, c) : t.success(n);
-    }),
+    pipe(
+      t.string.validate(m, c),
+      E.chain(s => {
+        const n = +s;
+        return isNaN(n) ? t.failure(s, c) : t.success(n);
+      })
+    ),
   String
 );
 export type NumberFromString = t.TypeOf<typeof NumberFromString>;

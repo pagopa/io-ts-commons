@@ -16,7 +16,7 @@ describe("withTimeout", () => {
 
     expect(isRight(r)).toBeTruthy();
     if (isRight(r)) {
-      expect(r.value).toEqual(true);
+      expect(r.right).toEqual(true);
     }
   });
 
@@ -30,7 +30,7 @@ describe("withTimeout", () => {
 
     expect(isLeft(r)).toBeTruthy();
     if (isLeft(r)) {
-      expect(r.value).toEqual("timeout");
+      expect(r.left).toEqual("timeout");
     }
   });
 });

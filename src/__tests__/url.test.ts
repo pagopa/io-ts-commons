@@ -10,8 +10,8 @@ describe("UrlFromString", () => {
     const errorOrUrl = UrlFromString.decode(anHttpUrl);
     expect(isRight(errorOrUrl)).toBeTruthy();
     if (isRight(errorOrUrl)) {
-      expect(errorOrUrl.value.href).toEqual(anHttpUrl + "/");
-      expect(errorOrUrl.value.hostname).toEqual(anHostName);
+      expect(errorOrUrl.right.href).toEqual(anHttpUrl + "/");
+      expect(errorOrUrl.right.hostname).toEqual(anHostName);
     }
   });
   it("should fail on invalid http URL", () => {

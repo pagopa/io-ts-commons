@@ -9,7 +9,9 @@
 // TODO: add etag support in responses
 
 import { left, right } from "fp-ts/lib/Either";
+import * as E from "fp-ts/lib/Either";
 import * as t from "io-ts";
+import { pipe } from "fp-ts/lib/function";
 
 /**
  * Describes the possible methods of a request
@@ -594,12 +596,15 @@ export function ioResponseDecoder<
     }
     const json = await response.json();
     const validated = type.decode(preprocessor(json));
-    return validated.map(value => ({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      headers: response.headers as any,
-      status,
-      value
-    }));
+    return pipe(
+      validated,
+      E.map(value => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        headers: response.headers as any,
+        status,
+        value
+      }))
+    );
   };
 }
 

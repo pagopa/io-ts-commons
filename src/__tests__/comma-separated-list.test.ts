@@ -23,7 +23,9 @@ describe("CommaSeparatedListOf", () => {
     const result = CommaSeparatedListOfStrings.decode(value);
 
     expect(isRight(result)).toBe(true);
-    expect(result.value).toEqual(expected);
+    if (isRight(result)) {
+      expect(result.right).toEqual(expected);
+    }
   });
 
   it("should succeed to decode a comma separated list of falsy values", () => {
@@ -35,7 +37,9 @@ describe("CommaSeparatedListOf", () => {
     const result = CommaSeparatedListOfStrings.decode(value);
 
     expect(isRight(result)).toBe(true);
-    expect(result.value).toEqual(expected);
+    if (isRight(result)) {
+      expect(result.right).toEqual(expected);
+    }
   });
 
   it("should succeed to decode a comma separated list with empty values", () => {
@@ -47,7 +51,9 @@ describe("CommaSeparatedListOf", () => {
     const result = CommaSeparatedListOfStrings.decode(value);
 
     expect(isRight(result)).toBe(true);
-    expect(result.value).toEqual(expected);
+    if (isRight(result)) {
+      expect(result.right).toEqual(expected);
+    }
   });
 
   it("should succeed to decode an empty comma separated list of strings", () => {
@@ -59,7 +65,9 @@ describe("CommaSeparatedListOf", () => {
     const result = CommaSeparatedListOfStrings.decode(value);
 
     expect(isRight(result)).toBe(true);
-    expect(result.value).toEqual(expected);
+    if (isRight(result)) {
+      expect(result.right).toEqual(expected);
+    }
   });
 
   it("should succeed to decode an empty comma separated list of NonEmptyString", () => {
@@ -71,7 +79,9 @@ describe("CommaSeparatedListOf", () => {
     const result = CommaSeparatedListOfStrings.decode(value);
 
     expect(isRight(result)).toBe(true);
-    expect(result.value).toEqual(expected);
+    if (isRight(result)) {
+      expect(result.right).toEqual(expected);
+    }
   });
 
   it("should fail to decode an undefined value", () => {
@@ -96,6 +106,8 @@ describe("CommaSeparatedListOf", () => {
     const result = CommaSeparatedListOfStrings.decode(value);
 
     expect(isRight(result)).toBe(true);
-    expect(result.value).toEqual(expected);
+    if (isRight(result)) {
+      expect(result.right).toEqual(expected);
+    }
   });
 });

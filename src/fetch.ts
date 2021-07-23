@@ -3,6 +3,8 @@
  */
 
 import { TaskEither, tryCatch } from "fp-ts/lib/TaskEither";
+import * as E from "fp-ts/lib/Either";
+import { pipe } from "fp-ts/lib/function";
 import { timeoutPromise } from "./promises";
 import {
   MaxRetries,
@@ -137,8 +139,8 @@ export const retriableFetch: (
   // return a new promise that gets resolved when the task resolves to a Right
   // or gets rejected in all other cases
   return new Promise<Response>((resolve, reject) => {
-    fetchWithRetries.run().then(result => {
-      result.fold(reject, resolve);
+    fetchWithRetries().then(result => {
+      pipe(result, E.fold(reject, resolve));
     }, reject);
   });
 };
