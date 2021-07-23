@@ -1,6 +1,9 @@
 import { Either, isLeft, isRight, Left, left, right } from "fp-ts/lib/Either";
+import * as E from "fp-ts/lib/Either";
 import { Task } from "fp-ts/lib/Task";
+import * as T from "fp-ts/lib/Task";
 import { TaskEither, taskify } from "fp-ts/lib/TaskEither";
+import * as TE from "fp-ts/lib/TaskEither";
 
 import { DeferredPromise } from "../promises";
 import {
@@ -12,11 +15,8 @@ import {
 } from "../tasks";
 import { Millisecond } from "../units";
 
-const transientFailingTask: RetriableTask<Error, string> = new TaskEither(
-  new Task(() =>
-    Promise.resolve(left<Error | TransientError, string>(TransientError))
-  )
-);
+const transientFailingTask: RetriableTask<Error, string> = () =>
+  Promise.resolve(left<Error | TransientError, string>(TransientError));
 
 const constantBackoff = () => 1 as Millisecond;
 
@@ -27,10 +27,10 @@ describe("withRetries", () => {
   it("should fail permanently when retries are over", async () => {
     const t = withNoRetries(transientFailingTask);
 
-    const r = await t.run();
-    expect(r.isLeft()).toBeTruthy();
+    const r = await t();
+    expect(E.isLeft(r)).toBeTruthy();
     if (isLeft(r)) {
-      expect(r.value).toEqual(MaxRetries);
+      expect(r.left).toEqual(MaxRetries);
     }
   });
 
@@ -38,17 +38,14 @@ describe("withRetries", () => {
     const taskMock = jest.fn(() =>
       Promise.resolve(left<Error | TransientError, string>(TransientError))
     );
-    const transientFailingTaskMock: RetriableTask<
-      Error,
-      string
-    > = new TaskEither(new Task(taskMock));
+    const transientFailingTaskMock: RetriableTask<Error, string> = taskMock;
 
     const t = withNoRetries(transientFailingTaskMock);
 
-    const r = await t.run();
-    expect(r.isLeft()).toBeTruthy();
+    const r = await t();
+    expect(E.isLeft(r)).toBeTruthy();
     if (isLeft(r)) {
-      expect(r.value).toEqual(MaxRetries);
+      expect(r.left).toEqual(MaxRetries);
     }
     expect(taskMock).toHaveBeenCalledTimes(1);
   });
@@ -57,17 +54,14 @@ describe("withRetries", () => {
     const taskMock = jest.fn(() =>
       Promise.resolve(left<Error | TransientError, string>(TransientError))
     );
-    const transientFailingTaskMock: RetriableTask<
-      Error,
-      string
-    > = new TaskEither(new Task(taskMock));
+    const transientFailingTaskMock: RetriableTask<Error, string> = taskMock;
 
     const t = withConstantRetries(3)(transientFailingTaskMock);
 
-    const r = await t.run();
-    expect(r.isLeft()).toBeTruthy();
+    const r = await t();
+    expect(E.isLeft(r)).toBeTruthy();
     if (isLeft(r)) {
-      expect(r.value).toEqual(MaxRetries);
+      expect(r.left).toEqual(MaxRetries);
     }
     expect(taskMock).toHaveBeenCalledTimes(3);
   });
@@ -81,17 +75,14 @@ describe("withRetries", () => {
       .mockImplementationOnce(() =>
         Promise.resolve(right<Error | TransientError, string>("ok"))
       );
-    const transientFailingTaskMock: RetriableTask<
-      Error,
-      string
-    > = new TaskEither(new Task(taskMock));
+    const transientFailingTaskMock: RetriableTask<Error, string> = taskMock;
 
     const t = withConstantRetries(3)(transientFailingTaskMock);
 
-    const r = await t.run();
-    expect(r.isLeft()).toBeTruthy();
+    const r = await t();
+    expect(E.isLeft(r)).toBeTruthy();
     if (isLeft(r)) {
-      expect(r.value).toEqual(err1);
+      expect(r.left).toEqual(err1);
     }
     expect(taskMock).toHaveBeenCalledTimes(1);
   });
@@ -104,17 +95,14 @@ describe("withRetries", () => {
       .mockImplementationOnce(() =>
         Promise.resolve(right<Error | TransientError, string>("ok"))
       );
-    const transientFailingTaskMock: RetriableTask<
-      Error,
-      string
-    > = new TaskEither(new Task(taskMock));
+    const transientFailingTaskMock: RetriableTask<Error, string> = taskMock;
 
     const t = withConstantRetries(3)(transientFailingTaskMock);
 
-    const r = await t.run();
-    expect(r.isRight()).toBeTruthy();
+    const r = await t();
+    expect(E.isRight(r)).toBeTruthy();
     if (isRight(r)) {
-      expect(r.value).toEqual("ok");
+      expect(r.right).toEqual("ok");
     }
     expect(taskMock).toHaveBeenCalledTimes(3);
   });
@@ -139,18 +127,15 @@ describe("withRetries", () => {
         abortResolve(true);
         return transientError;
       });
-    const transientFailingTaskMock: RetriableTask<
-      Error,
-      boolean
-    > = new TaskEither(new Task(taskMock));
+    const transientFailingTaskMock: RetriableTask<Error, boolean> = taskMock;
 
     // Retry this task for max 5 times
     const t = withConstantRetries(5)(transientFailingTaskMock, abortPromise);
 
-    const r = await t.run();
-    expect(r.isLeft()).toBeTruthy();
+    const r = await t();
+    expect(E.isLeft(r)).toBeTruthy();
     if (isLeft(r)) {
-      expect(r.value).toEqual(RetryAborted);
+      expect(r.left).toEqual(RetryAborted);
     }
     expect(taskMock).toHaveBeenCalledTimes(2);
   });
