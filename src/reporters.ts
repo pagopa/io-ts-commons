@@ -1,5 +1,7 @@
 import { Context, ValidationError } from "io-ts";
 import { Reporter } from "io-ts/lib/Reporter";
+import * as E from "fp-ts/lib/Either";
+import { pipe } from "fp-ts/lib/function";
 
 /**
  * Translate a context to a more readable path.
@@ -45,5 +47,6 @@ export const readableReport = (
  * readable messages.
  */
 export const ReadableReporter: Reporter<ReadonlyArray<string>> = {
-  report: validation => validation.fold(errorsToReadableMessages, success)
+  report: validation =>
+    pipe(validation, E.fold(errorsToReadableMessages, success))
 };

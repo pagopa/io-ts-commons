@@ -1,5 +1,6 @@
 import * as crypto from "crypto";
-import { Either, toError, tryCatch2v } from "fp-ts/lib/Either";
+
+import * as E from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
 // AES-128-CBC requires 16 random bytes for pseudo randomic string used in crypto algorithm
@@ -26,8 +27,8 @@ export type EncryptedPayload = t.TypeOf<typeof EncryptedPayload>;
 export function toEncryptedPayload(
   rsaPubKey: string,
   plainText: string
-): Either<Error, EncryptedPayload> {
-  return tryCatch2v(() => {
+): E.Either<Error, EncryptedPayload> {
+  return E.tryCatch(() => {
     const iv = crypto.randomBytes(IV_LENGTH);
     const aesKey = crypto.randomBytes(AES_KEY_LENGTH);
     const cipher = crypto.createCipheriv("aes-128-cbc", aesKey, iv);
@@ -44,15 +45,15 @@ export function toEncryptedPayload(
       encryptedKey,
       iv: iv.toString("base64")
     };
-  }, toError);
+  }, E.toError);
 }
 
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function toPlainText(
   rsaPrivateKey: string,
   encryptedPayload: EncryptedPayload
-): Either<Error, string> {
-  return tryCatch2v(() => {
+): E.Either<Error, string> {
+  return E.tryCatch(() => {
     const iv = Buffer.from(encryptedPayload.iv, "base64");
     const aesKey = crypto.privateDecrypt(
       rsaPrivateKey,
@@ -68,5 +69,5 @@ export function toPlainText(
     );
     const plainText = Buffer.concat([decrypted, decipher.final()]);
     return plainText.toString("utf-8");
-  }, toError);
+  }, E.toError);
 }

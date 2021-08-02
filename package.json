@@ -44,8 +44,8 @@
     "abort-controller": "^3.0.0",
     "agentkeepalive": "^4.1.4",
     "applicationinsights": "^1.8.10",
-    "fp-ts": "1.17.4",
-    "io-ts": "1.8.5",
+    "fp-ts": "^2.10.5",
+    "io-ts": "^2.2.16",
     "json-set-map": "^1.1.2",
     "node-fetch": "^2.6.0",
     "validator": "^10.1.0"
@@ -62,7 +62,6 @@
     "access": "public"
   },
   "resolutions": {
-    "fp-ts": "1.17.4",
     "handlebars": "~4.5.3"
   }
 }
