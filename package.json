@@ -38,7 +38,7 @@
     "rimraf": "^2.6.2",
     "ts-jest": "^23.0.1",
     "typedoc": "^0.20.36",
-    "typescript": "^3.9.9"
+    "typescript": "^4.3.5"
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
