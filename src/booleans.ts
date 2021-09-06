@@ -2,7 +2,7 @@ import { pipe } from "fp-ts/lib/function";
 import * as E from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
-export interface BooleanFromString extends t.Type<boolean, string, unknown> {}
+export type BooleanFromString = t.Type<boolean, string, unknown>;
 
 export const BooleanFromString: BooleanFromString = new t.Type<
   boolean,
