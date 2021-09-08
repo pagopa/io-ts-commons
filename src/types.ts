@@ -123,27 +123,32 @@ export const isObject = (o: {}): boolean =>
   o instanceof Object && o.constructor === Object;
 
 /**
+ * Return an object mantaining keys that satisfy the given processor function.
+ */
+export const filterValues = (f: (t: RecursiveRecord<unknown>) => boolean) => <
+  T
+>(
+  obj: T
+): T =>
+  Object.entries(obj).reduce(
+    (acc, [key, value]) =>
+      f(value)
+        ? {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ...(acc as any),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            [key]: isObject(value) ? filterValues(f)(value) : value
+          }
+        : acc,
+    {} as T
+  );
+
+/**
  * Return an object filtering out keys that point to undefined values.
  */
-export const withoutUndefinedValues = <T, K extends keyof T>(obj: T): T => {
-  // note that T has been already validated by the type system and we can
-  // be sure now that only attributes that may be undefined can be actually
-  // filtered out by the following code, so the output type T is always
-  // a valid T
-  const keys = Object.keys(obj);
-  return keys.reduce((acc, key) => {
-    const value = obj[key as K];
-    return value !== undefined
-      ? {
-          // see https://github.com/Microsoft/TypeScript/pull/13288
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ...(acc as any),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          [key]: isObject(value as any) ? withoutUndefinedValues(value) : value
-        }
-      : acc;
-  }, {} as T);
-};
+export const withoutUndefinedValues = filterValues(
+  value => value !== undefined
+);
 
 /**
  *  Return a new type that validates successfully only
@@ -274,3 +279,31 @@ export const replaceProp1 = <
  * Returns the type `A` if `T` is a `Promise<A>`, or else returns `never`
  */
 export type PromiseType<T> = T extends Promise<infer A> ? A : never;
+
+type UnionToIntersection<U> = (U extends unknown
+? (k: U) => void
+: never) extends (k: infer I) => void
+  ? I
+  : never;
+type LastOf<T> = UnionToIntersection<
+  T extends unknown ? () => T : never
+> extends () => infer R
+  ? R
+  : never;
+
+type Push<T extends ReadonlyArray<unknown>, V> = readonly [...T, V];
+
+type TuplifyUnion<
+  T,
+  L = LastOf<T>,
+  N = readonly [T] extends readonly [never] ? true : false
+> = true extends N ? readonly [] : Push<TuplifyUnion<Exclude<T, L>>, L>;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type RecursiveRecord<V> = V extends Record<infer K, infer _> // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ? TuplifyUnion<K> extends readonly [infer K1, ...(infer W)]
+    ? K1 extends keyof V
+      ? Record<K1, V[K1]> & RecursiveRecord<Omit<V, K1>>
+      : V
+    : V
+  : V;
