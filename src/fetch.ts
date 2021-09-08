@@ -152,7 +152,7 @@ export const retriableFetch: (
  * @returns: a new fetch with processor capabilities
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const fetchWithProcessor = (processor: (a: any) => any) => (
+export const fetchWithProcessor = <T>(processor: (a: unknown) => T) => (
   f: typeof fetch
 ): typeof fetch => async (input, init): Promise<Response> => {
   const old = await f(input, init);

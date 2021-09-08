@@ -129,7 +129,7 @@ export const filterValues = (f: (t: RecursiveRecord<unknown>) => boolean) => <
   T
 >(
   obj: T
-): T =>
+): RecursiveRecord<T> =>
   Object.entries(obj).reduce(
     (acc, [key, value]) =>
       f(value)
@@ -140,15 +140,31 @@ export const filterValues = (f: (t: RecursiveRecord<unknown>) => boolean) => <
             [key]: isObject(value) ? filterValues(f)(value) : value
           }
         : acc,
-    {} as T
+    {} as RecursiveRecord<T>
   );
 
 /**
  * Return an object filtering out keys that point to undefined values.
  */
-export const withoutUndefinedValues = filterValues(
-  value => value !== undefined
-);
+export const withoutUndefinedValues = <T, K extends keyof T>(obj: T): T => {
+  // note that T has been already validated by the type system and we can
+  // be sure now that only attributes that may be undefined can be actually
+  // filtered out by the following code, so the output type T is always
+  // a valid T
+  const keys = Object.keys(obj);
+  return keys.reduce((acc, key) => {
+    const value = obj[key as K];
+    return value !== undefined
+      ? {
+          // see https://github.com/Microsoft/TypeScript/pull/13288
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ...(acc as any),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          [key]: isObject(value as any) ? withoutUndefinedValues(value) : value
+        }
+      : acc;
+  }, {} as T);
+};
 
 /**
  *  Return a new type that validates successfully only
