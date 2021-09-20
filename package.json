@@ -55,7 +55,14 @@
     "collectCoverage": true,
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "preset": "ts-jest",
-    "testMatch": null
+    "testMatch": null,
+    "globals": {
+      "ts-jest": {
+         "diagnostics": {
+            "ignoreCodes": [2502]
+         }
+      }
+    }
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
