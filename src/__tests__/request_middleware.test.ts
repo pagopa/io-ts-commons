@@ -164,13 +164,6 @@ describe("withRequestMiddlewaresT", () => {
   );
 
   it("should accept handler with right parameters", () => {
-    // const mockHandler: (
-    //  param1: string,
-    //  param2: string
-    // ) => Promise<IResponse<{}>> = jest.fn(() => Promise.resolve(response));
-    // ^^^ It doesn't compile because of param2 type different from
-    // ResolvingNumberMiddleware resulting one
-
     const mockHandler: (
       param1: string,
       param2: number
@@ -181,12 +174,26 @@ describe("withRequestMiddlewaresT", () => {
     const handler = withRequestMiddlewaresT(
       ResolvingMiddleware,
       ResolvingNumberMiddleware
+      // @ts-expect-error
     )(mockHandler);
 
     return handler(request as any).then(r => {
       expect(mockHandler).toHaveBeenCalledWith(...["dummy", 1]);
       expect(r).toEqual(response);
     });
+  });
+
+  it("should NOT accept handler with type mismatching parameters", () => {
+    const mockHandler: (
+      param1: string,
+      param2: string
+    ) => Promise<IResponse<{}>> = jest.fn(() => Promise.resolve(response));
+
+    const handler = withRequestMiddlewaresT(
+      ResolvingMiddleware,
+      ResolvingNumberMiddleware
+      // @ts-expect-error
+    )(mockHandler);
   });
 
   it("should process a request with a rejecting middleware", () => {
