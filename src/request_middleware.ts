@@ -1,8 +1,12 @@
 import * as express from "express";
 
 import { Either, isLeft } from "fp-ts/lib/Either";
+import * as E from "fp-ts/lib/Either";
+import * as TE from "fp-ts/lib/TaskEither";
+import { pipe } from "fp-ts/lib/function";
 
 import { IResponse, ResponseErrorInternal } from "./responses";
+import { unknown } from "io-ts";
 
 export type RequestHandler<R> = (
   request: express.Request
@@ -344,3 +348,115 @@ export function withRequestMiddlewares<
       );
   };
 }
+
+// -----
+
+export type MiddlewareFailureResult<T> = T extends IRequestMiddleware<
+  infer R,
+  unknown
+>
+  ? R extends IResponse<infer Res>
+    ? Res
+    : R
+  : never;
+
+export type MiddlewareResult<T> = T extends IRequestMiddleware<unknown, infer R>
+  ? R
+  : never;
+
+// -----
+type Head<T extends ReadonlyArray<any>> = T extends readonly [
+  any,
+  ...ReadonlyArray<any>
+]
+  ? T[0]
+  : never;
+
+export type Tail<T extends ReadonlyArray<any>> = ((
+  ...t: T
+) => unknown) extends (_: any, ...tail: infer TT) => unknown
+  ? TT
+  : readonly [];
+
+export type HasTail<T extends ReadonlyArray<unknown>> = T extends
+  | readonly []
+  | readonly [unknown]
+  ? false
+  : true;
+
+export type MiddlewareFailure<
+  M extends IRequestMiddleware<unknown, unknown>
+> = M extends IRequestMiddleware<infer F, unknown> ? F : never;
+
+export type MiddlewareFailures<
+  T extends ReadonlyArray<IRequestMiddleware<unknown, unknown>>
+> = {
+  readonly 0: readonly [MiddlewareFailure<Head<T>>];
+  readonly 1: readonly [
+    MiddlewareFailure<Head<T>>,
+    ...MiddlewareFailures<Tail<T>>
+  ];
+}[HasTail<T> extends true ? 1 : 0];
+
+export type MiddlewareResults<
+  T extends ReadonlyArray<IRequestMiddleware<any, any>>
+> = {
+  readonly 0: readonly [MiddlewareResult<Head<T>>];
+  readonly 1: readonly [
+    MiddlewareResult<Head<T>>,
+    ...MiddlewareResults<Tail<T>>
+  ];
+}[HasTail<T> extends true ? 1 : 0];
+
+export type TypeOfArray<T extends ReadonlyArray<unknown>> = {
+  readonly 0: Head<T>;
+  readonly 1: Head<T> | TypeOfArray<Tail<T>>;
+}[HasTail<T> extends true ? 1 : 0];
+
+export type WithRequestMiddlewaresT = <
+  M extends ReadonlyArray<IRequestMiddleware<any, any>>
+>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ...middlewares: M
+) => <RH>(
+  handler: (...values: MiddlewareResults<M>) => Promise<IResponse<RH>>
+) => RequestHandler<
+  | RH
+  | "IResponseErrorInternal"
+  | TypeOfArray<MiddlewareFailures<typeof middlewares>>
+>;
+
+export const withRequestMiddlewaresT: WithRequestMiddlewaresT = (...middlewares) => handler =>
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  request => {
+    // eslint-disable-next-line sonarjs/prefer-immediate-return
+    const p = pipe(
+      middlewares,
+      middleware =>
+        middleware.map(m =>
+          pipe(
+            TE.tryCatch(
+              async () => await m(request),
+              _ => ResponseErrorInternal(`error executing middleware`)
+            ),
+            TE.chain(TE.fromEither)
+          )
+        ),
+      TE.sequenceSeqArray,
+      TE.map(params => params as MiddlewareResults<typeof middlewares>),
+      TE.chain(params =>
+        pipe(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          TE.tryCatch(() => handler(...params), E.toError),
+          TE.mapLeft(err =>
+            ResponseErrorInternal(
+              `Error executing endpoint handler: ${err.message}`
+            )
+          )
+        )
+      ),
+      TE.toUnion
+    );
+
+    return p();
+  };
