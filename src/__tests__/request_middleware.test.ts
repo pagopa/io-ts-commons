@@ -195,6 +195,20 @@ describe("withRequestMiddlewaresT", () => {
     )(mockHandler);
   });
 
+  it("should NOT accept handler with more parameters than middlewares", () => {
+    const mockHandler: (
+      param1: string,
+      param2: number,
+      param3: number
+    ) => Promise<IResponse<{}>> = jest.fn(() => Promise.resolve(response));
+
+    const handler = withRequestMiddlewaresT(
+      ResolvingMiddleware,
+      ResolvingNumberMiddleware
+      // @ts-expect-error
+    )(mockHandler);
+  });
+
   it("should process a request with a rejecting middleware", () => {
     const mockHandler = jest.fn(() => Promise.resolve(response));
     const handler = withRequestMiddlewaresT(RejectingMiddleware)(mockHandler);
