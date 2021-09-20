@@ -6,7 +6,6 @@ import * as TE from "fp-ts/lib/TaskEither";
 import { pipe } from "fp-ts/lib/function";
 
 import { IResponse, ResponseErrorInternal } from "./responses";
-import { unknown } from "io-ts";
 
 export type RequestHandler<R> = (
   request: express.Request
@@ -365,16 +364,21 @@ export type MiddlewareResult<T> = T extends IRequestMiddleware<unknown, infer R>
   : never;
 
 // -----
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Head<T extends ReadonlyArray<any>> = T extends readonly [
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ...ReadonlyArray<any>
 ]
   ? T[0]
   : never;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Tail<T extends ReadonlyArray<any>> = ((
   ...t: T
-) => unknown) extends (_: any, ...tail: infer TT) => unknown
+) => // eslint-disable-next-line @typescript-eslint/no-explicit-any
+unknown) extends (_: any, ...tail: infer TT) => unknown
   ? TT
   : readonly [];
 
@@ -399,6 +403,7 @@ export type MiddlewareFailures<
 }[HasTail<T> extends true ? 1 : 0];
 
 export type MiddlewareResults<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends ReadonlyArray<IRequestMiddleware<any, any>>
 > = {
   readonly 0: readonly [MiddlewareResult<Head<T>>];
@@ -414,6 +419,7 @@ export type TypeOfArray<T extends ReadonlyArray<unknown>> = {
 }[HasTail<T> extends true ? 1 : 0];
 
 export type WithRequestMiddlewaresT = <
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   M extends ReadonlyArray<IRequestMiddleware<any, any>>
 >(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -426,7 +432,9 @@ export type WithRequestMiddlewaresT = <
   | TypeOfArray<MiddlewareFailures<typeof middlewares>>
 >;
 
-export const withRequestMiddlewaresT: WithRequestMiddlewaresT = (...middlewares) => handler =>
+export const withRequestMiddlewaresT: WithRequestMiddlewaresT = (
+  ...middlewares
+) => handler =>
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   request => {
     // eslint-disable-next-line sonarjs/prefer-immediate-return

@@ -1,20 +1,13 @@
 // eslint-disable @typescript-eslint/no-explicit-any
 
 import {
-  HasTail,
   IRequestMiddleware,
-  MiddlewareFailures,
-  MiddlewareResults,
-  Tail,
-  TypeOfArray,
   withRequestMiddlewares,
   withRequestMiddlewaresT
 } from "../request_middleware";
 import {
   IResponse,
-  IResponseErrorConflict,
   IResponseErrorValidation,
-  ResponseErrorConflict,
   ResponseErrorValidation
 } from "../responses";
 
