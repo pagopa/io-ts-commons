@@ -174,7 +174,6 @@ describe("withRequestMiddlewaresT", () => {
     const handler = withRequestMiddlewaresT(
       ResolvingMiddleware,
       ResolvingNumberMiddleware
-      // @ts-expect-error
     )(mockHandler);
 
     return handler(request as any).then(r => {
