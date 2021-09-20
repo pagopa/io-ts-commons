@@ -12,12 +12,20 @@ import {
 } from "../responses";
 
 import { left, right } from "fp-ts/lib/Either";
+import { number } from "fp-ts";
 
 const ResolvingMiddleware: IRequestMiddleware<
   "IResponseErrorNever",
   string
 > = req => {
   return Promise.resolve(right<never, string>(req.params.dummy));
+};
+
+const ResolvingNumberMiddleware: IRequestMiddleware<
+  "IResponseErrorNever",
+  number
+> = req => {
+  return Promise.resolve(right<never, number>(1));
 };
 
 const RejectingMiddleware: IRequestMiddleware<
@@ -154,6 +162,32 @@ describe("withRequestMiddlewaresT", () => {
       });
     }
   );
+
+  it("should accept handler with right parameters", () => {
+    // const mockHandler: (
+    //  param1: string,
+    //  param2: string
+    // ) => Promise<IResponse<{}>> = jest.fn(() => Promise.resolve(response));
+    // ^^^ It doesn't compile because of param2 type different from
+    // ResolvingNumberMiddleware resulting one
+
+    const mockHandler: (
+      param1: string,
+      param2: number
+    ) => Promise<IResponse<{}>> = jest.fn((param1, param2) =>
+      Promise.resolve(response)
+    );
+
+    const handler = withRequestMiddlewaresT(
+      ResolvingMiddleware,
+      ResolvingNumberMiddleware
+    )(mockHandler);
+
+    return handler(request as any).then(r => {
+      expect(mockHandler).toHaveBeenCalledWith(...["dummy", 1]);
+      expect(r).toEqual(response);
+    });
+  });
 
   it("should process a request with a rejecting middleware", () => {
     const mockHandler = jest.fn(() => Promise.resolve(response));
