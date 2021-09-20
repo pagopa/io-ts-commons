@@ -58,7 +58,7 @@
     "testMatch": null,
     "globals": {
       "ts-jest": {
-        "warnOnly": true
+        "diagnostics": false
       }
     }
   },
