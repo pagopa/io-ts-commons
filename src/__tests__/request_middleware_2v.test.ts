@@ -37,10 +37,6 @@ const request = {
 const response = {} as IResponse<{}>;
 
 describe("withRequestMiddlewares", () => {
-  it("should allow up to 7 middlewares", () => {
-    expect(withRequestMiddlewaresStruct.length).toBe(7);
-  });
-
   // one case for any number of supported middlewares
   const cases = [1, 2, 3, 10];
   it.each(cases)(
