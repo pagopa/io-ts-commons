@@ -3,6 +3,7 @@ import nodeFetch from "node-fetch";
 
 import {
   AbortableFetch,
+  fetchWithProcessor,
   retriableFetch,
   setFetchTimeout,
   toFetch
@@ -16,6 +17,8 @@ import { Millisecond } from "../units";
 
 const TEST_HOST = "localhost";
 const TEST_PORT = 40000;
+
+const aJsonResponseBody = JSON.stringify({ foo: "bar" });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createServerMock(): any {
@@ -33,9 +36,20 @@ function createServerMock(): any {
     }
   });
 
+  server.on({
+    method: "GET",
+    path: "/sample-json",
+    reply: {
+      status: 200,
+      headers: { "content-type": "application/json" },
+      body: aJsonResponseBody
+    }
+  });
+
   return server;
 }
 
+const sampleJsonUrl = `http://${TEST_HOST}:${TEST_PORT}/sample-json`;
 const longDelayUrl = `http://${TEST_HOST}:${TEST_PORT}/long-delay`;
 
 // This test suite is based on functionality provided by a WIP branch of
@@ -161,4 +175,52 @@ describe("retriableFetch", () => {
       expect(e).toEqual(RetryAborted);
     }
   });
+});
+
+describe("fetchWithProcessor", () => {
+  const server = createServerMock();
+
+  beforeEach(server.start);
+  afterEach(server.stop);
+
+  it("should pre-process a json response body", async () => {
+    const processor = (a: unknown) =>
+      typeof a === "object" ? { ...a, customKey: "customValue" } : a;
+    const preprocessedFetch = fetchWithProcessor(processor)(fetch);
+
+    // start the fetch request
+    const result = await preprocessedFetch(sampleJsonUrl).then(e => e.json());
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    expect(result).toEqual(
+      expect.objectContaining({
+        customKey: "customValue"
+      })
+    );
+    expect(server.requests().length).toEqual(1);
+  });
+
+  it.each`
+    memberName   | type          | expected
+    ${"json"}    | ${"function"} | ${JSON.parse(aJsonResponseBody)}
+    ${"headers"} | ${"object"}   | ${expect.any(Object)}
+    ${"text"}    | ${"function"} | ${aJsonResponseBody}
+  `(
+    "should access $memberName of response",
+    async ({ memberName, type, expected }) => {
+      const processor = (a: unknown) => a;
+      const preprocessedFetch = fetchWithProcessor(processor)(fetch);
+
+      const response = await preprocessedFetch(sampleJsonUrl);
+
+      expect(memberName in response).toBe(true);
+      const member = response[memberName as keyof typeof response];
+      expect(typeof member).toBe(type);
+
+      const value = await (typeof member === "function" ? member() : member);
+
+      expect(value).toEqual(expected);
+      expect(server.requests().length).toEqual(1);
+    }
+  );
 });

@@ -123,6 +123,27 @@ export const isObject = (o: {}): boolean =>
   o instanceof Object && o.constructor === Object;
 
 /**
+ * Return an object mantaining keys that satisfy the given processor function.
+ */
+export const filterValues = (f: (t: RecursiveRecord<unknown>) => boolean) => <
+  T
+>(
+  obj: T
+): RecursiveRecord<T> =>
+  Object.entries(obj).reduce(
+    (acc, [key, value]) =>
+      f(value)
+        ? {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ...(acc as any),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            [key]: isObject(value) ? filterValues(f)(value) : value
+          }
+        : acc,
+    {} as RecursiveRecord<T>
+  );
+
+/**
  * Return an object filtering out keys that point to undefined values.
  */
 export const withoutUndefinedValues = <T, K extends keyof T>(obj: T): T => {
@@ -274,3 +295,31 @@ export const replaceProp1 = <
  * Returns the type `A` if `T` is a `Promise<A>`, or else returns `never`
  */
 export type PromiseType<T> = T extends Promise<infer A> ? A : never;
+
+type UnionToIntersection<U> = (U extends unknown
+? (k: U) => void
+: never) extends (k: infer I) => void
+  ? I
+  : never;
+type LastOf<T> = UnionToIntersection<
+  T extends unknown ? () => T : never
+> extends () => infer R
+  ? R
+  : never;
+
+type Push<T extends ReadonlyArray<unknown>, V> = readonly [...T, V];
+
+type TuplifyUnion<
+  T,
+  L = LastOf<T>,
+  N = readonly [T] extends readonly [never] ? true : false
+> = true extends N ? readonly [] : Push<TuplifyUnion<Exclude<T, L>>, L>;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type RecursiveRecord<V> = V extends Record<infer K, infer _> // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ? TuplifyUnion<K> extends readonly [infer K1, ...(infer W)]
+    ? K1 extends keyof V
+      ? Record<K1, V[K1]> & RecursiveRecord<Omit<V, K1>>
+      : V
+    : V
+  : V;

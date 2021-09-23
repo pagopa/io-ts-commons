@@ -144,3 +144,24 @@ export const retriableFetch: (
     }, reject);
   });
 };
+
+/**
+ * Makes fetch able to process response with a given processor function
+ *
+ * @param processor: a function that applies to original response
+ * @returns: a new fetch with processor capabilities
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchWithProcessor = <T>(processor: (a: unknown) => T) => (
+  f: typeof fetch
+): typeof fetch => async (input, init): Promise<Response> => {
+  const old = await f(input, init);
+  return {
+    ...old,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    json: async (): Promise<any> => {
+      const original = await old.json();
+      return processor(original);
+    }
+  };
+};
