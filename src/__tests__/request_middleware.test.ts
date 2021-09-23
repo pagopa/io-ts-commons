@@ -145,13 +145,20 @@ describe("withRequestMiddlewares", () => {
 
   it("should stop processing middlewares after a rejecting middleware", () => {
     const mockHandler = jest.fn(() => Promise.resolve(response));
+
+    const mockMiddlewareBeforeReject = jest.fn();
+    const mockMiddlewareAfterReject = jest.fn();
+
     const handler = withRequestMiddlewares(
+      ResolvingMiddleware,
+      ResolvingMiddleware,
       RejectingMiddleware,
-      ResolvingMiddleware
+      mockMiddlewareAfterReject
     )(mockHandler);
 
     return handler(request as any).then(r => {
       expect(mockHandler).not.toHaveBeenCalled();
+      expect(mockMiddlewareAfterReject).not.toHaveBeenCalled();
       expect(r.kind).toBe("IResponseErrorValidation");
     });
   });

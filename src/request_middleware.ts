@@ -119,7 +119,6 @@ export type WithRequestMiddlewaresT = <
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   M extends ReadonlyArray<IRequestMiddleware<any, any>>
 >(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ...middlewares: M
 ) => <RH>(
   handler: (...values: MiddlewareResults<M>) => Promise<IResponse<RH>>
@@ -133,26 +132,24 @@ export const withRequestMiddlewares: WithRequestMiddlewaresT = (
   ...middlewares
 ) => handler =>
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  request => {
-    // eslint-disable-next-line sonarjs/prefer-immediate-return
-    const p = pipe(
-      middlewares,
-      middleware =>
-        middleware.map(m =>
-          pipe(
-            TE.tryCatch(
-              async () => await m(request),
-              _ => ResponseErrorInternal(`error executing middleware`)
-            ),
-            TE.chain(TE.fromEither)
-          )
-        ),
+  request =>
+    pipe(
+      middlewares.map(middleware =>
+        pipe(
+          TE.tryCatch(
+            async () => await middleware(request),
+            _ => ResponseErrorInternal(`error executing middleware`)
+          ),
+          TE.chain(TE.fromEither)
+        )
+      ),
       TE.sequenceSeqArray,
-      TE.map(params => params as MiddlewareResults<typeof middlewares>),
       TE.chain(params =>
         pipe(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          TE.tryCatch(() => handler(...params), E.toError),
+          TE.tryCatch(
+            () => handler(...(params as MiddlewareResults<typeof middlewares>)),
+            E.toError
+          ),
           TE.mapLeft(err =>
             ResponseErrorInternal(
               `Error executing endpoint handler: ${err.message}`
@@ -161,7 +158,4 @@ export const withRequestMiddlewares: WithRequestMiddlewaresT = (
         )
       ),
       TE.toUnion
-    );
-
-    return p();
-  };
+    )();
