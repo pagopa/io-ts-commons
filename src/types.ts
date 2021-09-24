@@ -274,3 +274,36 @@ export const replaceProp1 = <
  * Returns the type `A` if `T` is a `Promise<A>`, or else returns `never`
  */
 export type PromiseType<T> = T extends Promise<infer A> ? A : never;
+
+/**
+ * Extract the type of the first element of an array
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Head<T extends ReadonlyArray<any>> = T extends readonly [
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ...ReadonlyArray<any>
+]
+  ? T[0]
+  : never;
+
+/**
+ * Extract the type of the sub-array of the tail of an array
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Tail<T extends ReadonlyArray<any>> = ((
+  ..._: T
+) => // eslint-disable-next-line @typescript-eslint/no-explicit-any
+unknown) extends (_: any, ...tail: infer TT) => unknown
+  ? TT
+  : readonly [];
+
+/**
+ * Whether an array is empty or has only one element
+ */
+export type HasTail<T extends ReadonlyArray<unknown>> = T extends
+  | readonly []
+  | readonly [unknown]
+  ? false
+  : true;

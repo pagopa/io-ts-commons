@@ -11,7 +11,6 @@ import {
 } from "../responses";
 
 import { left, right } from "fp-ts/lib/Either";
-import { number } from "fp-ts";
 
 const ResolvingMiddleware: IRequestMiddleware<
   "IResponseErrorNever",
@@ -107,16 +106,20 @@ describe("withRequestMiddlewares", () => {
   });
 
   it("should NOT accept handler with type mismatching parameters", () => {
+    // an handler with [string, string] arguments
     const mockHandler: (
       param1: string,
       param2: string
     ) => Promise<IResponse<{}>> = jest.fn(() => Promise.resolve(response));
 
-    const handler = withRequestMiddlewares(
+    // composing middleware resulting in [string, number]
+    const withComposedMiddlewares = withRequestMiddlewares(
       ResolvingMiddleware,
       ResolvingNumberMiddleware
-      // @ts-expect-error
-    )(mockHandler);
+    );
+
+    // @ts-expect-error as we want the compiler to notice we're passing an handler with wrong signature
+    const _handler = withComposedMiddlewares(mockHandler);
   });
 
   it("should NOT accept handler with more parameters than middlewares", () => {
@@ -126,11 +129,28 @@ describe("withRequestMiddlewares", () => {
       param3: number
     ) => Promise<IResponse<{}>> = jest.fn(() => Promise.resolve(response));
 
-    const handler = withRequestMiddlewares(
+    const withComposedMiddlewares = withRequestMiddlewares(
       ResolvingMiddleware,
       ResolvingNumberMiddleware
-      // @ts-expect-error
-    )(mockHandler);
+    );
+
+    // @ts-expect-error
+    const _handler = withComposedMiddlewares(mockHandler);
+  });
+
+  it("should accept handler with less parameters than middlewares", () => {
+    const mockHandler: (
+      param1: string,
+      param2: number
+    ) => Promise<IResponse<{}>> = jest.fn(() => Promise.resolve(response));
+
+    const withComposedMiddlewares = withRequestMiddlewares(
+      ResolvingMiddleware,
+      ResolvingNumberMiddleware,
+      ResolvingNumberMiddleware
+    );
+
+    const _handler = withComposedMiddlewares(mockHandler);
   });
 
   it("should process a request with a rejecting middleware", () => {

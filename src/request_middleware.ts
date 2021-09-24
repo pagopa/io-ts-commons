@@ -5,6 +5,7 @@ import * as TE from "fp-ts/lib/TaskEither";
 import { pipe } from "fp-ts/lib/function";
 
 import { IResponse, ResponseErrorInternal } from "./responses";
+import { Head, Tail, HasTail } from "./types";
 
 export type RequestHandler<R> = (
   request: express.Request
@@ -59,31 +60,6 @@ export type MiddlewareFailureResult<T> = T extends IRequestMiddleware<
 export type MiddlewareResult<T> = T extends IRequestMiddleware<unknown, infer R>
   ? R
   : never;
-
-// -----
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Head<T extends ReadonlyArray<any>> = T extends readonly [
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ...ReadonlyArray<any>
-]
-  ? T[0]
-  : never;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Tail<T extends ReadonlyArray<any>> = ((
-  ...t: T
-) => // eslint-disable-next-line @typescript-eslint/no-explicit-any
-unknown) extends (_: any, ...tail: infer TT) => unknown
-  ? TT
-  : readonly [];
-
-export type HasTail<T extends ReadonlyArray<unknown>> = T extends
-  | readonly []
-  | readonly [unknown]
-  ? false
-  : true;
 
 export type MiddlewareFailure<
   M extends IRequestMiddleware<unknown, unknown>
