@@ -9,7 +9,7 @@ import {
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { readableReport } from "../reporters";
 
-import { enumType, readonlySetType, withDefault } from "../types";
+import { enumType, readonlySetType, withDefault, Head } from "../types";
 
 enum aValidEnum {
   "foo" = "fooValue",
@@ -212,5 +212,15 @@ describe("withDefault (composed partial)", () => {
     if (E.isRight(r)) {
       expect(r.right).toEqual({ k: "DEFAULT" });
     }
+  });
+});
+
+describe(`Head<T>`, () => {
+  it("should map correct type for an array", () => {
+    const c = [1, "two", false];
+
+    const c0: Head<typeof c> = c[0];
+    // @ts-expect-error
+    const c1: Head<typeof c> = c[1];
   });
 });
