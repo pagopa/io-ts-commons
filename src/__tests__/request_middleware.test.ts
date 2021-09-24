@@ -37,6 +37,15 @@ const RejectingMiddleware: IRequestMiddleware<
   );
 };
 
+const DelayedFailureMiddleware: IRequestMiddleware<
+"IResponseErrorValidation",
+string
+> = _ => {
+  return new Promise((_, reject) => {
+    setInterval(() => reject(new Error("Error")), 500)
+  })
+};
+
 const request = {
   params: {
     dummy: "dummy"
@@ -160,6 +169,16 @@ describe("withRequestMiddlewares", () => {
     return handler(request as any).then(r => {
       expect(mockHandler).not.toHaveBeenCalled();
       expect(r.kind).toBe("IResponseErrorValidation");
+    });
+  });
+
+  it("should return an IResponseErrorInternal in case middleware fails", () => {
+    const mockHandler = jest.fn(() => Promise.resolve(response));
+    const handler = withRequestMiddlewares(DelayedFailureMiddleware)(mockHandler);
+
+    return handler(request as any).then(r => {
+      expect(mockHandler).not.toHaveBeenCalled();
+      expect(r.kind).toBe("IResponseErrorInternal");
     });
   });
 

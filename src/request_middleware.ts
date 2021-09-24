@@ -113,7 +113,7 @@ export const withRequestMiddlewares: WithRequestMiddlewaresT = (
       middlewares.map(middleware =>
         pipe(
           TE.tryCatch(
-           () => middleware(request),
+            () => middleware(request),
             _ => ResponseErrorInternal(`error executing middleware`)
           ),
           TE.chain(TE.fromEither)
