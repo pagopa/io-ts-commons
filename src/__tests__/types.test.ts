@@ -217,7 +217,7 @@ describe("withDefault (composed partial)", () => {
 
 describe(`Head<T>`, () => {
   it("should map correct type for an array", () => {
-    const c = [1, "two", false];
+    const c = [1, "two", false] as const;
 
     const c0: Head<typeof c> = c[0];
     // @ts-expect-error
