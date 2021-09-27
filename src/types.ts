@@ -278,15 +278,7 @@ export type PromiseType<T> = T extends Promise<infer A> ? A : never;
 /**
  * Extract the type of the first element of an array
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Head<T extends ReadonlyArray<any>> = T extends readonly [
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ...ReadonlyArray<any>
-]
-  ? T[0]
-  : never;
+export type Head<T extends ReadonlyArray<unknown>> = T[0];
 
 /**
  * Extract the type of the sub-array of the tail of an array
