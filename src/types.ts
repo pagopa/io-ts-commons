@@ -283,12 +283,11 @@ export type Head<T extends ReadonlyArray<unknown>> = T[0];
 /**
  * Extract the type of the sub-array of the tail of an array
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Tail<T extends ReadonlyArray<any>> = ((
-  ..._: T
-) => // eslint-disable-next-line @typescript-eslint/no-explicit-any
-unknown) extends (_: any, ...tail: infer TT) => unknown
-  ? TT
+export type Tail<T extends ReadonlyArray<unknown>> = T extends readonly [
+  unknown,
+  ...(infer Rest)
+]
+  ? Rest
   : readonly [];
 
 /**
