@@ -42,7 +42,7 @@ const DelayedFailureMiddleware: IRequestMiddleware<
 string
 > = _ => {
   return new Promise((_, reject) => {
-    setInterval(() => reject(new Error("Error")), 500)
+    setTimeout(() => reject(new Error("Error")), 500)
   })
 };
 
