@@ -6,7 +6,9 @@ import {
 } from "../request_middleware";
 import {
   IResponse,
+  IResponseErrorConflict,
   IResponseErrorValidation,
+  ResponseErrorConflict,
   ResponseErrorValidation
 } from "../responses";
 
@@ -37,13 +39,19 @@ const RejectingMiddleware: IRequestMiddleware<
   );
 };
 
+const RejectingConflictMiddleware: IRequestMiddleware<
+  "IResponseErrorConflict",
+  number
+> = async _ =>
+  left(ResponseErrorConflict("Conflict"));
+
 const DelayedFailureMiddleware: IRequestMiddleware<
-"IResponseErrorValidation",
-string
+  "IResponseErrorValidation",
+  string
 > = _ => {
   return new Promise((_, reject) => {
-    setTimeout(() => reject(new Error("Error")), 500)
-  })
+    setTimeout(() => reject(new Error("Error")), 500);
+  });
 };
 
 const request = {
@@ -174,7 +182,9 @@ describe("withRequestMiddlewares", () => {
 
   it("should return an IResponseErrorInternal in case middleware fails", () => {
     const mockHandler = jest.fn(() => Promise.resolve(response));
-    const handler = withRequestMiddlewares(DelayedFailureMiddleware)(mockHandler);
+    const handler = withRequestMiddlewares(DelayedFailureMiddleware)(
+      mockHandler
+    );
 
     return handler(request as any).then(r => {
       expect(mockHandler).not.toHaveBeenCalled();
@@ -185,13 +195,13 @@ describe("withRequestMiddlewares", () => {
   it("should stop processing middlewares after a rejecting middleware", () => {
     const mockHandler = jest.fn(() => Promise.resolve(response));
 
-    const mockMiddlewareBeforeReject = jest.fn();
     const mockMiddlewareAfterReject = jest.fn();
 
     const handler = withRequestMiddlewares(
       ResolvingMiddleware,
       ResolvingMiddleware,
       RejectingMiddleware,
+      RejectingConflictMiddleware,
       mockMiddlewareAfterReject
     )(mockHandler);
 
