@@ -294,7 +294,7 @@ describe("HasTail<T>", () => {
     const _x2: HasTail<typeof c> = false;
   });
 
-  it("should infer false for for arrays of one element", () => {
+  it("should infer false for arrays of one element", () => {
     const c = ["foo"] as const;
 
     // @ts-expect-error
