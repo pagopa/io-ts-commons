@@ -36,9 +36,12 @@ describe("encrypt", () => {
     if (isRight(errorOrEncryptedPayload)) {
       const errorOrdecryptedString = toPlainText(
         rsaPrivateKey,
-        errorOrEncryptedPayload.value
+        errorOrEncryptedPayload.right
       );
-      expect(errorOrdecryptedString.value).toEqual(aTextToEncrypt);
+      expect(isRight(errorOrdecryptedString)).toBe(true);
+      if (isRight(errorOrdecryptedString)) {
+        expect(errorOrdecryptedString.right).toEqual(aTextToEncrypt);
+      }
     }
   });
   it("should catch any exception thrown", async () => {
@@ -49,7 +52,7 @@ describe("encrypt", () => {
     );
     expect(isLeft(errorOrEncryptedPayload)).toBeTruthy();
     if (isLeft(errorOrEncryptedPayload)) {
-      expect(errorOrEncryptedPayload.value).toBeInstanceOf(Error);
+      expect(errorOrEncryptedPayload.left).toBeInstanceOf(Error);
     }
   });
 });

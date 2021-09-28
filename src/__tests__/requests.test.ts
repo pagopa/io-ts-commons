@@ -1,4 +1,4 @@
-import { right } from "fp-ts/lib/Either";
+import { isLeft, right } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
 import {
@@ -167,9 +167,9 @@ describe("A simple GET API", () => {
 
     const res = await getSimple(simpleParams);
 
-    expect(res.isLeft()).toBeTruthy();
-    if (res.isLeft()) {
-      expect(res.value[0].value).toHaveProperty("status", 999);
+    expect(isLeft(res)).toBeTruthy();
+    if (isLeft(res)) {
+      expect(res.left[0].value).toHaveProperty("status", 999);
     }
   });
 });
