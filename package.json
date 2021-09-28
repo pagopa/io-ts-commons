@@ -1,6 +1,6 @@
 {
   "name": "@pagopa/ts-commons",
-  "version": "10.1.0",
+  "version": "10.2.0",
   "description": "Shared TypeScript code for the IO project",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -58,9 +58,11 @@
     "testMatch": null,
     "globals": {
       "ts-jest": {
-         "diagnostics": {
-            "ignoreCodes": [2502]
-         }
+        "diagnostics": {
+          "ignoreCodes": [
+            2502
+          ]
+        }
       }
     }
   },
