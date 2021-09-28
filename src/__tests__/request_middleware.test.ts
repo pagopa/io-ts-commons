@@ -7,13 +7,24 @@ import {
 import {
   IResponse,
   IResponseErrorValidation,
+  ResponseErrorConflict,
   ResponseErrorValidation
 } from "../responses";
 
 import { left, right } from "fp-ts/lib/Either";
 
-const ResolvingMiddleware: IRequestMiddleware<never, string> = req => {
+const ResolvingMiddleware: IRequestMiddleware<
+  "IResponseErrorNever",
+  string
+> = req => {
   return Promise.resolve(right<never, string>(req.params.dummy));
+};
+
+const ResolvingNumberMiddleware: IRequestMiddleware<
+  "IResponseErrorNever",
+  number
+> = req => {
+  return Promise.resolve(right<never, number>(1));
 };
 
 const RejectingMiddleware: IRequestMiddleware<
@@ -27,6 +38,21 @@ const RejectingMiddleware: IRequestMiddleware<
   );
 };
 
+const RejectingConflictMiddleware: IRequestMiddleware<
+  "IResponseErrorConflict",
+  number
+> = async _ =>
+  left(ResponseErrorConflict("Conflict"));
+
+const DelayedFailureMiddleware: IRequestMiddleware<
+  "IResponseErrorValidation",
+  string
+> = _ => {
+  return new Promise((_, reject) => {
+    setTimeout(() => reject(new Error("Error")), 500);
+  });
+};
+
 const request = {
   params: {
     dummy: "dummy"
@@ -36,14 +62,8 @@ const request = {
 const response = {} as IResponse<{}>;
 
 describe("withRequestMiddlewares", () => {
-  it("should allow up to 7 middlewares", () => {
-    expect(withRequestMiddlewares.length).toBe(7);
-  });
-
   // one case for any number of supported middlewares
-  const cases = [...Array(withRequestMiddlewares.length).keys()].map((_, i) => [
-    i + 1
-  ]);
+  const cases = [1, 5, 10, 100];
   it.each(cases)(
     "should process a request with %i resolving middlewares",
     n => {
@@ -52,7 +72,6 @@ describe("withRequestMiddlewares", () => {
       const middlewares = Array(n).fill(ResolvingMiddleware);
       const expected = Array(n).fill("dummy");
 
-      // @ts-ignore because withRequestMiddlewares complaints about middlewares could be any size
       const handler = withRequestMiddlewares(...middlewares)(mockHandler);
 
       return handler(request as any).then((r: any) => {
@@ -74,7 +93,6 @@ describe("withRequestMiddlewares", () => {
         RejectingMiddleware
       ];
 
-      // @ts-ignore because withRequestMiddlewares complaints about middlewares could be any size
       const handler = withRequestMiddlewares(...middlewares)(mockHandler);
 
       return handler(request as any).then((r: any) => {
@@ -83,6 +101,73 @@ describe("withRequestMiddlewares", () => {
       });
     }
   );
+
+  it("should accept handler with right parameters", () => {
+    const mockHandler: (
+      param1: string,
+      param2: number
+    ) => Promise<IResponse<{}>> = jest.fn((param1, param2) =>
+      Promise.resolve(response)
+    );
+
+    const handler = withRequestMiddlewares(
+      ResolvingMiddleware,
+      ResolvingNumberMiddleware
+    )(mockHandler);
+
+    return handler(request as any).then(r => {
+      expect(mockHandler).toHaveBeenCalledWith(...["dummy", 1]);
+      expect(r).toEqual(response);
+    });
+  });
+
+  it("should NOT accept handler with type mismatching parameters", () => {
+    // an handler with [string, string] arguments
+    const mockHandler: (
+      param1: string,
+      param2: string
+    ) => Promise<IResponse<{}>> = jest.fn(() => Promise.resolve(response));
+
+    // composing middleware resulting in [string, number]
+    const withComposedMiddlewares = withRequestMiddlewares(
+      ResolvingMiddleware,
+      ResolvingNumberMiddleware
+    );
+
+    // @ts-expect-error as we want the compiler to notice we're passing an handler with wrong signature
+    const _handler = withComposedMiddlewares(mockHandler);
+  });
+
+  it("should NOT accept handler with more parameters than middlewares", () => {
+    const mockHandler: (
+      param1: string,
+      param2: number,
+      param3: number
+    ) => Promise<IResponse<{}>> = jest.fn(() => Promise.resolve(response));
+
+    const withComposedMiddlewares = withRequestMiddlewares(
+      ResolvingMiddleware,
+      ResolvingNumberMiddleware
+    );
+
+    // @ts-expect-error
+    const _handler = withComposedMiddlewares(mockHandler);
+  });
+
+  it("should accept handler with less parameters than middlewares", () => {
+    const mockHandler: (
+      param1: string,
+      param2: number
+    ) => Promise<IResponse<{}>> = jest.fn(() => Promise.resolve(response));
+
+    const withComposedMiddlewares = withRequestMiddlewares(
+      ResolvingMiddleware,
+      ResolvingNumberMiddleware,
+      ResolvingNumberMiddleware
+    );
+
+    const _handler = withComposedMiddlewares(mockHandler);
+  });
 
   it("should process a request with a rejecting middleware", () => {
     const mockHandler = jest.fn(() => Promise.resolve(response));
@@ -94,15 +179,34 @@ describe("withRequestMiddlewares", () => {
     });
   });
 
+  it("should return an IResponseErrorInternal in case middleware fails", () => {
+    const mockHandler = jest.fn(() => Promise.resolve(response));
+    const handler = withRequestMiddlewares(DelayedFailureMiddleware)(
+      mockHandler
+    );
+
+    return handler(request as any).then(r => {
+      expect(mockHandler).not.toHaveBeenCalled();
+      expect(r.kind).toBe("IResponseErrorInternal");
+    });
+  });
+
   it("should stop processing middlewares after a rejecting middleware", () => {
     const mockHandler = jest.fn(() => Promise.resolve(response));
+
+    const mockMiddlewareAfterReject = jest.fn();
+
     const handler = withRequestMiddlewares(
+      ResolvingMiddleware,
+      ResolvingMiddleware,
       RejectingMiddleware,
-      ResolvingMiddleware
+      RejectingConflictMiddleware,
+      mockMiddlewareAfterReject
     )(mockHandler);
 
     return handler(request as any).then(r => {
       expect(mockHandler).not.toHaveBeenCalled();
+      expect(mockMiddlewareAfterReject).not.toHaveBeenCalled();
       expect(r.kind).toBe("IResponseErrorValidation");
     });
   });

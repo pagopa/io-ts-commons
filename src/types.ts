@@ -1,6 +1,8 @@
 import * as t from "io-ts";
+import * as E from "fp-ts/lib/Either";
 
 import { Set as SerializableSet } from "json-set-map";
+import { pipe } from "fp-ts/lib/function";
 
 /**
  * Returns a subset of the input objects fields.
@@ -173,17 +175,20 @@ export const strictInterfaceWithOptionals = <
       // eslint-disable-next-line no-prototype-builtins
       Object.getOwnPropertyNames(m).every(k => props.hasOwnProperty(k)),
     (m, c) =>
-      loose.validate(m, c).chain(o => {
-        const errors: t.Errors = Object.getOwnPropertyNames(o)
-          .map(key =>
-            // eslint-disable-next-line no-prototype-builtins
-            !props.hasOwnProperty(key)
-              ? t.getValidationError(o[key], t.appendContext(c, key, t.never))
-              : undefined
-          )
-          .filter((e): e is t.ValidationError => e !== undefined);
-        return errors.length ? t.failures(errors) : t.success(o);
-      }),
+      pipe(
+        loose.validate(m, c),
+        E.chain(o => {
+          const errors: t.Errors = Object.getOwnPropertyNames(o)
+            .map(key =>
+              // eslint-disable-next-line no-prototype-builtins
+              !props.hasOwnProperty(key)
+                ? t.getValidationError(o[key], t.appendContext(c, key, t.never))
+                : undefined
+            )
+            .filter((e): e is t.ValidationError => e !== undefined);
+          return errors.length ? t.failures(errors) : t.success(o);
+        })
+      ),
     loose.encode
   );
 };
@@ -269,3 +274,27 @@ export const replaceProp1 = <
  * Returns the type `A` if `T` is a `Promise<A>`, or else returns `never`
  */
 export type PromiseType<T> = T extends Promise<infer A> ? A : never;
+
+/**
+ * Extract the type of the first element of an array
+ */
+export type Head<T extends ReadonlyArray<unknown>> = T[0];
+
+/**
+ * Extract the type of the sub-array of the tail of an array
+ */
+export type Tail<T extends ReadonlyArray<unknown>> = T extends readonly [
+  unknown,
+  ...(infer Rest)
+]
+  ? Rest
+  : readonly [];
+
+/**
+ * Whether an array is empty or has only one element
+ */
+export type HasTail<T extends ReadonlyArray<unknown>> = T extends
+  | readonly []
+  | readonly [unknown]
+  ? false
+  : true;

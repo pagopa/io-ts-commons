@@ -1,18 +1,16 @@
 import { right } from "fp-ts/lib/Either";
 import { Task } from "fp-ts/lib/Task";
-import { fromLeft, TaskEither } from "fp-ts/lib/TaskEither";
+import * as T from "fp-ts/lib/Task";
+import { TaskEither } from "fp-ts/lib/TaskEither";
+import * as TE from "fp-ts/lib/TaskEither";
+import { pipe } from "fp-ts/lib/function";
 import { Millisecond } from "./units";
 
 /**
  * Returns a Task that resolves to a value after a delay.
  */
 export const delayTask = <A>(n: Millisecond, a: A): Task<A> =>
-  new Task<A>(
-    () =>
-      new Promise<A>(resolve => {
-        setTimeout(() => resolve(a), n);
-      })
-  );
+  T.delay(n)(T.of(a));
 
 /**
  * In the context of a retriable task, when it returns a TransientError the
@@ -75,29 +73,33 @@ export const withRetries = <E, T>(
         return currentTask;
       }
       // allow one run of the task
-      return currentTask.orElse(l => {
-        // if the task fails...
-        if (mustAbort) {
-          return fromLeft(RetryAborted);
-        }
-        if (l === TransientError) {
-          // ...with a TransientError, chain it with a backoff delay
-          // an then with another run.
-          const delay = new TaskEither<
-            E | TransientError | RetryAborted,
-            boolean
-          >(delayTask(backoff(count), true).map(d => right(d)));
-          return delay.chain(() => runTaskOnce(count + 1, currentTask));
-        }
-        // ...with an error that is not a TransientError, we just return it
-        return fromLeft(l);
-      });
+      return pipe(
+        currentTask,
+        TE.orElse(l => {
+          // if the task fails...
+          if (mustAbort) {
+            return TE.left(RetryAborted);
+          }
+          if (l === TransientError) {
+            // ...with a TransientError, chain it with a backoff delay
+            // an then with another run.
+            return pipe(
+              delayTask(backoff(count), true),
+              T.map(d => right(d)),
+              TE.chain(() => runTaskOnce(count + 1, currentTask))
+            );
+          }
+          // ...with an error that is not a TransientError, we just return it
+          return TE.left(l);
+        })
+      );
     };
 
     // if the recursive task execution returns with a failure and the failure is
     // a TransientError, it means that the retries have been exausted - we map
     // the error to a MaxRetries error.
-    return runTaskOnce(0, task).mapLeft(l =>
-      l === TransientError ? MaxRetries : l
+    return pipe(
+      runTaskOnce(0, task),
+      TE.mapLeft(l => (l === TransientError ? MaxRetries : l))
     );
   };

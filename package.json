@@ -1,6 +1,6 @@
 {
   "name": "@pagopa/ts-commons",
-  "version": "9.6.0",
+  "version": "10.1.0",
   "description": "Shared TypeScript code for the IO project",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -38,12 +38,12 @@
     "rimraf": "^2.6.2",
     "ts-jest": "^23.0.1",
     "typedoc": "^0.20.36",
-    "typescript": "^3.9.9"
+    "typescript": "^4.3.5"
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
     "agentkeepalive": "^4.1.4",
-    "applicationinsights": "^1.7.4",
+    "applicationinsights": "^1.8.10",
     "fp-ts": "1.17.4",
     "io-ts": "1.8.5",
     "json-set-map": "^1.1.2",
@@ -55,14 +55,22 @@
     "collectCoverage": true,
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "preset": "ts-jest",
-    "testMatch": null
+    "testMatch": null,
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "ignoreCodes": [
+            2502
+          ]
+        }
+      }
+    }
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "resolutions": {
-    "fp-ts": "1.17.4",
     "handlebars": "~4.5.3"
   }
 }
