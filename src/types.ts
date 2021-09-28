@@ -274,3 +274,27 @@ export const replaceProp1 = <
  * Returns the type `A` if `T` is a `Promise<A>`, or else returns `never`
  */
 export type PromiseType<T> = T extends Promise<infer A> ? A : never;
+
+/**
+ * Extract the type of the first element of an array
+ */
+export type Head<T extends ReadonlyArray<unknown>> = T[0];
+
+/**
+ * Extract the type of the sub-array of the tail of an array
+ */
+export type Tail<T extends ReadonlyArray<unknown>> = T extends readonly [
+  unknown,
+  ...(infer Rest)
+]
+  ? Rest
+  : readonly [];
+
+/**
+ * Whether an array is empty or has only one element
+ */
+export type HasTail<T extends ReadonlyArray<unknown>> = T extends
+  | readonly []
+  | readonly [unknown]
+  ? false
+  : true;

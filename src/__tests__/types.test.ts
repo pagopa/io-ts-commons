@@ -1,15 +1,18 @@
 import * as t from "io-ts";
 import * as E from "fp-ts/lib/Either";
 import {
+  HasTail,
   readonlyNonEmptySetType,
   strictInterfaceWithOptionals,
+  Tail,
   withoutUndefinedValues
 } from "../types";
 
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { readableReport } from "../reporters";
 
-import { enumType, readonlySetType, withDefault } from "../types";
+import { enumType, readonlySetType, withDefault, Head } from "../types";
+import { string } from "fp-ts";
 
 enum aValidEnum {
   "foo" = "fooValue",
@@ -212,5 +215,98 @@ describe("withDefault (composed partial)", () => {
     if (E.isRight(r)) {
       expect(r.right).toEqual({ k: "DEFAULT" });
     }
+  });
+});
+
+describe(`Head<T>`, () => {
+  it("should map correct type for an array", () => {
+    const c = [1, "two", false] as const;
+
+    const c0: Head<typeof c> = c[0];
+    const c0_: typeof c[0] = c[0];
+    // @ts-expect-error
+    const c1: typeof c[0] = c[1];
+  });
+
+  it("should map correct type for an array of functions", () => {
+    const c = [() => "hello world", () => 1] as const;
+
+    const c0: string = c[0]();
+    // @ts-expect-error expect error because "hello world" isn't const
+    const c0a: "hello world" = c[0]();
+  });
+
+  it("should map correct type for an empty array", () => {
+    const c = [] as const;
+
+    const c0: Head<typeof c> = undefined;
+  });
+});
+
+describe("Tail<T>", () => {
+  // enforce a variable to be a Tail
+  const tail = <C extends ReadonlyArray<unknown>>([_, ...rest]: C): Tail<C> =>
+    rest as Tail<C>;
+
+  it("should infer an empty array for empty arrays", () => {
+    const c = [] as const;
+
+    // @ts-expect-error expect error because lenght is fixed to 0
+    const _x1: 1 = tail(c).length;
+    const _x2: 0 = tail(c).length;
+
+    const _x3: Tail<typeof c> = [];
+    // @ts-expect-error expect error because is expecting an empty array
+    const _x4: Tail<typeof c> = [undefined];
+  });
+
+  it("should infer an empty array for arrays of one element", () => {
+    const c = ["foo"] as const;
+
+    // @ts-expect-error expect error because lenght is fixed to 0
+    const _x1: 1 = tail(c).length;
+    const _x2: 0 = tail(c).length;
+
+    const _x3: Tail<typeof c> = [];
+    // @ts-expect-error expect error because is expecting an empty array
+    const _x4: Tail<typeof c> = [undefined];
+  });
+
+  it("should infer an array for arrays of more than one element", () => {
+    const c = [1, "two", false] as const;
+
+    // @ts-expect-error expect error because lenght is not fixed to 0
+    const _x1: 0 = tail(c).length;
+    // @ts-expect-error
+    const _x2: 1 = tail(c).length;
+    const _x3: 2 = tail(c).length;
+
+    const _x4: Tail<typeof c> = ["two", false];
+  });
+});
+
+describe("HasTail<T>", () => {
+  it("should infer false for empty arrays", () => {
+    const c = [] as const;
+
+    // @ts-expect-error
+    const _x1: HasTail<typeof c> = true;
+    const _x2: HasTail<typeof c> = false;
+  });
+
+  it("should infer false for arrays of one element", () => {
+    const c = ["foo"] as const;
+
+    // @ts-expect-error
+    const _x1: HasTail<typeof c> = true;
+    const _x2: HasTail<typeof c> = false;
+  });
+
+  it("should infer true for arrays of more than one element", () => {
+    const c = ["foo", "bar"] as const;
+
+    // @ts-expect-error
+    const _x1: HasTail<typeof c> = false;
+    const _x2: HasTail<typeof c> = true;
   });
 });
