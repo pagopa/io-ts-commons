@@ -62,12 +62,8 @@ describe("SerializedOf", () => {
       aRecordOfNonEmptyStrings,
       "|",
       ":"
-    ) as t.Mixed;
-    const depth1 = SerializedOf(
-      t.record(t.string, depth2),
-      "||",
-      "::"
-    ) as t.Mixed;
+    );
+    const depth1 = SerializedOf(t.record(t.string, depth2), "||", "::");
     const depth0 = SerializedOf(t.record(t.string, depth1), "|||", ":::");
 
     const input = "depth_0:::depth_1::depth_2:value";
@@ -88,15 +84,12 @@ describe("SerializedOf", () => {
     }
   });
 
-  it("should be BLA BLA BLA", () => {
-    type Address = t.TypeOf<typeof Address>;
+  it("should be compasble in structs", () => {
     const Address = t.interface({ city: t.string, street: t.string });
-
-    const address = (SerializedOf(Address) as unknown) as t.Type<Address>;
 
     const struct = SerializedOf(
       t.interface({
-        address,
+        address: SerializedOf(Address),
         name: t.string
       }),
       "||",
