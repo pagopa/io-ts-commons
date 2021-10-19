@@ -1,4 +1,6 @@
-import { isLeft, isRight } from "fp-ts/lib/Either";
+import { string } from "fp-ts";
+import { isLeft, isRight, getOrElseW } from "fp-ts/lib/Either";
+import { pipe } from "fp-ts/lib/function";
 import { HttpsUrlFromString, HttpUrlFromString, UrlFromString } from "../url";
 
 const anHostName = "example.com";
@@ -14,20 +16,47 @@ describe("UrlFromString", () => {
       expect(errorOrUrl.right.hostname).toEqual(anHostName);
     }
   });
-  it("should fail on invalid http URL", () => {
-    const errorOrUrl = HttpUrlFromString.decode(anHttpsUrl);
+  it.each`
+    scenario               | url           | codec
+    ${"invalid http URL"}  | ${anHttpsUrl} | ${HttpUrlFromString}
+    ${"invalid https URL"} | ${anHttpUrl}  | ${HttpsUrlFromString}
+  `("should fail on $scenario", ({ url, codec }) => {
+    const errorOrUrl = codec.decode(url);
     expect(isLeft(errorOrUrl)).toBeTruthy();
   });
-  it("should fail on invalid https URL", () => {
-    const errorOrUrl = HttpsUrlFromString.decode(anHttpUrl);
-    expect(isLeft(errorOrUrl)).toBeTruthy();
-  });
-  it("should pass on valid http URL", () => {
-    const errorOrUrl = HttpUrlFromString.decode(anHttpUrl);
+
+  it.each`
+    scenario             | url           | codec
+    ${"valid http URL"}  | ${anHttpUrl}  | ${HttpUrlFromString}
+    ${"valid https URL"} | ${anHttpsUrl} | ${HttpsUrlFromString}
+  `("should pass on $scenario", ({ url, codec }) => {
+    const errorOrUrl = codec.decode(url);
     expect(isRight(errorOrUrl)).toBeTruthy();
   });
-  it("should pass on valid https URL", () => {
-    const errorOrUrl = HttpsUrlFromString.decode(anHttpsUrl);
-    expect(isRight(errorOrUrl)).toBeTruthy();
-  });
+
+  it.each`
+    scenario             | url           | codec
+    ${"valid http URL"}  | ${anHttpUrl}  | ${HttpUrlFromString}
+    ${"valid https URL"} | ${anHttpsUrl} | ${HttpsUrlFromString}
+  `(
+    "should encode a $scenario",
+    ({
+      url,
+      codec
+    }: {
+      url: string;
+      codec: HttpUrlFromString | HttpsUrlFromString;
+    }) => {
+      const decodedUrl = pipe(
+        codec.decode(url),
+        getOrElseW(_ => fail(`Cannot decode url`))
+      );
+      const encodedUrl = codec.encode(decodedUrl);
+
+      // url parsing add ending slashes
+      const expectedUrl = url.endsWith("/") ? url : url + "/";
+
+      expect(encodedUrl).toBe(expectedUrl);
+    }
+  );
 });

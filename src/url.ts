@@ -28,7 +28,7 @@ export const UrlFromString = new t.Type<ValidUrl, string>(
             return !d.href ? t.failure(s, c) : t.success(d as ValidUrl);
           })
         ),
-  a => a.toString()
+  a => a.href
 );
 
 export type UrlFromString = t.TypeOf<typeof UrlFromString>;
