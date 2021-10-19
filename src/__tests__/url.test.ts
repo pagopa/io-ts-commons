@@ -38,25 +38,16 @@ describe("UrlFromString", () => {
     scenario             | url           | codec
     ${"valid http URL"}  | ${anHttpUrl}  | ${HttpUrlFromString}
     ${"valid https URL"} | ${anHttpsUrl} | ${HttpsUrlFromString}
-  `(
-    "should encode a $scenario",
-    ({
-      url,
-      codec
-    }: {
-      url: string;
-      codec: HttpUrlFromString | HttpsUrlFromString;
-    }) => {
-      const decodedUrl = pipe(
-        codec.decode(url),
-        getOrElseW(_ => fail(`Cannot decode url`))
-      );
-      const encodedUrl = codec.encode(decodedUrl);
+  `("should encode a $scenario", ({ url, codec }) => {
+    const decodedUrl = pipe(
+      codec.decode(url),
+      getOrElseW(_ => fail(`Cannot decode url`))
+    );
+    const encodedUrl = codec.encode(decodedUrl);
 
-      // url parsing add ending slashes
-      const expectedUrl = url.endsWith("/") ? url : url + "/";
+    // url parsing add ending slashes
+    const expectedUrl = url.endsWith("/") ? url : url + "/";
 
-      expect(encodedUrl).toBe(expectedUrl);
-    }
-  );
+    expect(encodedUrl).toBe(expectedUrl);
+  });
 });
