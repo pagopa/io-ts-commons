@@ -87,6 +87,15 @@ const createNotRecordOfStringErrorL = (
   }
 ];
 
+/**
+ * Create a io-ts decoder for the input type.
+ * This decoder will create an object collecting all and only the fields starting with prefix. The fields collected name will be splited using '_' to create nested object.
+ * eg. PREFIX_outer_inner_id: 1234 => { outer: { inner: { id: 1234 } } }
+ *
+ * @param type io-ts type
+ * @param prefix env vars prefix
+ * @returns a decoder for the input type
+ */
 export const ognlTypeFor = <T>(
   type: t.Mixed,
   prefix: string
