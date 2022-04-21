@@ -748,6 +748,8 @@ export type MapResponseType<
   ? IPutApiRequestType<P3, H3, Q3, MapTypeInApiResponse<R3, S, B>>
   : T extends IDeleteApiRequestType<infer P4, infer H4, infer Q4, infer R4>
   ? IDeleteApiRequestType<P4, H4, Q4, MapTypeInApiResponse<R4, S, B>>
+  : T extends IPatchApiRequestType<infer P5, infer H5, infer Q5, infer R5>
+  ? IPatchApiRequestType<P5, H5, Q5, MapTypeInApiResponse<R5, S, B>>
   : never;
 
 /**
@@ -768,7 +770,9 @@ export type RequestParams<T> = T extends IGetApiRequestType<
   : T extends IPutApiRequestType<infer P3, infer _H3, infer _Q3, infer _R3>
   ? P3 // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IDeleteApiRequestType<infer P4, infer _H4, infer _Q4, infer _R4>
-  ? P4
+  ? P4 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  : T extends IPatchApiRequestType<infer P5, infer _H5, infer _Q5, infer _R5>
+  ? P5
   : never;
 
 /**
@@ -787,7 +791,9 @@ export type ReplaceRequestParams<T, P> = T extends IGetApiRequestType<
   : T extends IPutApiRequestType<infer _P3, infer H3, infer Q3, infer R3>
   ? IPutApiRequestType<P, H3, Q3, R3> // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IDeleteApiRequestType<infer _P4, infer H4, infer Q4, infer R4>
-  ? IDeleteApiRequestType<P, H4, Q4, R4>
+  ? IDeleteApiRequestType<P, H4, Q4, R4> // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  : T extends IPatchApiRequestType<infer _P4, infer H5, infer Q5, infer R5>
+  ? IPatchApiRequestType<P, H5, Q5, R5>
   : never;
 
 /**
@@ -805,6 +811,8 @@ export type AddResponseType<
   ? IPutApiRequestType<P3, H3, Q3, R3 | IResponseType<S, A>>
   : T extends IDeleteApiRequestType<infer P4, infer H4, infer Q4, infer R4>
   ? IDeleteApiRequestType<P4, H4, Q4, R4 | IResponseType<S, A>>
+  : T extends IPatchApiRequestType<infer P5, infer H5, infer Q5, infer R5>
+  ? IPatchApiRequestType<P5, H5, Q5, R5 | IResponseType<S, A>>
   : never;
 
 /**
