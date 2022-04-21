@@ -192,7 +192,7 @@ export interface IPutApiRequestType<
 /**
  * Fully describes a PATCH request.
  *
- * PUT requests require to provide the "Content-Type" header.
+ * PATCH requests require to provide the "Content-Type" header.
  */
 export interface IPatchApiRequestType<
   P,
