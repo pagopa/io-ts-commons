@@ -16,7 +16,7 @@ import { pipe } from "fp-ts/lib/function";
 /**
  * Describes the possible methods of a request
  */
-export type RequestMethod = "get" | "post" | "put" | "delete";
+export type RequestMethod = "get" | "post" | "put" | "delete" | "patch";
 
 /**
  * Describes the possible header keys of a request
@@ -190,6 +190,21 @@ export interface IPutApiRequestType<
 }
 
 /**
+ * Fully describes a PATCH request.
+ *
+ * PUT requests require to provide the "Content-Type" header.
+ */
+export interface IPatchApiRequestType<
+  P,
+  KH extends RequestHeaderKey,
+  Q extends string,
+  R
+> extends IBaseApiRequestType<"patch", P, KH | "Content-Type", Q, R> {
+  readonly method: "patch";
+  readonly body: (params: P) => string | FormData;
+}
+
+/**
  * Fully describes a DELETE request.
  */
 export interface IDeleteApiRequestType<
@@ -213,6 +228,7 @@ export type ApiRequestType<
   | IGetApiRequestType<P, KH, Q, R>
   | IPostApiRequestType<P, KH, Q, R>
   | IPutApiRequestType<P, KH, Q, R>
+  | IPatchApiRequestType<P, KH, Q, R>
   | IDeleteApiRequestType<P, KH, Q, R>;
 
 /**
