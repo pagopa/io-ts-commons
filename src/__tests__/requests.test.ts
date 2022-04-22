@@ -6,6 +6,7 @@ import {
   BasicResponseType,
   createFetchRequestForApi,
   IGetApiRequestType,
+  IPatchApiRequestType,
   IPostApiRequestType
 } from "../requests";
 
@@ -70,6 +71,26 @@ const postSimpleT: PostSimpleT = {
     "Content-Type": "application/json"
   }),
   method: "post",
+  query: () => ({}),
+  response_decoder: basicResponseDecoder(SimpleModel),
+  url: () => "/api/v1/simples"
+};
+
+type PatchSimpleT = IPatchApiRequestType<
+  {
+    readonly value: SimpleModel;
+  },
+  never,
+  never,
+  BasicResponseType<SimpleModel>
+>;
+
+const patchSimpleT: PatchSimpleT = {
+  body: params => JSON.stringify(params.value),
+  headers: () => ({
+    "Content-Type": "application/json"
+  }),
+  method: "patch",
   query: () => ({}),
   response_decoder: basicResponseDecoder(SimpleModel),
   url: () => "/api/v1/simples"
@@ -192,6 +213,28 @@ describe("A simple POST API", () => {
       body: JSON.stringify(simpleValue),
       headers: { "Content-Type": "application/json" },
       method: "post"
+    });
+  });
+});
+
+describe("A simple PATCH API", () => {
+  it("should patch the right payload", async () => {
+    const fetchApi = mockFetch(200, simpleValue);
+
+    const patchSimple = createFetchRequestForApi(patchSimpleT, {
+      baseUrl,
+      fetchApi
+    });
+
+    await patchSimple({
+      value: simpleValue
+    });
+
+    expect(fetchApi).toHaveBeenCalledTimes(1);
+    expect(fetchApi).toHaveBeenCalledWith("https://localhost/api/v1/simples", {
+      body: JSON.stringify(simpleValue),
+      headers: { "Content-Type": "application/json" },
+      method: "patch"
     });
   });
 });
