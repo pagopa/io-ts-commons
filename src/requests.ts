@@ -20,23 +20,15 @@ export type RequestMethod = "get" | "post" | "put" | "delete" | "patch";
 
 /**
  * Describes the possible header keys of a request
+ *
+ * @deprecated This type used to enforce a contraint on a specific set of headers to be allowed. We decided to relax such constraint and to accept any string as the friction of being constrained on which header to use is not worth the little value it adds.
  */
-// eslint-disable-next-line sonarjs/no-duplicate-string
-export type RequestHeaderKey =
-  | "Accept-Encoding"
-  | "Authorization"
-  | "Content-Type" // eslint-disable-line sonarjs/no-duplicate-string
-  | "Host"
-  | "If-None-Match"
-  | "Ocp-Apim-Subscription-Key"
-  | "X-Functions-Key";
+export type RequestHeaderKey = string;
 
 /**
  * Describes a set of headers whose keys are of type RequestHeaderKey
  */
-export type RequestHeaders<HS extends RequestHeaderKey> = {
-  [key in HS]: string;
-};
+export type RequestHeaders<HS extends RequestHeaderKey> = Record<HS, string>;
 
 /**
  * Describes the query params for this request
@@ -80,7 +72,7 @@ export function composeHeaderProducers<
 export type BasicResponseHeaderKey =
   | "Cache-Control"
   | "Content-Encoding"
-  | "Content-Type"
+  | "Content-Type" // eslint-disable-line sonarjs/no-duplicate-string
   | "Date"
   | "ETag"
   | "Expires"
