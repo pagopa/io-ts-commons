@@ -153,3 +153,13 @@ export type SandboxFiscalCode = t.TypeOf<typeof SandboxFiscalCode>;
 export const OrganizationFiscalCode = PatternString("^[0-9]{11}$");
 
 export type OrganizationFiscalCode = t.TypeOf<typeof OrganizationFiscalCode>;
+
+/**
+ * The App version using the format {major}.{minor}.{patch}(.{build})
+ * The build value is optional.
+ */
+export const Semver = PatternString(
+  "^((0|[1-9]\\d*)\\.){2}(0|[1-9]\\d*)(\\.(0|[1-9]\\d*)){0,1}$"
+);
+
+export type Semver = t.TypeOf<typeof Semver>;
