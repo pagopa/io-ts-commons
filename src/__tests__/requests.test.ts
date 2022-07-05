@@ -198,8 +198,6 @@ describe("A simple GET API", () => {
       fetchApi: mockFetch
     });
 
-    console.log(buffer);
-
     const res = await getBuffer({});
     expect(res).toEqual(right({ status: 200, value: buffer }));
   });
