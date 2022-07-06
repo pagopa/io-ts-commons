@@ -1,10 +1,12 @@
 import {
   DateFromString,
   DateFromTimestamp,
-  UTCISODateFromString
+  IsoDateFromString,
+  TimezoneOnlyIsoDateFromString,
+  UTCISODateFromString,
+  UtcOnlyIsoDateFromString
 } from "../dates";
-
-import { isLeft, isRight } from "fp-ts/lib/Either";
+import { isLeft, isRight } from "fp-ts/Either";
 
 describe("DateFromString", () => {
   it("should validate an ISO string", async () => {
@@ -21,24 +23,62 @@ describe("DateFromString", () => {
   });
 });
 
-describe("UTCISODateFromString", () => {
+describe("UtcOnlyIsoDateFromString", () => {
   it("should validate a full ISO8601 string", async () => {
     const isoDates: ReadonlyArray<string> = [
       new Date().toISOString(),
       "2018-07-10T13:53:03.987Z"
     ];
     isoDates.forEach(isoDate => {
-      const validation = UTCISODateFromString.decode(isoDate);
+      const validation = UtcOnlyIsoDateFromString.decode(isoDate);
       expect(isRight(validation)).toBeTruthy();
-      expect(UTCISODateFromString.is(new Date())).toBeTruthy();
+      expect(UtcOnlyIsoDateFromString.is(new Date())).toBeTruthy();
     });
   });
   it("should fail on invalid full ISO8601 string", async () => {
     const noDates: ReadonlyArray<string> = ["2018-10-13", "2018-10-13 00:00"];
     noDates.forEach(noDate => {
-      const validation = UTCISODateFromString.decode(noDate);
+      const validation = UtcOnlyIsoDateFromString.decode(noDate);
       expect(isLeft(validation)).toBeTruthy();
-      expect(UTCISODateFromString.is(noDate)).toBeFalsy();
+      expect(UtcOnlyIsoDateFromString.is(noDate)).toBeFalsy();
+    });
+  });
+});
+
+describe("TimezoneOnlyIsoDateFromString", () => {
+  it("should decode a valid format", () => {
+    const parsed = TimezoneOnlyIsoDateFromString.decode(
+      "2021-12-22T10:56:03+01:00"
+    );
+    console.log(JSON.stringify(parsed));
+    expect(isRight(parsed)).toBeTruthy();
+  });
+
+  it("should not decode an invalid format", () => {
+    const parsed = TimezoneOnlyIsoDateFromString.decode("2021-12-22T10:56:03Z");
+    expect(isLeft(parsed)).toBeTruthy();
+  });
+});
+
+describe("IsoDateFromString", () => {
+  it("should validate a full ISO8601 string", async () => {
+    const isoDates: ReadonlyArray<string> = [
+      new Date().toISOString(),
+      "2018-07-10T13:53:03.987Z",
+      "2021-12-22T10:56:03+01:00"
+    ];
+    isoDates.forEach(isoDate => {
+      const validation = IsoDateFromString.decode(isoDate);
+      expect(isRight(validation)).toBeTruthy();
+      expect(IsoDateFromString.is(new Date())).toBeTruthy();
+    });
+  });
+  it("should fail on invalid full ISO8601 string", async () => {
+    const noDates: ReadonlyArray<string> = ["2018-10-13", "2018-10-13 00:00"];
+    noDates.forEach(noDate => {
+      const validation = IsoDateFromString.decode(noDate);
+      expect(isLeft(validation)).toBeTruthy();
+      expect(IsoDateFromString.is(noDate)).toBeFalsy();
     });
   });
 });
