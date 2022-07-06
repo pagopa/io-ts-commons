@@ -617,6 +617,39 @@ export function ioResponseDecoder<
 }
 
 /**
+ * An arrayBuffer ResponseDecoder
+ * it returns an IResponse with a Buffer value
+ *
+ * @param status  The response status handled by this decoder
+ */
+export const bufferArrayResponseDecoder = <
+  S extends number,
+  H extends string = never
+>(
+  status: S
+): ResponseDecoder<IResponseType<S, Buffer, H>> => async (
+  response: Response
+): Promise<t.Validation<IResponseType<S, Buffer, H>> | undefined> => {
+  if (response.status !== status) {
+    // skip this decoder if status doesn't match
+    return undefined;
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  return pipe(
+    arrayBuffer,
+    E.of,
+    E.map(ab => Buffer.from(ab)),
+    E.map(buffer => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      headers: response.headers as any,
+      status,
+      value: buffer
+    }))
+  );
+};
+
+/**
  * A basic ResponseDecoder that returns an Error with the status text if the
  * response status is S.
  */
@@ -765,6 +798,23 @@ export type RequestParams<T> = T extends IGetApiRequestType<
   ? P4 // eslint-disable-next-line @typescript-eslint/no-unused-vars
   : T extends IPatchApiRequestType<infer P5, infer _H5, infer _Q5, infer _R5>
   ? P5
+  : never;
+
+/**
+ * The IResponseType of the request T
+ */
+export type RequestResponseTypes<T> = T extends IBaseApiRequestType<
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  infer _M,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  infer _P,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  infer _H,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  infer _Q,
+  infer R
+>
+  ? R
   : never;
 
 /**
