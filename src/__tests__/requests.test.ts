@@ -297,6 +297,29 @@ describe("RequestReturn", () => {
     const v2: ValueTypes = { id: 1, name: "" };
     // @ts-expect-error expect error because number is not a type returned by GetSimpleT
     const vErr: ValueTypes = 43;
+
+    const res1: ResponseTypes = {
+      status: 200,
+      value: v2,
+      headers: {}
+    };
+    const res2: ResponseTypes = {
+      status: 404,
+      value: v1,
+      headers: {}
+    };
+    const res3: ResponseTypes = {
+      status: 500,
+      value: v1,
+      headers: {}
+    };
+
+    // @ts-expect-error expect error because string value is not accepted with 200 status
+    const resErr: ResponseTypes = {
+      status: 200,
+      value: v1,
+      headers: {}
+    };
   });
 });
 
