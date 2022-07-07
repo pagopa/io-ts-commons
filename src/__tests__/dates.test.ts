@@ -6,7 +6,8 @@ import {
   UTCISODateFromString,
   UtcOnlyIsoDateFromString
 } from "../dates";
-import { isLeft, isRight } from "fp-ts/Either";
+import { getOrElseW, isLeft, isRight } from "fp-ts/Either";
+import * as t from "io-ts";
 
 describe("DateFromString", () => {
   it("should validate an ISO string", async () => {
@@ -80,6 +81,17 @@ describe("IsoDateFromString", () => {
       expect(isLeft(validation)).toBeTruthy();
       expect(IsoDateFromString.is(noDate)).toBeFalsy();
     });
+  });
+
+  it("isomorphic test", () => {
+    const now = new Date();
+    expect(`${UTCISODateFromString.encode(now)}`).toBe(now.toISOString());
+    expect(
+      isRight(IsoDateFromString.decode(IsoDateFromString.encode(now)))
+    ).toBeTruthy();
+    expect(
+      isRight(UTCISODateFromString.decode(UTCISODateFromString.encode(now)))
+    ).toBeTruthy();
   });
 });
 
