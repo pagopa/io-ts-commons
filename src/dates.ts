@@ -96,7 +96,7 @@ export const IsoDateFromString = t.union(
   [UtcOnlyIsoDateFromString, TimezoneOnlyIsoDateFromString],
   "IsoDateFromString"
 );
-export type IsoDateFromString = typeof IsoDateFromString;
+export type IsoDateFromString = t.TypeOf<typeof IsoDateFromString>;
 
 /**
  * @deprecated use IsoDateFromString instead.
@@ -105,7 +105,7 @@ export const UTCISODateFromString = IsoDateFromString;
 /**
  * @deprecated use IsoDateFromString instead.
  */
-export type UTCISODateFromString = typeof UTCISODateFromString;
+export type UTCISODateFromString = t.TypeOf<typeof UTCISODateFromString>;
 
 /**
  * Accepts only a valid timestamp format (number)
