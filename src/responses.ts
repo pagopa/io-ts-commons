@@ -243,6 +243,20 @@ export const ResponseSuccessRedirectToResource = <T, V>(
   resource
 });
 
+/**
+ * Type for a successful response with no content (http code 204)
+ */
+export type IResponseSuccessNoContent = IResponse<"IResponseSuccessNoContent">;
+
+/**
+ * Returns a successful response without content and with a status code of 204
+ */
+export const ResponseSuccessNoContent = (): IResponse<"IResponseSuccessNoContent"> => ({
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  apply: res => res.status(HttpStatusCodeEnum.HTTP_STATUS_204).send(),
+  kind: "IResponseSuccessNoContent"
+});
+
 //
 // Error responses
 //
