@@ -354,16 +354,23 @@ export type IResponseErrorForbiddenNotAuthorized = IResponse<
 >;
 
 /**
- * The user is not allowed here.
+ * Return an IResponseErrorForbiddenNotAuthorized with a default detail if not provided
  */
-export const ResponseErrorForbiddenNotAuthorized: IResponseErrorForbiddenNotAuthorized = {
+export const getResponseErrorForbiddenNotAuthorized = (
+  detail = "You do not have enough permission to complete the operation you requested"
+): IResponseErrorForbiddenNotAuthorized => ({
   ...ResponseErrorGeneric(
     HttpStatusCodeEnum.HTTP_STATUS_403,
     "You are not allowed here",
-    "You do not have enough permission to complete the operation you requested"
+    detail
   ),
   kind: "IResponseErrorForbiddenNotAuthorized"
-};
+});
+
+/**
+ * The user is not allowed here.
+ */
+export const ResponseErrorForbiddenNotAuthorized: IResponseErrorForbiddenNotAuthorized = getResponseErrorForbiddenNotAuthorized();
 
 /**
  * The user is not allowed to issue production requests.
@@ -449,16 +456,22 @@ export type IResponseErrorForbiddenNoAuthorizationGroups = IResponse<
 >;
 
 /**
- * The user is not part of any valid authorization groups.
+ * Return an IResponseErrorForbiddenNoAuthorizationGroups with a default detail if not provided
  */
-export const ResponseErrorForbiddenNoAuthorizationGroups: IResponseErrorForbiddenNoAuthorizationGroups = {
-  ...ResponseErrorGeneric(
-    HttpStatusCodeEnum.HTTP_STATUS_403,
+export const getResponseErrorForbiddenNoAuthorizationGroups = (description = "You are not part of any valid scope, you should ask the administrator to give you the required permissions."): IResponseErrorForbiddenNoAuthorizationGroups => ({
+...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_403,
     "User has no valid scopes",
-    "You are not part of any valid scope, you should ask the administrator to give you the required permissions."
+    description
   ),
   kind: "IResponseErrorForbiddenNoAuthorizationGroups"
-};
+})
+
+/**
+ * The user is not part of any valid authorization groups.
+ */
+export const ResponseErrorForbiddenNoAuthorizationGroups: IResponseErrorForbiddenNoAuthorizationGroups = getResponseErrorForbiddenNoAuthorizationGroups();
+
 
 /**
  * Interface for a response describing a conflict error (409).
