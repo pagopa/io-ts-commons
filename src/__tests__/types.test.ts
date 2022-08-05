@@ -12,7 +12,6 @@ import { isLeft, isRight } from "fp-ts/lib/Either";
 import { readableReport } from "../reporters";
 
 import { enumType, readonlySetType, withDefault, Head } from "../types";
-import { string } from "fp-ts";
 
 enum aValidEnum {
   "foo" = "fooValue",
@@ -142,7 +141,7 @@ describe("strictInterfaceWithOptionals", () => {
     if (isLeft(validation)) {
       const errors = readableReport(validation.left);
       expect(errors).toEqual(
-        "value [true] at [root.x] is not a known property"
+        "value true at root.x is not a known property"
       );
     }
   });
