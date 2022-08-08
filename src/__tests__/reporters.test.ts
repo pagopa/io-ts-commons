@@ -89,28 +89,28 @@ describe("ReadableReporter", () => {
     ]);
   });
 
-  it("it should avoid the indexes of a t.intersection", () => {
+  it("should avoid the indexes of a t.intersection", () => {
     expect(pipe(
-      t.intersection([t.type({a: t.string}), t.type({b: t.number})]).decode({}),
+      t.intersection([t.type({ a: t.string }), t.type({ b: t.number })]).decode({}),
       ReadableReporter.report,
     )).toEqual(['value undefined at root.a is not a valid [string]', 'value undefined at root.b is not a valid [number]'])
   });
 
-  it("it should contain the indexes of a t.array", () => {
+  it("should contain the indexes of a t.array", () => {
     expect(pipe(
       t.array(t.number).decode([1, "2", 3]),
       ReadableReporter.report,
-    )).toEqual(["value \"2\" at root[1] is not a valid [number]"])
+    )).toEqual(['value "2" at root[1] is not a valid [number]'])
   });
 
-  it("it should not contain any index", () => {
+  it("should not contain any index", () => {
     expect(pipe(
       t.union([t.number, t.string]).decode(undefined),
       ReadableReporter.report,
     )).toEqual(["value undefined at root is not a valid [number]", "value undefined at root is not a valid [string]"])
   });
 
-  it("it should contain the index of the undefined element", () => {
+  it("should contain the index of the undefined element", () => {
     expect(pipe(
       t.array(t.union([t.number, t.string])).decode([1, undefined, "3"]),
       ReadableReporter.report,

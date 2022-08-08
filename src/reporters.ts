@@ -2,6 +2,7 @@ import { Context, ValidationError } from "io-ts";
 import { Reporter } from "io-ts/lib/Reporter";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
+import { IntegerFromString } from "./numbers";
 
 /**
  * Translate a context to a more readable path.
@@ -28,13 +29,13 @@ const getContextPath = (context: Context): string => {
     .filter(
       // eslint-disable-next-line
       (c: any, i: number) =>
-        (!isNaN(parseInt(c.key, 10)) &&
+        (IntegerFromString.is(+c.key) &&
           context[i - 1] &&
           // eslint-disable-next-line
           (context[i - 1].type as any)._tag === "ArrayType") ||
-        (isNaN(parseInt(c.key, 10)) && c.key !== "")
+        (!IntegerFromString.is(+c.key) && c.key !== "")
     )
-    .map(({ key }) => (isNaN(parseInt(key, 10)) ? `.${key}` : `[${key}]`));
+    .map(({ key }) => (!IntegerFromString.is(+key) ? `.${key}` : `[${key}]`));
 
   const lastType = context[context.length - 1].type;
 
