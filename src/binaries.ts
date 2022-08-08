@@ -1,6 +1,7 @@
 import { pipe } from "fp-ts/lib/function";
 import * as E from "fp-ts/lib/Either";
 import * as t from "io-ts";
+import { WithinRangeInteger } from "./numbers";
 
 /**
 Check wether the input is a valid Uint8Array
@@ -10,7 +11,7 @@ const checkUint8Array = (toCheck: any): boolean =>
   Array.isArray(toCheck) &&
   toCheck.length > 0 &&
   // eslint-disable-next-line
-  toCheck.every((e: any) => Number.isInteger(e) && e >= 0 && e <= 255);
+  toCheck.every((e: any) => WithinRangeInteger(0, 256).is(e));
 
 /**
 In order to be a valid array to generate a buffer:
@@ -40,8 +41,7 @@ Get a Buffer from a valid number[]
 
 export const BinaryFromArray = new t.Type<Buffer, unknown, unknown>(
   "BinaryFromArray",
-  (input): input is Buffer =>
-    Buffer.isBuffer(input) && input.length ? true : false,
+  (input): input is Buffer => Buffer.isBuffer(input),
   (input, context) => Uint8ArrayValidator(input, context),
   (input: Buffer) => input
 );
