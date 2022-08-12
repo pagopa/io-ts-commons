@@ -141,7 +141,7 @@ describe("strictInterfaceWithOptionals", () => {
     if (isLeft(validation)) {
       const errors = readableReport(validation.left);
       expect(errors).toEqual(
-        "value true at root.x is not a known property"
+        "value [true] at [root.x] is not a known property"
       );
     }
   });

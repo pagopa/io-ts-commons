@@ -1,8 +1,7 @@
-import { Context, ValidationError } from "io-ts";
+import { Context, ContextEntry, ValidationError } from "io-ts";
 import { Reporter } from "io-ts/lib/Reporter";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { IntegerFromString } from "./numbers";
 
 /**
  * Translate a context to a more readable path.
@@ -13,8 +12,43 @@ import { IntegerFromString } from "./numbers";
  *   ".a is not a number"
  *   ".c.b is not a non empty string"
  */
-
 const getContextPath = (context: Context): string => {
+  if (context.length === 0) {
+    return "] (decoder info n/a)";
+  }
+  const keysPath = context.map(({ key }) => key).join(".");
+  const lastType = context[context.length - 1].type;
+
+  if ("never" === lastType.name) {
+    return `${keysPath}] is not a known property`;
+  }
+
+  return `${keysPath}] is not a valid [${lastType.name}]`;
+};
+
+/**
+format path without usless indexes
+ */
+const isArrayIndex = (
+  prev: ReadonlyArray<string>,
+  c: ContextEntry,
+  i: number,
+  context: Context
+): ReadonlyArray<string> =>
+  c.key !== "" &&
+  ((Number.isInteger(+c.key) &&
+    i > 0 &&
+    // eslint-disable-next-line
+    (context[i - 1].type as any)._tag === "ArrayType") ||
+    // eslint-disable-next-line
+    (context[i - 1].type as any)._tag === "ReadonlyArrayType" ||
+    !Number.isInteger(+c.key))
+    ? Number.isInteger(+c.key)
+      ? [...prev, `[${c.key}]`]
+      : [...prev, `.${c.key}`]
+    : prev;
+
+const getContextPathSimplified = (context: Context): string => {
   if (context.length === 0) {
     return " (decoder info n/a)";
   }
@@ -25,17 +59,11 @@ const getContextPath = (context: Context): string => {
       1. the key can be parsed as a valid integer and the element right before was an ArrayType
       2. the key is not parsable as a valid integer but it is also a non empty string
   */
-  const keysPath = context
-    .filter(
-      // eslint-disable-next-line
-      (c: any, i: number) =>
-        (IntegerFromString.is(+c.key) &&
-          context[i - 1] &&
-          // eslint-disable-next-line
-          (context[i - 1].type as any)._tag === "ArrayType") ||
-        (!IntegerFromString.is(+c.key) && c.key !== "")
-    )
-    .map(({ key }) => (!IntegerFromString.is(+key) ? `.${key}` : `[${key}]`));
+  const keysPath = context.reduce(
+    (prev: ReadonlyArray<string>, c: ContextEntry, i: number) =>
+      isArrayIndex(prev, c, i, context),
+    []
+  );
 
   const lastType = context[context.length - 1].type;
 
@@ -47,14 +75,21 @@ const getContextPath = (context: Context): string => {
 };
 
 const getMessage = (value: unknown, context: Context): string =>
-  `value ${JSON.stringify(value)} at root${getContextPath(context)}`;
+  `value [${JSON.stringify(value)}] at [root${getContextPath(context)}`;
+
+const getMessageSimplified = (value: unknown, context: Context): string =>
+  `value ${JSON.stringify(value)} at root${getContextPathSimplified(context)}`;
 
 /**
  * Translates validation errors to more readable messages.
  */
 export const errorsToReadableMessages = (
-  es: ReadonlyArray<ValidationError>
-): ReadonlyArray<string> => es.map(e => getMessage(e.value, e.context));
+  es: ReadonlyArray<ValidationError>,
+  isSimplified = false
+): ReadonlyArray<string> =>
+  isSimplified
+    ? es.map(e => getMessageSimplified(e.value, e.context))
+    : es.map(e => getMessage(e.value, e.context));
 
 const success = (): ReadonlyArray<string> => ["No errors!"];
 
@@ -69,4 +104,26 @@ export const readableReport = (
 export const ReadableReporter: Reporter<ReadonlyArray<string>> = {
   report: validation =>
     pipe(validation, E.fold(errorsToReadableMessages, success))
+};
+
+export const readableReportSimplified = (
+  errors: ReadonlyArray<ValidationError>
+): string =>
+  errors
+    .map(({ context, value }: ValidationError) =>
+      getMessageSimplified(value, context)
+    )
+    .join("\n");
+
+/**
+ * A validation error reporter that translates validation errors to more
+ * readable messages avoiding indexes for types such as t.intersection or t.union.
+ */
+
+export const ReadableReporterSimplified: Reporter<ReadonlyArray<string>> = {
+  report: validation =>
+    pipe(
+      validation,
+      E.fold(v => errorsToReadableMessages(v, true), success)
+    )
 };
