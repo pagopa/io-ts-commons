@@ -36,13 +36,6 @@ const isArrayIndex = (
   i: number,
   context: Context
 ): boolean =>
-  /*
-    we keep the key in 2 cases: 
-      1. the key is a valid integer and the previous element was any type of array
-      2. the key is not an integer 
-    those 2 cases are separated cause we want to use the dot notation in the second case, in the first one 
-    we want to use the square brackets instead
-  */
   c.key !== "" &&
   Number.isInteger(+c.key) &&
   i > 0 &&
@@ -64,9 +57,12 @@ const getContextPathSimplified = (context: Context): string => {
     (prev: ReadonlyArray<string>, c: ContextEntry, i: number) =>
       isArrayIndex(prev, c, i, context) || !Number.isInteger(+c.key)
         ? Number.isInteger(+c.key)
-          ? [...prev, `[${c.key}]`]
-          : [...prev, `.${c.key}`]
-        : prev,
+          ? // key is an integer and the previous element is an array, we keep it
+            [...prev, `[${c.key}]`]
+          : // key is not an integer, we keep it (dotted notation)
+            [...prev, `.${c.key}`]
+        : // key is an integer but the previous element is not an array, we skip it
+          prev,
     []
   );
 
