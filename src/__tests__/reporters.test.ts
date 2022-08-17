@@ -151,4 +151,16 @@ describe("ReadableReporter", () => {
       )
     ).toEqual(["No errors!"]);
   });
+
+  it("should avoid the indexes of a t.union", () => {
+    expect(
+      pipe(
+        t.union([t.string, t.boolean]).decode([1, "2", 3]),
+        ReadableReporterSimplified.report
+      )
+    ).toEqual([
+      'value [1,"2",3] at root is not a valid [string]',
+      'value [1,"2",3] at root is not a valid [boolean]'
+    ]);
+  });
 });

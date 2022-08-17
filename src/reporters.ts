@@ -2,6 +2,7 @@ import { Context, ContextEntry, ValidationError } from "io-ts";
 import { Reporter } from "io-ts/lib/Reporter";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
+import { includes } from "fp-ts/lib/string";
 
 /**
  * Translate a context to a more readable path.
@@ -34,19 +35,19 @@ const isArrayIndex = (
   c: ContextEntry,
   i: number,
   context: Context
-): ReadonlyArray<string> =>
+): boolean =>
+  /*
+    we keep the key in 2 cases: 
+      1. the key is a valid integer and the previous element was any type of array
+      2. the key is not an integer 
+    those 2 cases are separated cause we want to use the dot notation in the second case, in the first one 
+    we want to use the square brackets instead
+  */
   c.key !== "" &&
-  ((Number.isInteger(+c.key) &&
-    i > 0 &&
-    // eslint-disable-next-line
-    (context[i - 1].type as any)._tag === "ArrayType") ||
-    // eslint-disable-next-line
-    (context[i - 1].type as any)._tag === "ReadonlyArrayType" ||
-    !Number.isInteger(+c.key))
-    ? Number.isInteger(+c.key)
-      ? [...prev, `[${c.key}]`]
-      : [...prev, `.${c.key}`]
-    : prev;
+  Number.isInteger(+c.key) &&
+  i > 0 &&
+  // eslint-disable-next-line
+  includes("Array")(context[i - 1].type.name);
 
 const getContextPathSimplified = (context: Context): string => {
   if (context.length === 0) {
@@ -61,7 +62,11 @@ const getContextPathSimplified = (context: Context): string => {
   */
   const keysPath = context.reduce(
     (prev: ReadonlyArray<string>, c: ContextEntry, i: number) =>
-      isArrayIndex(prev, c, i, context),
+      isArrayIndex(prev, c, i, context) || !Number.isInteger(+c.key)
+        ? Number.isInteger(+c.key)
+          ? [...prev, `[${c.key}]`]
+          : [...prev, `.${c.key}`]
+        : prev,
     []
   );
 
