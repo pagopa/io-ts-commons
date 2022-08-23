@@ -39,7 +39,6 @@ const isArrayIndex = (
   c.key !== "" &&
   Number.isInteger(+c.key) &&
   i > 0 &&
-  // eslint-disable-next-line
   includes("Array")(context[i - 1].type.name);
 
 const getContextPathSimplified = (context: Context): string => {
@@ -109,12 +108,7 @@ export const ReadableReporter: Reporter<ReadonlyArray<string>> = {
 
 export const readableReportSimplified = (
   errors: ReadonlyArray<ValidationError>
-): string =>
-  errors
-    .map(({ context, value }: ValidationError) =>
-      getMessageSimplified(value, context)
-    )
-    .join("\n");
+): string => errorsToReadableMessages(errors, true).join("\n");
 
 /**
  * A validation error reporter that translates validation errors to more
