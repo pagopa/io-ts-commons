@@ -47,7 +47,7 @@
     "fp-ts": "^2.11.0",
     "io-ts": "^2.2.16",
     "json-set-map": "^1.1.2",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^3.2.10",
     "validator": "^13.7.0"
   },
   "jest": {
