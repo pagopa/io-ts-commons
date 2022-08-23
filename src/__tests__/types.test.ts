@@ -12,7 +12,6 @@ import { isLeft, isRight } from "fp-ts/lib/Either";
 import { readableReport } from "../reporters";
 
 import { enumType, readonlySetType, withDefault, Head } from "../types";
-import { string } from "fp-ts";
 
 enum aValidEnum {
   "foo" = "fooValue",

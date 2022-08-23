@@ -10,7 +10,8 @@ import { NonNegativeNumber } from "../numbers";
 import { strictInterfaceWithOptionals } from "../types";
 
 import { left } from "fp-ts/lib/Either";
-import { ReadableReporter } from "../reporters";
+import { ReadableReporter, ReadableReporterSimplified } from "../reporters";
+import { pipe } from "fp-ts/lib/function";
 
 const TestType = t.interface(
   {
@@ -85,6 +86,81 @@ describe("ReadableReporter", () => {
     const errorsReport = ReadableReporter.report(errors);
     expect(errorsReport).toEqual([
       'value ["some value"] at [root] (decoder info n/a)'
+    ]);
+  });
+
+  it("should avoid the indexes of a t.intersection", () => {
+    expect(
+      pipe(
+        t
+          .intersection([t.type({ a: t.string }), t.type({ b: t.number })])
+          .decode({}),
+        ReadableReporterSimplified.report
+      )
+    ).toEqual([
+      "value undefined at root.a is not a valid [string]",
+      "value undefined at root.b is not a valid [number]"
+    ]);
+  });
+
+  it("should contain the indexes of a t.array", () => {
+    expect(
+      pipe(
+        t.array(t.number).decode([1, "2", 3]),
+        ReadableReporterSimplified.report
+      )
+    ).toEqual(['value "2" at root[1] is not a valid [number]']);
+  });
+
+  it("should not contain any index", () => {
+    expect(
+      pipe(
+        t.union([t.number, t.string]).decode(undefined),
+        ReadableReporterSimplified.report
+      )
+    ).toEqual([
+      "value undefined at root is not a valid [number]",
+      "value undefined at root is not a valid [string]"
+    ]);
+  });
+
+  it("should contain the index of the undefined element", () => {
+    expect(
+      pipe(
+        t.array(t.union([t.number, t.string])).decode([1, undefined, "3"]),
+        ReadableReporterSimplified.report
+      )
+    ).toEqual([
+      "value undefined at root[1] is not a valid [number]",
+      "value undefined at root[1] is not a valid [string]"
+    ]);
+  });
+
+  it("should contain the index of the undefined element for a ReadonlyArray", () => {
+    expect(
+      ReadableReporterSimplified.report(
+        t.readonlyArray(t.number).decode([1, 2, "invalid"])
+      )
+    ).toEqual(['value "invalid" at root[2] is not a valid [number]']);
+  });
+
+  it("should return no errors", () => {
+    expect(
+      ReadableReporterSimplified.report(
+        t.readonlyArray(t.number).decode([1, 2, 3])
+      )
+    ).toEqual(["No errors!"]);
+  });
+
+  it("should avoid the indexes of a t.union", () => {
+    expect(
+      pipe(
+        t.union([t.string, t.boolean]).decode([1, "2", 3]),
+        ReadableReporterSimplified.report
+      )
+    ).toEqual([
+      'value [1,"2",3] at root is not a valid [string]',
+      'value [1,"2",3] at root is not a valid [boolean]'
     ]);
   });
 });
