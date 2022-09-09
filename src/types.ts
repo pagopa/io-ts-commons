@@ -125,24 +125,30 @@ export const isObject = (o: {}): boolean =>
 /**
  * Return an object filtering out keys that point to undefined values.
  */
-export const withoutUndefinedValues = <T, K extends keyof T>(obj: T): T => {
+export const withoutUndefinedValues = <T, K extends keyof T>(input: T): T => {
   // note that T has been already validated by the type system and we can
   // be sure now that only attributes that may be undefined can be actually
   // filtered out by the following code, so the output type T is always
   // a valid T
-  const keys = Object.keys(obj);
-  return keys.reduce((acc, key) => {
-    const value = obj[key as K];
-    return value !== undefined
-      ? {
-          // see https://github.com/Microsoft/TypeScript/pull/13288
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ...(acc as any),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          [key]: isObject(value as any) ? withoutUndefinedValues(value) : value
-        }
-      : acc;
-  }, {} as T);
+  if (Array.isArray(input)) {
+    return (
+      (input
+        .map(withoutUndefinedValues)
+        // Remove only the objects that are empty (no keys)
+        .filter(elem =>
+          isObject(elem) ? Object.keys(elem).length > 0 : elem
+        ) as unknown) as T
+    );
+  } else if (isObject(input)) {
+    return Object.keys(input)
+      .filter(key => input[key as K] !== undefined)
+      .reduce(
+        (acc, k) => ({ ...acc, [k]: withoutUndefinedValues(input[k as K]) }),
+        {} as T
+      );
+  } else {
+    return input;
+  }
 };
 
 /**
