@@ -108,19 +108,22 @@ describe("definedValues", () => {
       c: {
         d: [1, 2],
         e: undefined
-      }
+      },
+      f: [{ g: 1, h: undefined }, { i: undefined }]
     };
 
     const newObj = withoutUndefinedValues(obj);
 
-    expect(Object.keys(newObj).length).toEqual(2);
+    expect(Object.keys(newObj).length).toEqual(3);
     expect(Object.keys(newObj.c).length).toEqual(1);
+    expect(newObj.f.length).toEqual(1);
 
     expect(newObj).toEqual({
       a: 1,
       c: {
         d: [1, 2]
-      }
+      },
+      f: [{ g: 1 }]
     });
   });
 });
