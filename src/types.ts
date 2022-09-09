@@ -131,14 +131,7 @@ export const withoutUndefinedValues = <T, K extends keyof T>(input: T): T => {
   // filtered out by the following code, so the output type T is always
   // a valid T
   if (Array.isArray(input)) {
-    return (
-      (input
-        .map(withoutUndefinedValues)
-        // Remove only the objects that are empty (no keys)
-        .filter(elem =>
-          isObject(elem) ? Object.keys(elem).length > 0 : elem
-        ) as unknown) as T
-    );
+    return (input.map(withoutUndefinedValues) as unknown) as T;
   } else if (isObject(input)) {
     return Object.keys(input)
       .filter(key => input[key as K] !== undefined)
