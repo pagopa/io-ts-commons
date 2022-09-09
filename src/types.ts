@@ -123,7 +123,7 @@ export const isObject = (o: {}): boolean =>
   o instanceof Object && o.constructor === Object;
 
 /**
- * Return an object filtering out keys that point to undefined values.
+ * Return an object or an array filtering out keys that point to undefined values.
  */
 export const withoutUndefinedValues = <T, K extends keyof T>(input: T): T => {
   // note that T has been already validated by the type system and we can
