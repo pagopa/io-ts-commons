@@ -5,6 +5,7 @@ import {
   readonlyNonEmptySetType,
   strictInterfaceWithOptionals,
   Tail,
+  withoutNullValues,
   withoutUndefinedValues
 } from "../types";
 
@@ -121,6 +122,28 @@ describe("definedValues", () => {
       c: {
         d: [1, 2]
       }
+    });
+  });
+
+  it("should recursively filter out properties pointing to null values", async () => {
+    const obj = {
+      a: 1,
+      b: null,
+      c: {
+        d: [1, 2],
+        e: null
+      },
+      f: [{g: null}]
+    };
+
+    const newObj = withoutNullValues(obj);
+
+    expect(newObj).toStrictEqual({
+      a: 1,
+      c: {
+        d: [1, 2]
+      },
+      f: [{}]
     });
   });
 });
