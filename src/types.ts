@@ -146,6 +146,24 @@ export const withoutUndefinedValues = <T, K extends keyof T>(obj: T): T => {
 };
 
 /**
+ * Return an object or an array filtering out keys that point to null values.
+ */
+export const withoutNullValues = <T, K extends keyof T>(input: T): T => {
+  if (Array.isArray(input)) {
+    return (input.map(withoutNullValues) as unknown) as T;
+  } else if (isObject(input)) {
+    return Object.keys(input)
+      .filter(key => input[key as K] !== null)
+      .reduce(
+        (acc, k) => ({ ...acc, [k]: withoutNullValues(input[k as K]) }),
+        {} as T
+      );
+  } else {
+    return input;
+  }
+};
+
+/**
  *  Return a new type that validates successfully only
  *  when the instance (object) contains no unknown properties.
  *
