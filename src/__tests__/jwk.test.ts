@@ -9,6 +9,20 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEQ8K81dZcC4DdKl52iW7bT0ubXXm2amN8
 -----END PUBLIC KEY-----`;
 
 const getJwkToken = () => jose.importSPKI(spki, algorithm);
+
+const aJwkPublicKey: JwkPublicKey = {
+  kty: "EC",
+  crv: "crv",
+  x: "x",
+  y: "y"
+};
+
+const aRsaJwkPublicKey: JwkPublicKey = {
+  kty: "RSA",
+  alg: "alg",
+  e: "e",
+  n: "n"
+};
 describe("parseJwkOrError", () => {
   it("should parse a valid jwk token", async () => {
     const jwkToken = await getJwkToken();
@@ -104,5 +118,29 @@ describe("JwkPublicKeyFromToken", () => {
   it("should guard correctly a wrong input", async () => {
     const result = JwkPublicKeyFromToken.is("");
     expect(result).toBeFalsy();
+  });
+});
+
+describe("JwkPublicKey", () => {
+  it("should decode an ECKey removing extra properties", () => {
+    const result = JwkPublicKey.decode({
+      ...aJwkPublicKey,
+      otherProp: "other"
+    });
+    expect(E.isRight(result)).toBeTruthy();
+    if (E.isRight(result)) {
+      expect(result.right).toStrictEqual(aJwkPublicKey);
+    }
+  });
+
+  it("should decode a RSAKey removing extra properties", () => {
+    const result = JwkPublicKey.decode({
+      ...aRsaJwkPublicKey,
+      otherProp: "other"
+    });
+    expect(E.isRight(result)).toBeTruthy();
+    if (E.isRight(result)) {
+      expect(result.right).toStrictEqual(aRsaJwkPublicKey);
+    }
   });
 });
