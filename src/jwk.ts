@@ -9,24 +9,28 @@ import { errorsToReadableMessages } from "./reporters";
 /**
  * This is the JWK JSON type for the EC keys.
  */
-export const ECKey = t.type({
-  crv: t.string,
-  kty: t.literal("EC"),
-  x: t.string,
-  y: t.string
-});
+export const ECKey = t.exact(
+  t.type({
+    crv: t.string,
+    kty: t.literal("EC"),
+    x: t.string,
+    y: t.string
+  })
+);
 
 export type ECKey = t.TypeOf<typeof ECKey>;
 
 /**
  * This is the JWK JSON type for the RSA keys.
  */
-export const RSAKey = t.type({
-  alg: t.string,
-  e: t.string,
-  kty: t.literal("RSA"),
-  n: t.string
-});
+export const RSAKey = t.exact(
+  t.type({
+    alg: t.string,
+    e: t.string,
+    kty: t.literal("RSA"),
+    n: t.string
+  })
+);
 
 export type RSAKey = t.TypeOf<typeof RSAKey>;
 
