@@ -13,7 +13,7 @@ export const UserAgentSemver = t.type({
 export type UserAgentSemver = t.TypeOf<typeof UserAgentSemver>;
 
 /**
- * this comaprator check if the second provided userAgentSemver's version is
+ * this comparator check if the second provided userAgentSemver's version is
  * prior or equal to the first one
  */
 export const UserAgentSemverValid = {
