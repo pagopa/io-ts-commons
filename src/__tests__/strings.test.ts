@@ -1,7 +1,7 @@
 import * as t from "io-ts";
 
 import { isLeft, isRight } from "fp-ts/lib/Either";
-import { PatternString, Semver } from "../strings";
+import { PatternString, Semver, UlidString } from "../strings";
 
 describe("PatternString", () => {
   it("should match a pattern", () => {
@@ -36,5 +36,19 @@ describe("Semver PatternString", () => {
 
     // dummy check for verifying that encoding is isomorphic
     expect(Semver.encode(Semver.encode(s1))).toEqual(s1);
+  });
+});
+
+describe("Ulid PatternString", () => {
+  it("should match the pattern", () => {
+    expect(isRight(UlidString.decode("01DEYQGXBN1XB9W6RDZV94V20A"))).toBeTruthy();
+    expect(isLeft(UlidString.decode("01ILOUGXBN1XB9W6RDZV94V20A"))).toBeTruthy();
+  });
+
+  it("should match the type", () => {
+    const s1 = "01DEYQGXBN1XB9W6RDZV94V20A" as UlidString;
+
+    // dummy check for verifying that encoding is isomorphic
+    expect(UlidString.encode(UlidString.encode(s1))).toEqual(s1);
   });
 });
