@@ -41,8 +41,8 @@ describe("Semver PatternString", () => {
 
 describe("Ulid PatternString", () => {
   it("should match the pattern", () => {
-    expect(isRight(Ulid.decode("01DEYQGXBN1XB9W6RDZV94V20A"))).toBeTruthy();
-    expect(isRight(Ulid.decode("01deyqgxbn1xb9w6rdzv94v20a"))).toBeTruthy();
+    expect(isRight(Ulid.decode("01DEYQGXBN1XB8W6RDZV94V20A"))).toBeTruthy();
+    expect(isRight(Ulid.decode("01deyqgxbn1xb8w6rdzv94v20a"))).toBeTruthy();
     expect(isLeft(Ulid.decode("01DEYQGXBN1XB-W6RDZV94V20A"))).toBeTruthy();
     expect(isLeft(Ulid.decode("01DEYQGXBN1XB/W6RDZV94V20A"))).toBeTruthy();
     expect(isLeft(Ulid.decode("01ILOUGXBN1XB9W6RDZV94V20A"))).toBeTruthy();
