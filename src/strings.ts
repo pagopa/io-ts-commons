@@ -163,3 +163,10 @@ export const Semver = PatternString(
 );
 
 export type Semver = t.TypeOf<typeof Semver>;
+
+/**
+ * A valid ULID string
+ */
+export const Ulid = PatternString("^[0-9a-hjkmnp-tv-zA-HJKMNP-TV-Z]{26}$");
+
+export type Ulid = t.TypeOf<typeof Ulid>;
