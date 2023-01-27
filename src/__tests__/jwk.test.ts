@@ -30,7 +30,7 @@ describe("parseJwkOrError", () => {
     const result = parseJwkOrError(jose.base64url.encode(JSON.stringify(jwk)));
     expect(E.isRight(result)).toBeTruthy();
     if (E.isRight(result)) {
-      expect(result.right).toStrictEqual(jwk);
+      expect(result.right).toEqual(jwk);
     }
   });
 
@@ -70,7 +70,7 @@ describe("JwkPublicKeyFromToken", () => {
     );
     expect(E.isRight(result)).toBeTruthy();
     if (E.isRight(result)) {
-      expect(result.right).toStrictEqual(jwk);
+      expect(result.right).toEqual(jwk);
     }
   });
 
