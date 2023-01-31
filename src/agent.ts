@@ -133,7 +133,12 @@ export const getFetch = (
   const httpsAgent = getHttpsFetch(env, extraOptions);
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return (input, init) => {
-    const url = typeof input === "string" ? input : input.url;
+    const url =
+      input instanceof URL
+        ? input.toString()
+        : input instanceof Request
+        ? input.url
+        : input;
     return url.startsWith("https://")
       ? httpsAgent(input, init)
       : httpAgent(input, init);

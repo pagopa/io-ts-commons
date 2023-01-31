@@ -125,7 +125,10 @@ export const isObject = (o: {}): boolean =>
 /**
  * Return an object filtering out keys that point to undefined values.
  */
-export const withoutUndefinedValues = <T, K extends keyof T>(obj: T): T => {
+// eslint-disable-next-line
+export const withoutUndefinedValues = <T extends Object, K extends keyof T>(
+  obj: T
+): T => {
   // note that T has been already validated by the type system and we can
   // be sure now that only attributes that may be undefined can be actually
   // filtered out by the following code, so the output type T is always
@@ -133,7 +136,7 @@ export const withoutUndefinedValues = <T, K extends keyof T>(obj: T): T => {
   const keys = Object.keys(obj);
   return keys.reduce((acc, key) => {
     const value = obj[key as K];
-    return value !== undefined
+    return value !== undefined && value !== null
       ? {
           // see https://github.com/Microsoft/TypeScript/pull/13288
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

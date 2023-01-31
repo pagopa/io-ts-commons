@@ -16,7 +16,7 @@ export function toExpressHandler<T>(
       const response = await handler.call(object, req);
       response.apply(res);
     } catch (e) {
-      ResponseErrorInternal(e).apply(res);
+      ResponseErrorInternal(String(e)).apply(res);
     }
   };
 }

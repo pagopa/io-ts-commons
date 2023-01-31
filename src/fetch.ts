@@ -22,7 +22,7 @@ import "abort-controller/polyfill";
  * An instance of fetch, along its associated AbortController
  */
 export type AbortableFetch = (
-  input: Request | string,
+  input: RequestInfo | URL,
   init?: RequestInit
 ) => ITuple2<Promise<Response>, AbortController>;
 
@@ -63,7 +63,7 @@ export function AbortableFetch(
  */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const toFetch = (f: AbortableFetch) => (
-  input: Request | string,
+  input: RequestInfo | URL,
   init?: RequestInit
 ) => f(input, init).e1;
 
@@ -105,7 +105,7 @@ export const retriableFetch: (
   retryWrapper,
   shouldAbort = Promise.resolve(false)
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-) => f => (input: Request | string, init?: RequestInit) => {
+) => f => (input: RequestInfo | URL, init?: RequestInit) => {
   // wraps the fetch call with a TaskEither type, mapping certain promise
   // rejections to TransientError(s)
   const fetchTask = tryCatch<Error | TransientError, Response>(
