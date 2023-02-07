@@ -15,6 +15,9 @@ export type SequenceMiddlewareT = <E>(
 ) => IRequestMiddleware<E, R0 | R1>;
 
 export const SequenceMiddleware: SequenceMiddlewareT = defaultError => (
+  // TODO: the helper is intended for an undefined number of middleware
+  // however, we decided to implement the simplest case so far (two middlewares only)
+  // Please enhance the type definition to allow more middlewares if needed
   middleware0,
   middleware1
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
