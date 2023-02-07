@@ -11,20 +11,16 @@ interface SampleAuthManage extends SampleAuth {
   isManageFlow: boolean;
 }
 
-const aFirstMiddlewareResult: SampleAuth = {
-  kind: 0,
-  result: "SUCCESS"
-};
-
+const aFirstMiddlewareResult = 5;
 const aSecondMiddlewareResult: SampleAuthManage = {
   kind: 1,
   result: "SUCCESS",
   isManageFlow: true
 };
 
-const aFirstMiddlewareReturningRightResult = (serviceModel: any) => async (
+const aFirstMiddlewareReturningRightResult = (_serviceModel: any) => async (
   _request: any
-): Promise<E.Either<never, SampleAuth>> => {
+): Promise<E.Either<never, typeof aFirstMiddlewareResult>> => {
   return E.right(aFirstMiddlewareResult);
 };
 
@@ -95,7 +91,7 @@ describe("SequenceMiddleware", () => {
 
     expect(E.isRight(result)).toBeTruthy();
     expect(result).toEqual(E.right(aSecondMiddlewareResult));
-    
+
     // @ts-expect-error
     const _check_type_ko: E.Either<
       unknown,
