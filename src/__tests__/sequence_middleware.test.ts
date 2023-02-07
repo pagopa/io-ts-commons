@@ -74,6 +74,15 @@ describe("SequenceMiddleware", () => {
 
     expect(E.isRight(result)).toBeTruthy();
     expect(result).toEqual(E.right(aFirstMiddlewareResult));
+    // @ts-expect-error
+    const _check_type_ko: E.Either<
+      unknown,
+      typeof aSecondMiddlewareResult
+    > = result;
+    const _check_type_ok: E.Either<
+      unknown,
+      typeof aFirstMiddlewareResult
+    > = result;
   });
 
   it("should return the second middleware 'R1' result if only second middleware return an Either Right", async () => {
@@ -86,6 +95,16 @@ describe("SequenceMiddleware", () => {
 
     expect(E.isRight(result)).toBeTruthy();
     expect(result).toEqual(E.right(aSecondMiddlewareResult));
+    
+    // @ts-expect-error
+    const _check_type_ko: E.Either<
+      unknown,
+      typeof aFirstMiddlewareResult
+    > = result;
+    const _check_type_ok: E.Either<
+      unknown,
+      typeof aSecondMiddlewareResult
+    > = result;
   });
 
   it("should return the default error if both middlewares return a Promise of an Either Left", async () => {
