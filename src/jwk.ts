@@ -67,6 +67,12 @@ export const parseJwkOrError = (token: unknown): E.Either<Error, J.Json> =>
         J.parse,
         E.mapLeft(_ => Error("Cannot parse JWK to JSON format"))
       )
+    ),
+    E.orElseW(error =>
+      pipe(
+        token,
+        E.fromPredicate(JwkPublicKey.is, () => error)
+      )
     )
   );
 
