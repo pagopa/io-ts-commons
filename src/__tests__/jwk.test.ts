@@ -92,6 +92,12 @@ describe("JwkPublicKeyFromToken", () => {
     }
   });
 
+  it("should decode if a JWKPubKey object as input", () => {
+    const result = JwkPublicKeyFromToken.decode(aJwkPublicKey);
+    expect(E.isRight(result)).toBeTruthy();
+    if (E.isRight(result)) expect(result.right).toEqual(aJwkPublicKey);
+  });
+
   it("should encode a correct input", async () => {
     const jwkToken = await getJwkToken();
     const jwk = await jose.exportJWK(jwkToken);
@@ -118,6 +124,11 @@ describe("JwkPublicKeyFromToken", () => {
   it("should guard correctly a wrong input", async () => {
     const result = JwkPublicKeyFromToken.is("");
     expect(result).toBeFalsy();
+  });
+
+  it("should guard if a JWKPubKey object as input", () => {
+    const result = JwkPublicKeyFromToken.is(aJwkPublicKey);
+    expect(result).toBeTruthy();
   });
 });
 
