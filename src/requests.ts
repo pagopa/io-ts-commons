@@ -163,7 +163,7 @@ export interface IPostApiRequestType<
   R
 > extends IBaseApiRequestType<"post", P, KH | "Content-Type", Q, R> {
   readonly method: "post";
-  readonly body: (params: P) => string | FormData;
+  readonly body: (params: P) => string | FormData | ReadableStream<Uint8Array>;
 }
 
 /**
@@ -178,7 +178,7 @@ export interface IPutApiRequestType<
   R
 > extends IBaseApiRequestType<"put", P, KH | "Content-Type", Q, R> {
   readonly method: "put";
-  readonly body: (params: P) => string | FormData;
+  readonly body: (params: P) => string | FormData | ReadableStream<Uint8Array>;
 }
 
 /**
@@ -193,7 +193,7 @@ export interface IPatchApiRequestType<
   R
 > extends IBaseApiRequestType<"patch", P, KH | "Content-Type", Q, R> {
   readonly method: "patch";
-  readonly body: (params: P) => string | FormData;
+  readonly body: (params: P) => string | FormData | ReadableStream<Uint8Array>;
 }
 
 /**
