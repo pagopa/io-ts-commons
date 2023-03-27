@@ -1,5 +1,5 @@
 import { IncomingMessage } from "http";
-import ServerMock = require("mock-http-server");
+const ServerMock = require("mock-http-server");
 import { getHttpFetch, getHttpsFetch, getFetch } from "../agent";
 
 const HTTP_TEST_HOST = "localhost";

@@ -1,4 +1,4 @@
-import ServerMock = require("mock-http-server");
+const ServerMock = require("mock-http-server");
 import nodeFetch from "node-fetch";
 
 import {
