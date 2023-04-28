@@ -7,7 +7,7 @@ import { errorsToReadableMessages } from "./reporters";
 
 export const UserAgentSemver = t.type({
   clientName: NonEmptyString,
-  clientVersion: Semver
+  clientVersion: Semver,
 });
 
 export type UserAgentSemver = t.TypeOf<typeof UserAgentSemver>;
@@ -19,7 +19,7 @@ export type UserAgentSemver = t.TypeOf<typeof UserAgentSemver>;
 export const UserAgentSemverValid = {
   equals: (first: UserAgentSemver, second: UserAgentSemver): boolean =>
     first.clientName === second.clientName &&
-    semver.satisfies(second.clientVersion, `<=${first.clientVersion}`)
+    semver.satisfies(second.clientVersion, `<=${first.clientVersion}`),
 };
 
 /**
@@ -38,17 +38,17 @@ export const SemverFromFromUserAgentString = new t.Type<
       t.string.decode,
       E.fold(
         () => false,
-        s =>
+        (s) =>
           pipe(
             s.substring(s.indexOf(`/`) + 1),
-            ver => ({
+            (ver) => ({
               clientName: s.substring(0, s.indexOf(`/`)),
               clientVersion: ver
                 // ignore extra user agents information
                 .split(" ")[0]
                 .split(".")
                 .slice(0, 3)
-                .join(".")
+                .join("."),
             }),
             UserAgentSemver.is
           )
@@ -58,27 +58,27 @@ export const SemverFromFromUserAgentString = new t.Type<
     pipe(
       s,
       t.string.decode,
-      E.mapLeft(errs => Error(errorsToReadableMessages(errs).join("|"))),
-      E.map(str =>
-        pipe(str.substring(str.indexOf(`/`) + 1), ver => ({
+      E.mapLeft((errs) => Error(errorsToReadableMessages(errs).join("|"))),
+      E.map((str) =>
+        pipe(str.substring(str.indexOf(`/`) + 1), (ver) => ({
           clientName: str.substring(0, str.indexOf(`/`)),
           clientVersion: ver
             // ignore extra user agents information
             .split(" ")[0]
             .split(".")
             .slice(0, 3)
-            .join(".")
+            .join("."),
         }))
       ),
       E.chainW(
         flow(
           UserAgentSemver.decode,
-          E.mapLeft(errs => Error(errorsToReadableMessages(errs).join("|")))
+          E.mapLeft((errs) => Error(errorsToReadableMessages(errs).join("|")))
         )
       ),
-      E.fold(e => t.failure(s, ctx, e.message), t.success)
+      E.fold((e) => t.failure(s, ctx, e.message), t.success)
     ),
-  u => `${u.clientName}/${u.clientVersion}`
+  (u) => `${u.clientName}/${u.clientVersion}`
 );
 
 export type SemverFromFromUserAgentString = t.TypeOf<

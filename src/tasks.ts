@@ -41,13 +41,14 @@ export type RetriableTask<E, T> = E extends TransientError
 /**
  * Wraps a RetriableTask with a number of retries
  */
-export const withRetries = <E, T>(
-  maxRetries: number,
-  backoff: (count: number) => Millisecond
-): ((
-  _: RetriableTask<E, T>,
-  shouldAbort?: Promise<boolean>
-) => TaskEither<E | MaxRetries | RetryAborted, T>) =>
+export const withRetries =
+  <E, T>(
+    maxRetries: number,
+    backoff: (count: number) => Millisecond
+  ): ((
+    _: RetriableTask<E, T>,
+    shouldAbort?: Promise<boolean>
+  ) => TaskEither<E | MaxRetries | RetryAborted, T>) =>
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   (task, shouldAbort = Promise.resolve(false)) => {
     // Whether we must stop retrying
@@ -57,10 +58,10 @@ export const withRetries = <E, T>(
     // eslint-disable-next-line functional/no-let
     let mustAbort = false;
     shouldAbort.then(
-      v => {
+      (v) => {
         mustAbort = v;
       },
-      _ => void 0
+      (_) => void 0
     );
 
     const runTaskOnce = (
@@ -75,7 +76,7 @@ export const withRetries = <E, T>(
       // allow one run of the task
       return pipe(
         currentTask,
-        TE.orElse(l => {
+        TE.orElse((l) => {
           // if the task fails...
           if (mustAbort) {
             return TE.left(RetryAborted);
@@ -85,7 +86,7 @@ export const withRetries = <E, T>(
             // an then with another run.
             return pipe(
               delayTask(backoff(count), true),
-              T.map(d => right(d)),
+              T.map((d) => right(d)),
               TE.chain(() => runTaskOnce(count + 1, currentTask))
             );
           }
@@ -100,6 +101,6 @@ export const withRetries = <E, T>(
     // the error to a MaxRetries error.
     return pipe(
       runTaskOnce(0, task),
-      TE.mapLeft(l => (l === TransientError ? MaxRetries : l))
+      TE.mapLeft((l) => (l === TransientError ? MaxRetries : l))
     );
   };

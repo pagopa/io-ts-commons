@@ -29,7 +29,7 @@ export function calculateExponentialBackoffInterval(
   maxBackoff: Millisecond = DEFAULT_EXPONENTIAL_BACKOFF_MAX
 ): (n: number) => Millisecond {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  return count => {
+  return (count) => {
     // The jitter helps to avoid cases where many clients get synchronized by
     // some situation and all retry at once, sending requests in synchronized
     // waves.

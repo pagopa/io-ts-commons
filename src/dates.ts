@@ -17,12 +17,12 @@ export const DateFromString = new t.Type<Date, string>(
       ? t.success(v)
       : pipe(
           t.string.validate(v, c),
-          E.chain(s => {
+          E.chain((s) => {
             const d = new Date(s);
             return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);
           })
         ),
-  a => a.toISOString()
+  (a) => a.toISOString()
 );
 
 export type DateFromString = t.TypeOf<typeof DateFromString>;
@@ -39,12 +39,12 @@ export const patternDateFromString = (
         ? t.success(v)
         : pipe(
             PatternString(pattern).validate(v, c),
-            E.chain(s => {
+            E.chain((s) => {
               const d = new Date(s);
               return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);
             })
           ),
-    a => a.toISOString()
+    (a) => a.toISOString()
   );
 
 /**
@@ -120,12 +120,12 @@ export const DateFromTimestamp = new t.Type<Date, number>(
       ? t.success(v)
       : pipe(
           t.number.validate(v, c),
-          E.chain(s => {
+          E.chain((s) => {
             const d = new Date(s);
             return isNaN(d.getTime()) ? t.failure(s, c) : t.success(d);
           })
         ),
-  a => a.valueOf()
+  (a) => a.valueOf()
 );
 
 export type DateFromTimestamp = t.TypeOf<typeof DateFromTimestamp>;

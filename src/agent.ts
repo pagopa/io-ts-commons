@@ -34,7 +34,7 @@ export const getKeepAliveAgentOptions = (env: typeof process.env) => ({
   timeout:
     env.FETCH_KEEPALIVE_TIMEOUT === undefined
       ? undefined
-      : parseInt(env.FETCH_KEEPALIVE_TIMEOUT, 10)
+      : parseInt(env.FETCH_KEEPALIVE_TIMEOUT, 10),
 });
 
 // We need the following two exports to prevent the caller module
@@ -52,9 +52,9 @@ export const newHttpsAgent = (httpsOptions: agentkeepalive.HttpsOptions) =>
   new agentkeepalive.HttpsAgent(httpsOptions);
 
 // Returns a fetch instance backed by a keepalive-enabled HTTP agent
-const getKeepaliveHttpFetch: (
-  _: agentkeepalive.HttpOptions
-) => typeof fetch = httpOptions => {
+const getKeepaliveHttpFetch: (_: agentkeepalive.HttpOptions) => typeof fetch = (
+  httpOptions
+) => {
   // custom HTTP agent that will reuse sockets
   // see https://github.com/node-modules/agentkeepalive#new-agentoptions
   const httpAgent = newHttpAgent(httpOptions);
@@ -63,7 +63,7 @@ const getKeepaliveHttpFetch: (
   return (input, init) => {
     const initWithKeepalive = {
       ...(init === undefined ? {} : init),
-      agent: httpAgent
+      agent: httpAgent,
     };
     // need to cast to any since node-fetch has a slightly different type
     // signature that DOM's fetch
@@ -76,7 +76,7 @@ const getKeepaliveHttpFetch: (
 // Returns a fetch instance backed by a keepalive-enabled HTTP agent
 const getKeepaliveHttpsFetch: (
   _: agentkeepalive.HttpsOptions
-) => typeof fetch = httpsOptions => {
+) => typeof fetch = (httpsOptions) => {
   // custom HTTP agent that will reuse sockets
   // see https://github.com/node-modules/agentkeepalive#new-agentoptions
   const httpAgent = newHttpsAgent(httpsOptions);
@@ -85,7 +85,7 @@ const getKeepaliveHttpsFetch: (
   return (input, init) => {
     const initWithKeepalive = {
       ...(init === undefined ? {} : init),
-      agent: httpAgent
+      agent: httpAgent,
     };
     // need to cast to any since node-fetch has a slightly different type
     // signature that DOM's fetch
@@ -104,7 +104,7 @@ export const getHttpFetch = (
   isFetchKeepaliveEnabled(env)
     ? getKeepaliveHttpFetch({
         ...getKeepAliveAgentOptions(env),
-        ...extraOptions
+        ...extraOptions,
       })
     : // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (nodeFetch as any);
@@ -118,7 +118,7 @@ export const getHttpsFetch = (
   isFetchKeepaliveEnabled(env)
     ? getKeepaliveHttpsFetch({
         ...getKeepAliveAgentOptions(env),
-        ...extraOptions
+        ...extraOptions,
       })
     : // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (nodeFetch as any);

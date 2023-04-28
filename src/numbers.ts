@@ -26,7 +26,7 @@ export const WithinRangeNumber = <
   h: H
 ): Tagged<T, number> =>
   tag<T>()(
-    t.refinement(t.number, s => s >= l && s < h, `number >= ${l} and < ${h}`)
+    t.refinement(t.number, (s) => s >= l && s < h, `number >= ${l} and < ${h}`)
   );
 
 export type WithinRangeNumber<L extends number, H extends number> = number &
@@ -40,7 +40,7 @@ export interface INonNegativeNumberTag {
  * A non negative number
  */
 export const NonNegativeNumber = tag<INonNegativeNumberTag>()(
-  t.refinement(t.number, s => s >= 0, "number >= 0")
+  t.refinement(t.number, (s) => s >= 0, "number >= 0")
 );
 
 export type NonNegativeNumber = t.TypeOf<typeof NonNegativeNumber>;
@@ -71,7 +71,7 @@ export const WithinRangeInteger = <
     t.refinement(
       t.Integer,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      s => s >= l && s < h,
+      (s) => s >= l && s < h,
       `integer >= ${l} and < ${h}`
     )
   );
@@ -86,7 +86,7 @@ export interface INonNegativeIntegerTag {
  * A non negative integer
  */
 export const NonNegativeInteger = tag<INonNegativeIntegerTag>()(
-  t.refinement(t.Integer, s => s >= 0, "integer >= 0")
+  t.refinement(t.Integer, (s) => s >= 0, "integer >= 0")
 );
 export type NonNegativeInteger = t.TypeOf<typeof NonNegativeInteger>;
 
@@ -99,7 +99,7 @@ export const NumberFromString = new t.Type<number, string>(
   (m, c) =>
     pipe(
       t.string.validate(m, c),
-      E.chain(s => {
+      E.chain((s) => {
         const n = +s;
         return isNaN(n) ? t.failure(s, c) : t.success(n);
       })
@@ -122,7 +122,7 @@ export type IntegerFromString = t.TypeOf<typeof IntegerFromString>;
  * Parses a string into a non negative integer
  */
 export const NonNegativeIntegerFromString = tag<INonNegativeIntegerTag>()(
-  t.refinement(IntegerFromString, i => i >= 0, "NonNegativeIntegerFromString")
+  t.refinement(IntegerFromString, (i) => i >= 0, "NonNegativeIntegerFromString")
 );
 type NonNegativeIntegerFromString = t.TypeOf<
   typeof NonNegativeIntegerFromString

@@ -28,11 +28,11 @@ export type Tagged<T, A, O = A, I = t.mixed> = t.Type<A & T, O & T, I>;
 /**
  * Tags an io-ts type with an interface T
  */
-export const tag = <T>() => <A, O = A, I = t.mixed>(
-  type: t.Type<A, O, I>
-): Tagged<T, A, O, I> =>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  type as any;
+export const tag =
+  <T>() =>
+  <A, O = A, I = t.mixed>(type: t.Type<A, O, I>): Tagged<T, A, O, I> =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    type as any;
 
 /**
  * Removes any extra tags from a type that extends a basic type.
@@ -108,11 +108,12 @@ export const readonlyNonEmptySetType = <E>(
   o: t.Type<E, t.mixed>,
   name: string
 ): t.Type<ReadOnlyNonEmptySet<E>, t.mixed> =>
-  t.refinement(readonlySetType(o, name), e => e.size > 0, name);
+  t.refinement(readonlySetType(o, name), (e) => e.size > 0, name);
 
 /**
  * Returns a new type that has only the F fields of type T.
  */
+// eslint-disable-next-line functional/prefer-readonly-type
 export type LimitedFields<T, F extends keyof T> = { [P in F]: T[P] };
 
 /**
@@ -142,7 +143,7 @@ export const withoutUndefinedValues = <T extends Object, K extends keyof T>(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ...(acc as any),
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          [key]: isObject(value as any) ? withoutUndefinedValues(value) : value
+          [key]: isObject(value as any) ? withoutUndefinedValues(value) : value,
         }
       : acc;
   }, {} as T);
@@ -176,13 +177,13 @@ export const strictInterfaceWithOptionals = <
       loose.is(m) &&
       // check if all object properties belong to the strict interface
       // eslint-disable-next-line no-prototype-builtins
-      Object.getOwnPropertyNames(m).every(k => props.hasOwnProperty(k)),
+      Object.getOwnPropertyNames(m).every((k) => props.hasOwnProperty(k)),
     (m, c) =>
       pipe(
         loose.validate(m, c),
-        E.chain(o => {
+        E.chain((o) => {
           const errors: t.Errors = Object.getOwnPropertyNames(o)
-            .map(key =>
+            .map((key) =>
               // eslint-disable-next-line no-prototype-builtins
               !props.hasOwnProperty(key)
                 ? t.getValidationError(o[key], t.appendContext(c, key, t.never))
@@ -222,13 +223,15 @@ export const withDefault = <T extends t.Any>(
  */
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-export type ReplaceProp1<T, P1 extends keyof T, A> = { [K in P1]: A } &
-  Pick<T, Exclude<keyof T, P1>>;
+// eslint-disable-next-line functional/prefer-readonly-type
+export type ReplaceProp1<T, P1 extends keyof T, A> = {
+  [K in P1]: A;
+} & Pick<T, Exclude<keyof T, P1>>;
 
+// eslint-disable-next-line functional/prefer-readonly-type
 export type ReplaceProp2<T, P1 extends keyof T, P2 extends keyof T[P1], A> = {
   [K in P1]: ReplaceProp1<T[K], P2, A>;
-} &
-  Pick<T, Exclude<keyof T, P1>>;
+} & Pick<T, Exclude<keyof T, P1>>;
 
 /**
  * Removes null/undefined types from T[P1]
@@ -254,7 +257,7 @@ export const requiredProp1 = <A, O, I, P extends keyof A>(
   name?: string
 ): t.Type<RequiredProp1<A, P>, O, I> =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  t.refinement(type, o => o[p] !== undefined, name) as any;
+  t.refinement(type, (o) => o[p] !== undefined, name) as any;
 
 export const replaceProp1 = <
   A,
@@ -271,7 +274,7 @@ export const replaceProp1 = <
   name?: string
 ): t.Type<ReplaceProp1<A, P, A1>, O, I> =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  t.refinement(type, o => typeB.is(o[p]), name) as any;
+  t.refinement(type, (o) => typeB.is(o[p]), name) as any;
 
 /**
  * Returns the type `A` if `T` is a `Promise<A>`, or else returns `never`
@@ -288,7 +291,7 @@ export type Head<T extends ReadonlyArray<unknown>> = T[0];
  */
 export type Tail<T extends ReadonlyArray<unknown>> = T extends readonly [
   unknown,
-  ...(infer Rest)
+  ...infer Rest
 ]
   ? Rest
   : readonly [];

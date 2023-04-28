@@ -1,0 +1,18 @@
+name: "Lint and Link PR title"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+
+jobs:
+  lint:
+    name: Validate PR title And link Jira Issue
+    runs-on: ubuntu-22.04
+    steps:
+      - id: lint
+        # from https://github.com/pagopa/link-jira-issue-action/commits/main
+        uses: pagopa/link-jira-issue-action@37d5e40820eddd388864905bee9c45ef50cc7453

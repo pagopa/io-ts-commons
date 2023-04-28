@@ -10,7 +10,7 @@ import {
   MaxRetries,
   RetriableTask,
   RetryAborted,
-  TransientError
+  TransientError,
 } from "./tasks";
 import { ITuple2, Tuple2 } from "./tuples";
 import { Millisecond } from "./units";
@@ -48,7 +48,7 @@ export function AbortableFetch(
     // augment the provided fetch with the signal controller
     const newInit = {
       ...init,
-      signal
+      signal,
     };
 
     // execute the request
@@ -61,11 +61,10 @@ export function AbortableFetch(
 /**
  * Converts an AbortableFetch back to a simple fetch
  */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const toFetch = (f: AbortableFetch) => (
-  input: RequestInfo | URL,
-  init?: RequestInit
-) => f(input, init).e1;
+export const toFetch =
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  (f: AbortableFetch) => (input: RequestInfo | URL, init?: RequestInit) =>
+    f(input, init).e1;
 
 /**
  * Sets a timeout on an AbortableFetch.
@@ -85,7 +84,7 @@ export function setFetchTimeout(
       .then(() => {
         result.e2.abort();
       })
-      .catch(_ => void 0);
+      .catch((_) => void 0);
     return result;
   };
 }
@@ -101,46 +100,49 @@ export const retriableFetch: (
     shouldAbort?: Promise<boolean>
   ) => TaskEither<Error | MaxRetries | RetryAborted, Response>,
   shouldAbort?: Promise<boolean>
-) => (f: typeof fetch) => typeof fetch = (
-  retryWrapper,
-  shouldAbort = Promise.resolve(false)
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-) => f => (input: RequestInfo | URL, init?: RequestInit) => {
-  // wraps the fetch call with a TaskEither type, mapping certain promise
-  // rejections to TransientError(s)
-  const fetchTask = tryCatch<Error | TransientError, Response>(
-    () => f(input, init),
-    reason => {
-      // map rejection reason to a transient or permanent error
-      if (
-        `${reason}`.toLowerCase().indexOf("aborted") >= 0 ||
-        (reason as Error).name === "Aborted" ||
-        (reason as Error).name === "Network request failed" ||
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (reason as any).type === "aborted"
-      ) {
-        // We return a TransientError in case the request got aborted by
-        // a timeout or there was a network request.
-        // See possible rejections of fetch here:
-        // https://github.com/github/fetch/blob/master/fetch.js#L441
-        // TODO: make this logic customizable (e.g. via response status)
-        return TransientError;
+) => (f: typeof fetch) => typeof fetch =
+  (
+    retryWrapper,
+    shouldAbort = Promise.resolve(false)
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  ) =>
+  (f) =>
+  (input: RequestInfo | URL, init?: RequestInit) => {
+    // wraps the fetch call with a TaskEither type, mapping certain promise
+    // rejections to TransientError(s)
+    const fetchTask = tryCatch<Error | TransientError, Response>(
+      () => f(input, init),
+      (reason) => {
+        // map rejection reason to a transient or permanent error
+        if (
+          `${reason}`.toLowerCase().indexOf("aborted") >= 0 ||
+          (reason as Error).name === "Aborted" ||
+          (reason as Error).name === "Network request failed" ||
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (reason as any).type === "aborted"
+        ) {
+          // We return a TransientError in case the request got aborted by
+          // a timeout or there was a network request.
+          // See possible rejections of fetch here:
+          // https://github.com/github/fetch/blob/master/fetch.js#L441
+          // TODO: make this logic customizable (e.g. via response status)
+          return TransientError;
+        }
+
+        // in all other case we return the reject reason
+        // TODO: provide reason?
+        return new Error("Promise has been rejected");
       }
+    );
 
-      // in all other case we return the reject reason
-      // TODO: provide reason?
-      return new Error("Promise has been rejected");
-    }
-  );
+    // wrap the fetch task with the provided retry wrapper
+    const fetchWithRetries = retryWrapper(fetchTask, shouldAbort);
 
-  // wrap the fetch task with the provided retry wrapper
-  const fetchWithRetries = retryWrapper(fetchTask, shouldAbort);
-
-  // return a new promise that gets resolved when the task resolves to a Right
-  // or gets rejected in all other cases
-  return new Promise<Response>((resolve, reject) => {
-    fetchWithRetries().then(result => {
-      pipe(result, E.fold(reject, resolve));
-    }, reject);
-  });
-};
+    // return a new promise that gets resolved when the task resolves to a Right
+    // or gets rejected in all other cases
+    return new Promise<Response>((resolve, reject) => {
+      fetchWithRetries().then((result) => {
+        pipe(result, E.fold(reject, resolve));
+      }, reject);
+    });
+  };

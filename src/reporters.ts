@@ -88,8 +88,8 @@ export const errorsToReadableMessages = (
   isSimplified = false
 ): ReadonlyArray<string> =>
   isSimplified
-    ? es.map(e => getMessageSimplified(e.value, e.context))
-    : es.map(e => getMessage(e.value, e.context));
+    ? es.map((e) => getMessageSimplified(e.value, e.context))
+    : es.map((e) => getMessage(e.value, e.context));
 
 const success = (): ReadonlyArray<string> => ["No errors!"];
 
@@ -102,8 +102,8 @@ export const readableReport = (
  * readable messages.
  */
 export const ReadableReporter: Reporter<ReadonlyArray<string>> = {
-  report: validation =>
-    pipe(validation, E.fold(errorsToReadableMessages, success))
+  report: (validation) =>
+    pipe(validation, E.fold(errorsToReadableMessages, success)),
 };
 
 export const readableReportSimplified = (
@@ -116,9 +116,9 @@ export const readableReportSimplified = (
  */
 
 export const ReadableReporterSimplified: Reporter<ReadonlyArray<string>> = {
-  report: validation =>
+  report: (validation) =>
     pipe(
       validation,
-      E.fold(v => errorsToReadableMessages(v, true), success)
-    )
+      E.fold((v) => errorsToReadableMessages(v, true), success)
+    ),
 };

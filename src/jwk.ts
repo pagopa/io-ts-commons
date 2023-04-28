@@ -14,7 +14,7 @@ export const ECKey = t.exact(
     crv: t.string,
     kty: t.literal("EC"),
     x: t.string,
-    y: t.string
+    y: t.string,
   })
 );
 
@@ -28,7 +28,7 @@ export const RSAKey = t.exact(
     alg: t.string,
     e: t.string,
     kty: t.literal("RSA"),
-    n: t.string
+    n: t.string,
   })
 );
 
@@ -45,30 +45,30 @@ export const parseJwkOrError = (token: unknown): E.Either<Error, J.Json> =>
     token,
     NonEmptyString.decode,
     E.mapLeft(E.toError),
-    E.chain(tokenStr =>
+    E.chain((tokenStr) =>
       E.tryCatch(
         () =>
           pipe(
             Buffer.from(jose.base64url.decode(tokenStr)),
             E.fromPredicate(
-              b => b.length > 0,
+              (b) => b.length > 0,
               () => {
                 throw new Error("Unexpected JWK empty buffer");
               }
             ),
-            E.map(b => b.toString()),
+            E.map((b) => b.toString()),
             E.toUnion
           ),
-        _ => Error("Cannot decode JWK Base64")
+        (_) => Error("Cannot decode JWK Base64")
       )
     ),
     E.chain(
       flow(
         J.parse,
-        E.mapLeft(_ => Error("Cannot parse JWK to JSON format"))
+        E.mapLeft((_) => Error("Cannot parse JWK to JSON format"))
       )
     ),
-    E.orElseW(error =>
+    E.orElseW((error) =>
       pipe(
         token,
         E.fromPredicate(JwkPublicKey.is, () => error)
@@ -87,15 +87,15 @@ export const JwkPublicKeyFromToken = new t.Type<JwkPublicKey, string>(
       E.chainW(
         flow(
           JwkPublicKey.decode,
-          E.mapLeft(errs => Error(errorsToReadableMessages(errs).join("|")))
+          E.mapLeft((errs) => Error(errorsToReadableMessages(errs).join("|")))
         )
       ),
-      E.fold(e => t.failure(s, ctx, e.message), t.success)
+      E.fold((e) => t.failure(s, ctx, e.message), t.success)
     ),
   flow(
     J.stringify,
     E.map(jose.base64url.encode),
-    E.getOrElseW(_ => {
+    E.getOrElseW((_) => {
       throw new Error("Cannot stringify a malformed json");
     })
   )

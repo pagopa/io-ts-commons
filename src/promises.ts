@@ -10,7 +10,7 @@ import { Millisecond } from "./units";
  * Returns a Promise that resolves after millis milliseconds
  */
 export const timeoutPromise = (millis: Millisecond): Promise<void> =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     setTimeout(() => resolve(), millis);
   });
 
@@ -28,7 +28,7 @@ export const withTimeout = <T>(
     // on timeout
     t.then(() => resolve(left<"timeout", T>("timeout"))).catch(reject);
     // on completion
-    p.then(v => resolve(right<"timeout", T>(v))).catch(reject);
+    p.then((v) => resolve(right<"timeout", T>(v))).catch(reject);
   });
 };
 

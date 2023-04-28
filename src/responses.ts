@@ -67,7 +67,7 @@ export enum HttpStatusCodeEnum {
   HTTP_STATUS_507 = 507,
   HTTP_STATUS_508 = 508,
   HTTP_STATUS_510 = 510,
-  HTTP_STATUS_511 = 511
+  HTTP_STATUS_511 = 511,
 }
 
 export const HttpStatusCode = enumType<HttpStatusCodeEnum>(
@@ -81,7 +81,7 @@ export const ProblemJson = t.partial({
   instance: t.string,
   status: HttpStatusCode,
   title: t.string,
-  type: withDefault(t.string, "about:blank")
+  type: withDefault(t.string, "about:blank"),
 });
 export type ProblemJson = t.TypeOf<typeof ProblemJson>;
 
@@ -114,14 +114,14 @@ export interface IResponseSuccessJson<T>
  */
 export const ResponseSuccessJson = <T>(o: T): IResponseSuccessJson<T> => {
   const kindlessObject = Object.assign(Object.assign({}, o), {
-    kind: undefined
+    kind: undefined,
   });
   return {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    apply: res =>
+    apply: (res) =>
       res.status(HttpStatusCodeEnum.HTTP_STATUS_200).json(kindlessObject),
     kind: "IResponseSuccessJson",
-    value: o
+    value: o,
   };
 };
 
@@ -140,13 +140,13 @@ export interface IResponseSuccessXml<T>
  */
 export const ResponseSuccessXml = <T>(o: T): IResponseSuccessXml<T> => ({
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  apply: res =>
+  apply: (res) =>
     res
       .status(HttpStatusCodeEnum.HTTP_STATUS_200)
       .set("Content-Type", "application/xml")
       .send(o),
   kind: "IResponseSuccessXml",
-  value: o
+  value: o,
 });
 
 /**
@@ -165,21 +165,20 @@ export const ResponseSuccessAccepted = <V>(
   payload?: V
 ): IResponseSuccessAccepted<V> => ({
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  apply: res =>
+  apply: (res) =>
     payload === undefined
       ? res.send(HttpStatusCodeEnum.HTTP_STATUS_202)
       : res.status(HttpStatusCodeEnum.HTTP_STATUS_202).json(payload),
   detail,
   kind: "IResponseSuccessAccepted",
-  payload
+  payload,
 });
 
 /**
  * Interface for a issuing a client redirect .
  */
-export type IResponsePermanentRedirect = IResponse<
-  "IResponsePermanentRedirect"
->;
+export type IResponsePermanentRedirect =
+  IResponse<"IResponsePermanentRedirect">;
 
 /**
  * Returns a redirect response.
@@ -190,9 +189,10 @@ export const ResponsePermanentRedirect = (
   location: UrlFromString
 ): IResponsePermanentRedirect => ({
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  apply: res => res.redirect(HttpStatusCodeEnum.HTTP_STATUS_301, location.href),
+  apply: (res) =>
+    res.redirect(HttpStatusCodeEnum.HTTP_STATUS_301, location.href),
   detail: location.href,
-  kind: "IResponsePermanentRedirect"
+  kind: "IResponsePermanentRedirect",
 });
 
 /**
@@ -209,9 +209,10 @@ export const ResponseSeeOtherRedirect = (
   location: UrlFromString
 ): IResponseSeeOtherRedirect => ({
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  apply: res => res.redirect(HttpStatusCodeEnum.HTTP_STATUS_303, location.href),
+  apply: (res) =>
+    res.redirect(HttpStatusCodeEnum.HTTP_STATUS_303, location.href),
   detail: location.href,
-  kind: "IResponseSeeOtherRedirect"
+  kind: "IResponseSeeOtherRedirect",
 });
 
 /**
@@ -232,7 +233,7 @@ export const ResponseSuccessRedirectToResource = <T, V>(
   payload: V
 ): IResponseSuccessRedirectToResource<T, V> => ({
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  apply: res =>
+  apply: (res) =>
     res
       .set("Location", url)
       .status(HttpStatusCodeEnum.HTTP_STATUS_201)
@@ -240,7 +241,7 @@ export const ResponseSuccessRedirectToResource = <T, V>(
   detail: url,
   kind: "IResponseSuccessRedirectToResource",
   payload,
-  resource
+  resource,
 });
 
 /**
@@ -251,11 +252,12 @@ export type IResponseSuccessNoContent = IResponse<"IResponseSuccessNoContent">;
 /**
  * Returns a successful response without content and with a status code of 204
  */
-export const ResponseSuccessNoContent = (): IResponse<"IResponseSuccessNoContent"> => ({
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  apply: res => res.status(HttpStatusCodeEnum.HTTP_STATUS_204).send(),
-  kind: "IResponseSuccessNoContent"
-});
+export const ResponseSuccessNoContent =
+  (): IResponse<"IResponseSuccessNoContent"> => ({
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    apply: (res) => res.status(HttpStatusCodeEnum.HTTP_STATUS_204).send(),
+    kind: "IResponseSuccessNoContent",
+  });
 
 //
 // Error responses
@@ -283,17 +285,17 @@ export const ResponseErrorGeneric = (
     detail,
     status,
     title,
-    type: problemType
+    type: problemType,
   };
   return {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    apply: res =>
+    apply: (res) =>
       res
         .status(status)
         .set("Content-Type", "application/problem+json")
         .json(problem),
     detail: `${title}: ${detail}`,
-    kind: "IResponseErrorGeneric"
+    kind: "IResponseErrorGeneric",
   };
 };
 
@@ -313,7 +315,7 @@ export const ResponseErrorNotFound = (
 ): IResponseErrorNotFound => ({
   ...ResponseErrorGeneric(HttpStatusCodeEnum.HTTP_STATUS_404, title, detail),
   detail: `${title}: ${detail}`,
-  kind: "IResponseErrorNotFound"
+  kind: "IResponseErrorNotFound",
 });
 
 /**
@@ -330,28 +332,29 @@ export const ResponseErrorValidation = (
 ): IResponseErrorValidation => ({
   ...ResponseErrorGeneric(HttpStatusCodeEnum.HTTP_STATUS_400, title, detail),
   detail: `${title}: ${detail}`,
-  kind: "IResponseErrorValidation"
+  kind: "IResponseErrorValidation",
 });
 
 /**
  * Returns a response describing a validation error.
  */
-export const ResponseErrorFromValidationErrors = <S, A>(
-  type: t.Type<A, S>
-): ((
-  errors: ReadonlyArray<t.ValidationError>
-) => // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-IResponseErrorValidation) => errors => {
-  const detail = errorsToReadableMessages(errors).join("\n");
-  return ResponseErrorValidation(`Invalid ${type.name}`, detail);
-};
+export const ResponseErrorFromValidationErrors =
+  <S, A>(
+    type: t.Type<A, S>
+  ): ((
+    errors: ReadonlyArray<t.ValidationError>
+  ) => // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  IResponseErrorValidation) =>
+  (errors) => {
+    const detail = errorsToReadableMessages(errors).join("\n");
+    return ResponseErrorValidation(`Invalid ${type.name}`, detail);
+  };
 
 /**
  * The user is not allowed here.
  */
-export type IResponseErrorForbiddenNotAuthorized = IResponse<
-  "IResponseErrorForbiddenNotAuthorized"
->;
+export type IResponseErrorForbiddenNotAuthorized =
+  IResponse<"IResponseErrorForbiddenNotAuthorized">;
 
 /**
  * Return an IResponseErrorForbiddenNotAuthorized with a default detail if not provided
@@ -364,96 +367,96 @@ export const getResponseErrorForbiddenNotAuthorized = (
     "You are not allowed here",
     detail
   ),
-  kind: "IResponseErrorForbiddenNotAuthorized"
+  kind: "IResponseErrorForbiddenNotAuthorized",
 });
 
 /**
  * The user is not allowed here.
  */
-export const ResponseErrorForbiddenNotAuthorized: IResponseErrorForbiddenNotAuthorized = getResponseErrorForbiddenNotAuthorized();
+export const ResponseErrorForbiddenNotAuthorized: IResponseErrorForbiddenNotAuthorized =
+  getResponseErrorForbiddenNotAuthorized();
 
 /**
  * The user is not allowed to issue production requests.
  */
-export type IResponseErrorForbiddenNotAuthorizedForProduction = IResponse<
-  "IResponseErrorForbiddenNotAuthorizedForProduction"
->;
+export type IResponseErrorForbiddenNotAuthorizedForProduction =
+  IResponse<"IResponseErrorForbiddenNotAuthorizedForProduction">;
 
 /**
  * The user is not allowed to issue production requests.
  */
-export const ResponseErrorForbiddenNotAuthorizedForProduction: IResponseErrorForbiddenNotAuthorizedForProduction = {
-  ...ResponseErrorGeneric(
-    HttpStatusCodeEnum.HTTP_STATUS_403,
-    "Production call forbidden",
-    "You are not allowed to issue production calls at this time."
-  ),
-  kind: "IResponseErrorForbiddenNotAuthorizedForProduction"
-};
+export const ResponseErrorForbiddenNotAuthorizedForProduction: IResponseErrorForbiddenNotAuthorizedForProduction =
+  {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_403,
+      "Production call forbidden",
+      "You are not allowed to issue production calls at this time."
+    ),
+    kind: "IResponseErrorForbiddenNotAuthorizedForProduction",
+  };
 
 /**
  * The user is not allowed to issue requests for the recipient.
  */
-export type IResponseErrorForbiddenNotAuthorizedForRecipient = IResponse<
-  "IResponseErrorForbiddenNotAuthorizedForRecipient"
->;
+export type IResponseErrorForbiddenNotAuthorizedForRecipient =
+  IResponse<"IResponseErrorForbiddenNotAuthorizedForRecipient">;
 
 /**
  * The user is not allowed to issue requests for the recipient.
  */
-export const ResponseErrorForbiddenNotAuthorizedForRecipient: IResponseErrorForbiddenNotAuthorizedForRecipient = {
-  ...ResponseErrorGeneric(
-    HttpStatusCodeEnum.HTTP_STATUS_403,
-    "Recipient forbidden",
-    "You are not allowed to issue requests for the recipient."
-  ),
-  kind: "IResponseErrorForbiddenNotAuthorizedForRecipient"
-};
+export const ResponseErrorForbiddenNotAuthorizedForRecipient: IResponseErrorForbiddenNotAuthorizedForRecipient =
+  {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_403,
+      "Recipient forbidden",
+      "You are not allowed to issue requests for the recipient."
+    ),
+    kind: "IResponseErrorForbiddenNotAuthorizedForRecipient",
+  };
 
 /**
  * The user is not allowed to send messages with default addresses.
  */
-export type IResponseErrorForbiddenNotAuthorizedForDefaultAddresses = IResponse<
-  "IResponseErrorForbiddenNotAuthorizedForDefaultAddresses"
->;
+export type IResponseErrorForbiddenNotAuthorizedForDefaultAddresses =
+  IResponse<"IResponseErrorForbiddenNotAuthorizedForDefaultAddresses">;
 
 /**
  * The user is not allowed to send messages with default addresses.
  */
-export const ResponseErrorForbiddenNotAuthorizedForDefaultAddresses: IResponseErrorForbiddenNotAuthorizedForDefaultAddresses = {
-  ...ResponseErrorGeneric(
-    HttpStatusCodeEnum.HTTP_STATUS_403,
-    "Call forbidden",
-    "You are not allowed to send messages by providing default addresses."
-  ),
-  kind: "IResponseErrorForbiddenNotAuthorizedForDefaultAddresses"
-};
+export const ResponseErrorForbiddenNotAuthorizedForDefaultAddresses: IResponseErrorForbiddenNotAuthorizedForDefaultAddresses =
+  {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_403,
+      "Call forbidden",
+      "You are not allowed to send messages by providing default addresses."
+    ),
+    kind: "IResponseErrorForbiddenNotAuthorizedForDefaultAddresses",
+  };
 
 /**
  * The user is anonymous.
  */
-export type IResponseErrorForbiddenAnonymousUser = IResponse<
-  "IResponseErrorForbiddenAnonymousUser"
->;
+export type IResponseErrorForbiddenAnonymousUser =
+  IResponse<"IResponseErrorForbiddenAnonymousUser">;
 
 /**
  * The user is anonymous.
  */
-export const ResponseErrorForbiddenAnonymousUser: IResponseErrorForbiddenAnonymousUser = {
-  ...ResponseErrorGeneric(
-    HttpStatusCodeEnum.HTTP_STATUS_403,
-    "Anonymous user",
-    "The request could not be associated to a user, missing userId or subscriptionId."
-  ),
-  kind: "IResponseErrorForbiddenAnonymousUser"
-};
+export const ResponseErrorForbiddenAnonymousUser: IResponseErrorForbiddenAnonymousUser =
+  {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_403,
+      "Anonymous user",
+      "The request could not be associated to a user, missing userId or subscriptionId."
+    ),
+    kind: "IResponseErrorForbiddenAnonymousUser",
+  };
 
 /**
  * The user is not part of any valid authorization groups.
  */
-export type IResponseErrorForbiddenNoAuthorizationGroups = IResponse<
-  "IResponseErrorForbiddenNoAuthorizationGroups"
->;
+export type IResponseErrorForbiddenNoAuthorizationGroups =
+  IResponse<"IResponseErrorForbiddenNoAuthorizationGroups">;
 
 /**
  * Return an IResponseErrorForbiddenNoAuthorizationGroups with a default detail if not provided
@@ -466,13 +469,14 @@ export const getResponseErrorForbiddenNoAuthorizationGroups = (
     "User has no valid scopes",
     description
   ),
-  kind: "IResponseErrorForbiddenNoAuthorizationGroups"
+  kind: "IResponseErrorForbiddenNoAuthorizationGroups",
 });
 
 /**
  * The user is not part of any valid authorization groups.
  */
-export const ResponseErrorForbiddenNoAuthorizationGroups: IResponseErrorForbiddenNoAuthorizationGroups = getResponseErrorForbiddenNoAuthorizationGroups();
+export const ResponseErrorForbiddenNoAuthorizationGroups: IResponseErrorForbiddenNoAuthorizationGroups =
+  getResponseErrorForbiddenNoAuthorizationGroups();
 
 /**
  * Interface for a response describing a conflict error (409).
@@ -492,16 +496,15 @@ export function ResponseErrorConflict(detail: string): IResponseErrorConflict {
       "Conflict",
       detail
     ),
-    kind: "IResponseErrorConflict"
+    kind: "IResponseErrorConflict",
   };
 }
 
 /**
  * Interface for a response describing a too many requests error (429).
  */
-export type IResponseErrorTooManyRequests = IResponse<
-  "IResponseErrorTooManyRequests"
->;
+export type IResponseErrorTooManyRequests =
+  IResponse<"IResponseErrorTooManyRequests">;
 
 /**
  * Returns a response describing a too many requests error (429).
@@ -518,7 +521,7 @@ export function ResponseErrorTooManyRequests(
       "Too many requests",
       detail === undefined ? "" : detail
     ),
-    kind: "IResponseErrorTooManyRequests"
+    kind: "IResponseErrorTooManyRequests",
   };
 }
 
@@ -540,16 +543,15 @@ export function ResponseErrorInternal(detail: string): IResponseErrorInternal {
       "Internal server error",
       detail
     ),
-    kind: "IResponseErrorInternal"
+    kind: "IResponseErrorInternal",
   };
 }
 
 /**
  * Interface for a response describing a service unavailable error.
  */
-export type IResponseErrorServiceUnavailable = IResponse<
-  "IResponseErrorServiceUnavailable"
->;
+export type IResponseErrorServiceUnavailable =
+  IResponse<"IResponseErrorServiceUnavailable">;
 
 /**
  * Returns a response describing a service unavailable error.
@@ -566,7 +568,7 @@ export function ResponseErrorServiceUnavailable(
       "Service temporarily unavailable",
       detail
     ),
-    kind: "IResponseErrorInternal"
+    kind: "IResponseErrorInternal",
   };
 }
 
@@ -585,6 +587,6 @@ export function ResponseErrorGone(detail: string): IResponseErrorGone {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     apply: (res: express.Response) => res.status(410).json({ detail }),
     kind: "IResponseErrorGone",
-    value: { detail }
+    value: { detail },
   };
 }

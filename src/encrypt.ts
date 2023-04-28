@@ -18,7 +18,7 @@ export const EncryptedPayload = t.interface({
 
   // AES Key encrypted with RSA public key (Base64)
   // eslint-disable-next-line sort-keys
-  encryptedKey: t.string
+  encryptedKey: t.string,
 });
 
 export type EncryptedPayload = t.TypeOf<typeof EncryptedPayload>;
@@ -35,7 +35,7 @@ export function toEncryptedPayload(
     // @see https://nodejs.org/api/crypto.html#crypto_class_cipher
     const cypherText = Buffer.concat([
       cipher.update(plainText),
-      cipher.final()
+      cipher.final(),
     ]).toString("base64");
     const encryptedKey = crypto
       .publicEncrypt(rsaPubKey, aesKey)
@@ -43,7 +43,7 @@ export function toEncryptedPayload(
     return {
       cypherText,
       encryptedKey,
-      iv: iv.toString("base64")
+      iv: iv.toString("base64"),
     };
   }, E.toError);
 }

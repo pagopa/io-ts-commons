@@ -12,13 +12,13 @@ export const CommaSeparatedListOf = (decoder: t.Mixed) =>
   new t.Type<ReadonlyArray<t.TypeOf<typeof decoder>>, string, unknown>(
     `CommaSeparatedListOf<${decoder.name}>`,
     (value: unknown): value is ReadonlyArray<t.TypeOf<typeof decoder>> =>
-      Array.isArray(value) && value.every(e => decoder.is(e)),
-    input =>
+      Array.isArray(value) && value.every((e) => decoder.is(e)),
+    (input) =>
       t.readonlyArray(decoder).decode(
         typeof input === "string"
           ? input
               .split(",")
-              .map(e => e.trim())
+              .map((e) => e.trim())
               .filter(Boolean)
           : input // it should not happen, but in case we let the decoder fail
       ),
