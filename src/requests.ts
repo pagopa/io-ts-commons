@@ -78,8 +78,9 @@ export type BasicResponseHeaderKey =
   | "Expires"
   | "Transfer-Encoding";
 
+// eslint-disable-next-line functional/prefer-readonly-type
 export type ResponseHeaders<H extends string = never> = {
-  readonly [key in BasicResponseHeaderKey | H]?: string;
+  [key in BasicResponseHeaderKey | H]?: string;
 };
 
 /**
