@@ -113,7 +113,8 @@ export const readonlyNonEmptySetType = <E>(
 /**
  * Returns a new type that has only the F fields of type T.
  */
-export type LimitedFields<T, F extends keyof T> = { readonly [P in F]: T[P] };
+// eslint-disable-next-line functional/prefer-readonly-type
+export type LimitedFields<T, F extends keyof T> = { [P in F]: T[P] };
 
 /**
  *  True when the input is an object (and not array).
@@ -222,12 +223,14 @@ export const withDefault = <T extends t.Any>(
  */
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
+// eslint-disable-next-line functional/prefer-readonly-type
 export type ReplaceProp1<T, P1 extends keyof T, A> = {
-  readonly [K in P1]: A;
+  [K in P1]: A;
 } & Pick<T, Exclude<keyof T, P1>>;
 
+// eslint-disable-next-line functional/prefer-readonly-type
 export type ReplaceProp2<T, P1 extends keyof T, P2 extends keyof T[P1], A> = {
-  readonly [K in P1]: ReplaceProp1<T[K], P2, A>;
+  [K in P1]: ReplaceProp1<T[K], P2, A>;
 } & Pick<T, Exclude<keyof T, P1>>;
 
 /**
