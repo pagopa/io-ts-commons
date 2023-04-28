@@ -3,7 +3,7 @@ import { enumType } from "./types";
 
 export enum NodeEnvironmentEnum {
   DEVELOPMENT = "dev",
-  PRODUCTION = "production"
+  PRODUCTION = "production",
 }
 
 /**

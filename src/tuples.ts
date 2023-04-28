@@ -18,7 +18,7 @@ export interface ITuple2<A, B> {
  */
 export const Tuple2 = <A, B>(e1: A, e2: B): ITuple2<A, B> => ({
   e1,
-  e2
+  e2,
 });
 
 /**
@@ -38,5 +38,5 @@ export interface ITuple3<A, B, C> extends ITuple2<A, B> {
 export const Tuple3 = <A, B, C>(e1: A, e2: B, e3: C): ITuple3<A, B, C> => ({
   e1,
   e2,
-  e3
+  e3,
 });

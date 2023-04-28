@@ -6,7 +6,7 @@ import {
   getKeepAliveAgentOptions,
   isFetchKeepaliveEnabled,
   newHttpAgent,
-  newHttpsAgent
+  newHttpsAgent,
 } from "./agent";
 
 interface IInsightsRequestData {
@@ -123,9 +123,8 @@ export function removeQueryParamsPreprocessor(
   if (envelope.data.baseType === "RequestData") {
     const originalUrl = (envelope.data as IInsightsRequestData).baseData.url;
     // eslint-disable-next-line functional/immutable-data
-    (envelope.data as IInsightsRequestData).baseData.url = originalUrl.split(
-      "?"
-    )[0];
+    (envelope.data as IInsightsRequestData).baseData.url =
+      originalUrl.split("?")[0];
   }
   return true;
 }
@@ -176,7 +175,7 @@ export function initAppInsights(
   const agentOpts = isFetchKeepaliveEnabled(env)
     ? {
         httpAgent: newHttpAgent(getKeepAliveAgentOptions(env)),
-        httpsAgent: newHttpsAgent(getKeepAliveAgentOptions(env))
+        httpsAgent: newHttpsAgent(getKeepAliveAgentOptions(env)),
       }
     : {};
 
@@ -186,6 +185,6 @@ export function initAppInsights(
   return startAppInsights(aiInstrumentationKey, {
     cloudRole,
     ...config,
-    ...agentOpts
+    ...agentOpts,
   });
 }

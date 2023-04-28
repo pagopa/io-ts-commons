@@ -57,14 +57,14 @@ export function composeHeaderProducers<
   p1: RequestHeaderProducer<PH, KH>
 ): RequestHeaderProducer<PI & PH, KI | KH> {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  return params => {
+  return (params) => {
     const headers0 = p0(params);
     const headers1 = p1(params);
     return {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(headers0 as any),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(headers1 as any)
+      ...(headers1 as any),
     };
   };
 }
@@ -79,7 +79,7 @@ export type BasicResponseHeaderKey =
   | "Transfer-Encoding";
 
 export type ResponseHeaders<H extends string = never> = {
-  [key in BasicResponseHeaderKey | H]?: string;
+  readonly [key in BasicResponseHeaderKey | H]?: string;
 };
 
 /**
@@ -111,7 +111,7 @@ export function composeResponseDecoders<R1, R2>(
 ): ResponseDecoder<R1 | R2> {
   // TODO: make sure R1, R2 don't intersect
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  return async response => {
+  return async (response) => {
     const r1 = await d1(response);
     return r1 !== undefined ? r1 : await d2(response);
   };
@@ -262,12 +262,9 @@ export type TypeofApiResponse<T> = T extends ApiRequestType<
 /**
  * A union type of the Response statuses of an ApiRequestType
  */
-export type TypeOfApiResponseStatus<T> = TypeofApiResponse<
-  T
+export type TypeOfApiResponseStatus<T> =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-> extends IResponseType<infer S, any>
-  ? S
-  : never;
+  TypeofApiResponse<T> extends IResponseType<infer S, any> ? S : never;
 
 /**
  * The type of the method that runs an ApiRequestType
@@ -311,15 +308,15 @@ const emptyBaseRequest = {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   response_decoder: () => Promise.reject({}),
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  url: () => ""
+  url: () => "",
 };
 
 const emptyBasePutOrPostRequest = {
   ...emptyBaseRequest,
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   body: () => JSON.stringify({}),
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  headers: () => ({ "Content-Type": "application/json" })
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/naming-convention
+  headers: () => ({ "Content-Type": "application/json" }),
 };
 
 /**
@@ -366,7 +363,7 @@ export class ApiRequestBuilder<
       ApiRequestTypeForMethod<"post", {}, "Content-Type", never, never>
     >({
       ...emptyBasePutOrPostRequest,
-      method: "post"
+      method: "post",
     });
   }
 
@@ -387,7 +384,7 @@ export class ApiRequestBuilder<
       ApiRequestTypeForMethod<"put", {}, "Content-Type", never, never>
     >({
       ...emptyBasePutOrPostRequest,
-      method: "put"
+      method: "put",
     });
   }
 
@@ -414,12 +411,12 @@ export class ApiRequestBuilder<
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request.query(p) as any),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(query(p) as any)
+      ...(query(p) as any),
     });
     return new ApiRequestBuilder({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request as any),
-      query: newQuery
+      query: newQuery,
     });
   }
 
@@ -441,12 +438,12 @@ export class ApiRequestBuilder<
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request.headers(p) as any),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(headers(p) as any)
+      ...(headers(p) as any),
     });
     return new ApiRequestBuilder({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request as any),
-      headers: newHeaders
+      headers: newHeaders,
     });
   }
 
@@ -466,7 +463,7 @@ export class ApiRequestBuilder<
     return new ApiRequestBuilder({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request as any),
-      response_decoder
+      response_decoder,
     });
   }
 }
@@ -484,7 +481,9 @@ function queryStringFromParams<P extends string>(
     return undefined;
   }
   return keys
-    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k as P])}`)
+    .map(
+      (k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k as P])}`
+    )
     .join("&");
 }
 
@@ -508,7 +507,7 @@ export function createFetchRequestForApi<
   // TODO: handle unsuccessful fetch and HTTP errors
   // @see https://www.pivotaltracker.com/story/show/154661120
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  return async params => {
+  return async (params) => {
     // Build operationUrl from the params
     const operationUrl = requestType.url(params);
 
@@ -534,7 +533,7 @@ export function createFetchRequestForApi<
 
     // build the request
     const baseRequest: RequestInit = {
-      method: requestType.method
+      method: requestType.method,
     };
 
     const requestWithOptionalHeaders =
@@ -542,7 +541,7 @@ export function createFetchRequestForApi<
         ? baseRequest
         : {
             ...baseRequest,
-            headers
+            headers,
           };
 
     const requestWithOptionalHeadersAndBody =
@@ -550,7 +549,7 @@ export function createFetchRequestForApi<
         ? requestWithOptionalHeaders
         : {
             ...requestWithOptionalHeaders,
-            body: requestType.body(params)
+            body: requestType.body(params),
           };
 
     // Get the fetch client
@@ -567,8 +566,8 @@ export function createFetchRequestForApi<
       : left<t.Errors, R>([
           {
             context: [],
-            value: response
-          }
+            value: response,
+          },
         ]);
   };
 }
@@ -578,7 +577,8 @@ export function createFetchRequestForApi<
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const ApiHeaderJson: RequestHeaderProducer<{}, "Content-Type"> = () => ({
-  "Content-Type": "application/json"
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  "Content-Type": "application/json",
 });
 
 /**
@@ -600,7 +600,7 @@ export function ioResponseDecoder<
   status: S,
   type: t.Type<R, O>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
-  preprocessor: (i: any) => any = _ => _
+  preprocessor: (i: any) => any = (_) => _
 ): ResponseDecoder<IResponseType<S, R, H>> {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return async (response: Response) => {
@@ -612,11 +612,11 @@ export function ioResponseDecoder<
     const validated = type.decode(preprocessor(json));
     return pipe(
       validated,
-      E.map(value => ({
+      E.map((value) => ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         headers: response.headers as any,
         status,
-        value
+        value,
       }))
     );
   };
@@ -628,32 +628,31 @@ export function ioResponseDecoder<
  *
  * @param status  The response status handled by this decoder
  */
-export const bufferArrayResponseDecoder = <
-  S extends number,
-  H extends string = never
->(
-  status: S
-): ResponseDecoder<IResponseType<S, Buffer, H>> => async (
-  response: Response
-): Promise<t.Validation<IResponseType<S, Buffer, H>> | undefined> => {
-  if (response.status !== status) {
-    // skip this decoder if status doesn't match
-    return undefined;
-  }
+export const bufferArrayResponseDecoder =
+  <S extends number, H extends string = never>(
+    status: S
+  ): ResponseDecoder<IResponseType<S, Buffer, H>> =>
+  async (
+    response: Response
+  ): Promise<t.Validation<IResponseType<S, Buffer, H>> | undefined> => {
+    if (response.status !== status) {
+      // skip this decoder if status doesn't match
+      return undefined;
+    }
 
-  const arrayBuffer = await response.arrayBuffer();
-  return pipe(
-    arrayBuffer,
-    E.of,
-    E.map(ab => Buffer.from(ab)),
-    E.map(buffer => ({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      headers: response.headers as any,
-      status,
-      value: buffer
-    }))
-  );
-};
+    const arrayBuffer = await response.arrayBuffer();
+    return pipe(
+      arrayBuffer,
+      E.of,
+      E.map((ab) => Buffer.from(ab)),
+      E.map((buffer) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        headers: response.headers as any,
+        status,
+        value: buffer,
+      }))
+    );
+  };
 
 /**
  * A basic ResponseDecoder that returns an Error with the status text if the
@@ -665,7 +664,7 @@ export function basicErrorResponseDecoder<
   H extends string = never
 >(status: S): ResponseDecoder<IResponseType<S, string, H>> {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  return async response => {
+  return async (response) => {
     if (response.status !== status) {
       // skip this decoder if status doesn't match
       return undefined;
@@ -674,7 +673,7 @@ export function basicErrorResponseDecoder<
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       headers: response.headers as any,
       status,
-      value: response.statusText
+      value: response.statusText,
     });
   };
 }
@@ -716,7 +715,7 @@ export function constantResponseDecoder<
   H extends string = never
 >(status: S, value: T): ResponseDecoder<IResponseType<S, T, H>> {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  return async response => {
+  return async (response) => {
     if (response.status !== status) {
       return undefined;
     }
@@ -724,7 +723,7 @@ export function constantResponseDecoder<
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       headers: response.headers as any,
       status,
-      value
+      value,
     });
   };
 }
@@ -738,7 +737,7 @@ export function ParamAuthorizationBearerHeaderProducer<
   P extends { readonly token: string }
 >(): RequestHeaderProducer<P, "Authorization"> {
   return (p: P): RequestHeaders<"Authorization"> => ({
-    Authorization: `Bearer ${p.token}`
+    Authorization: `Bearer ${p.token}`,
   });
 }
 
@@ -752,7 +751,7 @@ export function AuthorizationBearerHeaderProducer<P>(
 ): RequestHeaderProducer<P, "Authorization"> {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return () => ({
-    Authorization: `Bearer ${token}`
+    Authorization: `Bearer ${token}`,
   });
 }
 

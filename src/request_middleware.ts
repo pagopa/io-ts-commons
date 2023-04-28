@@ -16,19 +16,21 @@ export type RequestHandler<R> = (
  *
  * Failed promises will be mapped to 500 errors handled by ResponseErrorGeneric.
  */
-export const wrapRequestHandler = <R>(handler: RequestHandler<R>) => (
-  request: express.Request,
-  response: express.Response,
-  _: express.NextFunction
-): Promise<void> =>
-  handler(request).then(
-    r => {
-      r.apply(response);
-    },
-    e => {
-      ResponseErrorInternal(e).apply(response);
-    }
-  );
+export const wrapRequestHandler =
+  <R>(handler: RequestHandler<R>) =>
+  (
+    request: express.Request,
+    response: express.Response,
+    _: express.NextFunction
+  ): Promise<void> =>
+    handler(request).then(
+      (r) => {
+        r.apply(response);
+      },
+      (e) => {
+        ResponseErrorInternal(e).apply(response);
+      }
+    );
 
 /**
  * Interface for implementing a request middleware.
@@ -61,14 +63,15 @@ export type MiddlewareResult<T> = T extends IRequestMiddleware<unknown, infer R>
   ? R
   : never;
 
-export type MiddlewareFailure<
-  M extends IRequestMiddleware<unknown, unknown>
-> = M extends IRequestMiddleware<infer F, unknown> ? F : never;
+export type MiddlewareFailure<M extends IRequestMiddleware<unknown, unknown>> =
+  M extends IRequestMiddleware<infer F, unknown> ? F : never;
 
 export type MiddlewareFailures<
   T extends ReadonlyArray<IRequestMiddleware<unknown, unknown>>
 > = {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 0: readonly [MiddlewareFailure<Head<T>>];
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 1: readonly [
     MiddlewareFailure<Head<T>>,
     ...MiddlewareFailures<Tail<T>>
@@ -79,7 +82,9 @@ export type MiddlewareResults<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends ReadonlyArray<IRequestMiddleware<any, any>>
 > = {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 0: readonly [MiddlewareResult<Head<T>>];
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 1: readonly [
     MiddlewareResult<Head<T>>,
     ...MiddlewareResults<Tail<T>>
@@ -87,7 +92,9 @@ export type MiddlewareResults<
 }[HasTail<T> extends true ? 1 : 0];
 
 export type TypeOfArray<T extends ReadonlyArray<unknown>> = {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 0: Head<T>;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 1: Head<T> | TypeOfArray<Tail<T>>;
 }[HasTail<T> extends true ? 1 : 0];
 
@@ -104,29 +111,29 @@ export type WithRequestMiddlewaresT = <
   | TypeOfArray<MiddlewareFailures<typeof middlewares>>
 >;
 
-export const withRequestMiddlewares: WithRequestMiddlewaresT = (
-  ...middlewares
-) => handler =>
+export const withRequestMiddlewares: WithRequestMiddlewaresT =
+  (...middlewares) =>
+  (handler) =>
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  request =>
+  (request) =>
     pipe(
-      middlewares.map(middleware =>
+      middlewares.map((middleware) =>
         pipe(
           TE.tryCatch(
             () => middleware(request),
-            _ => ResponseErrorInternal(`error executing middleware`)
+            (_) => ResponseErrorInternal(`error executing middleware`)
           ),
           TE.chain(TE.fromEither)
         )
       ),
       TE.sequenceSeqArray,
-      TE.chain(params =>
+      TE.chain((params) =>
         pipe(
           TE.tryCatch(
             () => handler(...(params as MiddlewareResults<typeof middlewares>)),
             E.toError
           ),
-          TE.mapLeft(err =>
+          TE.mapLeft((err) =>
             ResponseErrorInternal(
               `Error executing endpoint handler: ${err.message}`
             )

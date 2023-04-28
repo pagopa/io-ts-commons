@@ -11,7 +11,7 @@ export interface INonEmptyStringTag {
  * A non-empty string
  */
 export const NonEmptyString = tag<INonEmptyStringTag>()(
-  t.refinement(t.string, s => s.length > 0, "non empty string")
+  t.refinement(t.string, (s) => s.length > 0, "non empty string")
 );
 
 export type NonEmptyString = t.TypeOf<typeof NonEmptyString>;
@@ -36,7 +36,7 @@ export const WithinRangeString = <
   tag<T>()(
     t.refinement(
       t.string,
-      s => s.length >= l && s.length < h,
+      (s) => s.length >= l && s.length < h,
       `string of length >= ${l} and < ${h}`
     )
   );
@@ -58,7 +58,7 @@ export const PatternString = <P extends string, T extends IPatternStringTag<P>>(
   tag<T>()(
     t.refinement(
       t.string,
-      s => s.match(p) !== null,
+      (s) => s.match(p) !== null,
       `string that matches the pattern "${p}"`
     )
   );
@@ -75,11 +75,11 @@ export interface IEmailStringTag {
 export const EmailString = tag<IEmailStringTag>()(
   t.refinement(
     t.string,
-    s =>
+    (s) =>
       validator.isEmail(s, {
         allow_display_name: false,
         allow_utf8_local_part: false,
-        require_tld: true
+        require_tld: true,
       }),
     "string that represents an email address"
   )

@@ -16,7 +16,7 @@ interface None {
 }
 
 export const none: None = {
-  kind: "PotNone"
+  kind: "PotNone",
 };
 
 /**
@@ -28,7 +28,7 @@ interface NoneLoading {
 }
 
 export const noneLoading: NoneLoading = {
-  kind: "PotNoneLoading"
+  kind: "PotNoneLoading",
 };
 
 /**
@@ -42,7 +42,7 @@ interface NoneUpdating<T> {
 
 export const noneUpdating = <T>(newValue: T): NoneUpdating<T> => ({
   kind: "PotNoneUpdating",
-  newValue
+  newValue,
 });
 
 /**
@@ -56,7 +56,7 @@ interface NoneError<E> {
 
 export const noneError = <E>(error: E): NoneError<E> => ({
   error,
-  kind: "PotNoneError"
+  kind: "PotNoneError",
 });
 
 /**
@@ -70,7 +70,7 @@ interface Some<T> {
 
 export const some = <T>(value: T): Some<T> => ({
   kind: "PotSome",
-  value
+  value,
 });
 
 /**
@@ -84,7 +84,7 @@ interface SomeLoading<T> {
 
 export const someLoading = <T>(value: T): SomeLoading<T> => ({
   kind: "PotSomeLoading",
-  value
+  value,
 });
 
 /**
@@ -100,7 +100,7 @@ interface SomeUpdating<T> {
 export const someUpdating = <T>(value: T, newValue: T): SomeUpdating<T> => ({
   kind: "PotSomeUpdating",
   newValue,
-  value
+  value,
 });
 
 /**
@@ -116,7 +116,7 @@ interface SomeError<T, E> {
 export const someError = <T, E>(value: T, error: E): SomeError<T, E> => ({
   error,
   kind: "PotSomeError",
-  value
+  value,
 });
 
 export type Pot<T, E> =
@@ -238,10 +238,10 @@ export const map = <A, B, E = unknown>(
     p,
     () => none,
     () => noneLoading,
-    newValue => noneUpdating(f(newValue)),
-    error => noneError(error),
-    value => some(f(value)),
-    value => someLoading(f(value)),
+    (newValue) => noneUpdating(f(newValue)),
+    (error) => noneError(error),
+    (value) => some(f(value)),
+    (value) => someLoading(f(value)),
     (value, newValue) => someUpdating(f(value), f(newValue)),
     (value, error) => someError(f(value), error)
   );
@@ -256,8 +256,8 @@ export const filter = <A, E = unknown>(
     () => p,
     () => p,
     () => p,
-    value => (f(value) ? p : none),
-    value => (f(value) ? p : noneLoading),
+    (value) => (f(value) ? p : none),
+    (value) => (f(value) ? p : noneLoading),
     (value, newValue) => (f(value) ? p : noneUpdating(newValue)),
     (value, error) => (f(value) ? p : noneError(error))
   );
@@ -267,7 +267,7 @@ export const mapNullable = <A, B, E = unknown>(
   f: (_: A) => B | undefined | null
 ): Pot<B, E> => {
   const mapped = map(p, f);
-  return filter(mapped, _ => _ !== undefined && _ !== null) as Pot<B, E>;
+  return filter(mapped, (_) => _ !== undefined && _ !== null) as Pot<B, E>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -290,7 +290,7 @@ export const toOption = <A>(p: Pot<A, any>): option.Option<A> =>
   option.fromNullable(toUndefined(p));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PotKinds = { [index in Pot<any, any>["kind"]]: 0 };
+type PotKinds = { readonly [index in Pot<any, any>["kind"]]: 0 };
 
 const PotKinds: PotKinds = {
   PotNone: 0,
@@ -300,7 +300,7 @@ const PotKinds: PotKinds = {
   PotSome: 0,
   PotSomeError: 0,
   PotSomeLoading: 0,
-  PotSomeUpdating: 0
+  PotSomeUpdating: 0,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

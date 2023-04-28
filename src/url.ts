@@ -22,25 +22,25 @@ export const UrlFromString = new t.Type<ValidUrl, string>(
       ? t.success(v)
       : pipe(
           t.string.validate(v, c),
-          E.chain(s => {
+          E.chain((s) => {
             const d = url.parse(s);
             // we can safely use url.href in calling methods
             return !d.href ? t.failure(s, c) : t.success(d as ValidUrl);
           })
         ),
-  a => a.href
+  (a) => a.href
 );
 
 export type UrlFromString = t.TypeOf<typeof UrlFromString>;
 
 export const HttpsUrlFromString = t.refinement(
   UrlFromString,
-  o => o.protocol === "https:"
+  (o) => o.protocol === "https:"
 );
 export type HttpsUrlFromString = t.Type<typeof HttpsUrlFromString>;
 
 export const HttpUrlFromString = t.refinement(
   UrlFromString,
-  o => o.protocol === "http:"
+  (o) => o.protocol === "http:"
 );
 export type HttpUrlFromString = t.Type<typeof HttpsUrlFromString>;
