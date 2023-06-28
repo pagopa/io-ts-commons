@@ -59,7 +59,7 @@ export const RSAKey = t.exact(
 export type RSAKey = t.TypeOf<typeof RSAKey>;
 
 /**
- * This is the JWK JSON type for the EC private keys.
+ * This is the JWK JSON type for the RSA private keys.
  */
 export const RSAPrivateKey = t.intersection([
   RSAKey,
