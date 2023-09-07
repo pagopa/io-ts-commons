@@ -548,6 +548,30 @@ export function ResponseErrorInternal(detail: string): IResponseErrorInternal {
 }
 
 /**
+ * Interface for a response describing a bad gateway.
+ */
+export type IResponseErrorBadGateway = IResponse<"IResponseErrorBadGateway">;
+
+/**
+ * Returns a response describing a bad gateway error.
+ *
+ * @param detail The error message
+ */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function ResponseErrorBadGateway(
+  detail: string
+): IResponseErrorBadGateway {
+  return {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_502,
+      "Bad Gateway",
+      detail
+    ),
+    kind: "IResponseErrorBadGateway",
+  };
+}
+
+/**
  * Interface for a response describing a service unavailable error.
  */
 export type IResponseErrorServiceUnavailable =
@@ -569,6 +593,31 @@ export function ResponseErrorServiceUnavailable(
       detail
     ),
     kind: "IResponseErrorInternal",
+  };
+}
+
+/**
+ * Interface for a response describing a gateway timeout.
+ */
+export type IResponseErrorGatewayTimeout =
+  IResponse<"IResponseErrorGatewayTimeout">;
+
+/**
+ * Returns a response describing a gateway timeout error.
+ *
+ * @param detail The error message
+ */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function ResponseErrorGatewayTimeout(
+  detail: string
+): IResponseErrorGatewayTimeout {
+  return {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_504,
+      "Gateway Timeout",
+      detail
+    ),
+    kind: "IResponseErrorGatewayTimeout",
   };
 }
 
