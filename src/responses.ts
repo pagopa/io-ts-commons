@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import * as express from "express";
 import * as t from "io-ts";
 
@@ -585,14 +586,45 @@ export type IResponseErrorServiceUnavailable =
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function ResponseErrorServiceUnavailable(
   detail: string
-): IResponseErrorInternal {
+): IResponseErrorServiceUnavailable {
   return {
     ...ResponseErrorGeneric(
       HttpStatusCodeEnum.HTTP_STATUS_503,
       "Service temporarily unavailable",
       detail
     ),
-    kind: "IResponseErrorInternal",
+    kind: "IResponseErrorServiceUnavailable",
+  };
+}
+
+/**
+ * Returns a response describing a service temporarily unavailable error.
+ *
+ * @param detail The error message
+ * @param retryAfter seconds to wait for the Retry-After header
+ */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function ResponseErrorServiceTemporarilyUnavailable(
+  detail: string,
+  retryAfter: string
+): IResponseErrorServiceUnavailable {
+  const title = "Service temporarily unavailable";
+  const status = HttpStatusCodeEnum.HTTP_STATUS_503;
+  const problem: ProblemJson = {
+    detail,
+    status,
+    title,
+  };
+  return {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    apply: (res) =>
+      res
+        .status(status)
+        .set("Content-Type", "application/problem+json")
+        .set("Retry-After", retryAfter)
+        .json(problem),
+    detail: `${title}: ${detail}`,
+    kind: "IResponseErrorServiceUnavailable",
   };
 }
 
