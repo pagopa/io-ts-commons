@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import * as express from "express";
 import * as t from "io-ts";
 
@@ -612,18 +613,18 @@ export function ResponseErrorServiceTemporarilyUnavailable(
   const problem: ProblemJson = {
     detail,
     status,
-    title
+    title,
   };
   return {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    apply: res =>
+    apply: (res) =>
       res
         .status(status)
         .set("Content-Type", "application/problem+json")
         .set("Retry-After", retryAfter)
         .json(problem),
     detail: `${title}: ${detail}`,
-    kind: "IResponseErrorServiceUnavailable"
+    kind: "IResponseErrorServiceUnavailable",
   };
 }
 
