@@ -502,6 +502,31 @@ export function ResponseErrorConflict(detail: string): IResponseErrorConflict {
 }
 
 /**
+ * Interface for a response describing a precondition failed error (412).
+ */
+export type IResponseErrorPreconditionFailed =
+  IResponse<"IResponseErrorPreconditionFailed">;
+
+/**
+ * Returns a response describing an precondition failed error (412).
+ *
+ * @param detail The error message
+ */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function ResponseErrorPreconditionFailed(
+  detail: string
+): IResponseErrorPreconditionFailed {
+  return {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_412,
+      "Precondition Failed",
+      detail
+    ),
+    kind: "IResponseErrorPreconditionFailed",
+  };
+}
+
+/**
  * Interface for a response describing a too many requests error (429).
  */
 export type IResponseErrorTooManyRequests =
