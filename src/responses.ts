@@ -519,7 +519,7 @@ export function ResponseErrorPreconditionFailed(
   return {
     ...ResponseErrorGeneric(
       HttpStatusCodeEnum.HTTP_STATUS_412,
-      "PreconditionFailed",
+      "Precondition Failed",
       detail
     ),
     kind: "IResponseErrorPreconditionFailed",
