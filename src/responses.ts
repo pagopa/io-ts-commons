@@ -514,13 +514,15 @@ export type IResponseErrorPreconditionFailed =
  */
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function ResponseErrorPreconditionFailed(
-  detail: string
+  detail: string,
+  problemType?: string
 ): IResponseErrorPreconditionFailed {
   return {
     ...ResponseErrorGeneric(
       HttpStatusCodeEnum.HTTP_STATUS_412,
       "Precondition Failed",
-      detail
+      detail,
+      problemType
     ),
     kind: "IResponseErrorPreconditionFailed",
   };
