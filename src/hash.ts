@@ -1,6 +1,6 @@
 import { FiscalCode } from "./strings";
 
-import * as crypto from "node:crypto";
+import * as crypto from "crypto";
 
 export const hashFiscalCode = (fiscalCode: FiscalCode) => {
   const hash = crypto.createHash("sha256");
