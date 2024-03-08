@@ -46,7 +46,7 @@
     "applicationinsights": "^1.8.10",
     "fp-ts": "2.14.0",
     "io-ts": "2.2.20",
-    "jose": "^4.11.2",
+    "jose": "^4.15.5",
     "json-set-map": "^1.1.2",
     "jsonwebtoken": "^9.0.1",
     "node-fetch": "^2.6.0",
