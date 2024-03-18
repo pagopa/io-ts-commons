@@ -10,35 +10,95 @@ import { errorsToReadableMessages } from "./reporters";
  * This is the JWK JSON type for the EC keys.
  */
 export const ECKey = t.exact(
-  t.type({
-    crv: t.string,
-    kty: t.literal("EC"),
-    x: t.string,
-    y: t.string,
-  })
+  t.intersection([
+    t.type({
+      crv: t.string,
+      kty: t.literal("EC"),
+      x: t.string,
+      y: t.string,
+    }),
+    t.partial({
+      kid: t.string,
+    }),
+  ])
 );
 
 export type ECKey = t.TypeOf<typeof ECKey>;
 
 /**
+ * This is the JWK JSON type for the EC private keys.
+ */
+export const ECPrivateKey = t.intersection([
+  ECKey,
+  t.exact(
+    t.type({
+      d: t.string,
+    })
+  ),
+]);
+
+export type ECPrivateKey = t.TypeOf<typeof ECPrivateKey>;
+
+/**
  * This is the JWK JSON type for the RSA keys.
  */
 export const RSAKey = t.exact(
-  t.type({
-    alg: t.string,
-    e: t.string,
-    kty: t.literal("RSA"),
-    n: t.string,
-  })
+  t.intersection([
+    t.type({
+      alg: t.string,
+      e: t.string,
+      kty: t.literal("RSA"),
+      n: t.string,
+    }),
+    t.partial({
+      kid: t.string,
+    }),
+  ])
 );
 
 export type RSAKey = t.TypeOf<typeof RSAKey>;
+
+/**
+ * This is the JWK JSON type for the RSA private keys.
+ */
+export const RSAPrivateKey = t.intersection([
+  RSAKey,
+  t.exact(
+    t.intersection([
+      t.type({
+        d: t.string,
+      }),
+      t.partial({
+        p: t.string,
+        q: t.string,
+        u: t.string,
+      }),
+    ])
+  ),
+]);
+
+export type RSAPrivateKey = t.TypeOf<typeof RSAPrivateKey>;
 
 /**
  * The Public Key JWK type. It could be either an ECKey or an RSAKey.
  */
 export const JwkPublicKey = t.union([RSAKey, ECKey], "JwkPublicKey");
 export type JwkPublicKey = t.TypeOf<typeof JwkPublicKey>;
+
+/**
+ * The Private Key JWK type. It could be either an ECPrivateKey or an RSAPrivateKey.
+ */
+export const JwkPrivateKey = t.union(
+  [RSAPrivateKey, ECPrivateKey],
+  "JwkPrivateKey"
+);
+export type JwkPrivateKey = t.TypeOf<typeof JwkPrivateKey>;
+
+/**
+ * A generic JWK. It could be either an ECPrivateKey,RSAPrivateKey,ECKey or RSAKey.
+ */
+export const Jwk = t.union([JwkPublicKey, JwkPrivateKey], "Jwk");
+export type Jwk = t.TypeOf<typeof Jwk>;
 
 export const parseJwkOrError = (token: unknown): E.Either<Error, J.Json> =>
   pipe(
