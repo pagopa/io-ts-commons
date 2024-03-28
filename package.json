@@ -45,7 +45,7 @@
   "dependencies": {
     "abort-controller": "^3.0.0",
     "agentkeepalive": "^4.1.4",
-    "applicationinsights": "^1.8.10",
+    "applicationinsights": "^2.9.5",
     "jose": "^4.15.5",
     "json-set-map": "^1.1.2",
     "jsonwebtoken": "^9.0.1",
