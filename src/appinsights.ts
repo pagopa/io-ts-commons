@@ -1,6 +1,5 @@
 import * as appInsights from "applicationinsights";
 import { DistributedTracingModes } from "applicationinsights";
-// eslint-disable-next-line import/no-internal-modules
 import Config = require("applicationinsights/out/Library/Config");
 import {
   getKeepAliveAgentOptions,
@@ -47,23 +46,23 @@ export type ApplicationInsightsConfig = IInsightsTracingConfig &
  */
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 function startAppInsights(
-  instrumentationKey: string,
+  connectionString: string,
   aiConfig: ApplicationInsightsConfig
 ): appInsights.TelemetryClient {
-  const ai = appInsights.setup(instrumentationKey);
+  const ai = appInsights.setup(connectionString);
 
   if (aiConfig.isTracingDisabled) {
     ai.setAutoCollectConsole(false)
       .setAutoCollectPerformance(false)
       .setAutoCollectDependencies(false)
       .setAutoCollectRequests(false)
-      .setAutoDependencyCorrelation(false)
-      .setSendLiveMetrics(false);
+      .setAutoDependencyCorrelation(false);
   }
 
   // @see https://github.com/Azure/azure-functions-host/issues/3747
   // @see https://github.com/Azure/azure-functions-nodejs-worker/pull/244
   ai.setDistributedTracingMode(DistributedTracingModes.AI_AND_W3C)
+    .setSendLiveMetrics(false)
     // @see https://stackoverflow.com/questions/49438235/application-insights-metric-in-aws-lambda/49441135#49441135
     .setUseDiskRetryCaching(false)
     .start();
@@ -166,7 +165,7 @@ export function disableSamplingByTag(
  */
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function initAppInsights(
-  aiInstrumentationKey: string,
+  aiConnectionString: string,
   config?: ApplicationInsightsConfig,
   env: typeof process.env = process.env
 ): ReturnType<typeof startAppInsights> {
@@ -182,7 +181,7 @@ export function initAppInsights(
   // defaults to the name of the function app if not set in config
   const cloudRole = config?.cloudRole || env.WEBSITE_SITE_NAME;
 
-  return startAppInsights(aiInstrumentationKey, {
+  return startAppInsights(aiConnectionString, {
     cloudRole,
     ...config,
     ...agentOpts,
