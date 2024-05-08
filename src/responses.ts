@@ -352,6 +352,27 @@ export const ResponseErrorFromValidationErrors =
   };
 
 /**
+ * Interface for 401 unauthorized
+ */
+export type IResponseErrorUnauthorized =
+  IResponse<"IResponseErrorUnauthorized"> & { readonly detail: string };
+
+/**
+ * Returns an unauthorized error response with status code 401.
+ */
+export const ResponseErrorUnauthorized = (
+  detail: string
+): IResponseErrorUnauthorized => ({
+  ...ResponseErrorGeneric(
+    HttpStatusCodeEnum.HTTP_STATUS_401,
+    "Unauthorized",
+    detail
+  ),
+  detail: `Unauthorized: ${detail}`,
+  kind: "IResponseErrorUnauthorized",
+});
+
+/**
  * The user is not allowed here.
  */
 export type IResponseErrorForbiddenNotAuthorized =

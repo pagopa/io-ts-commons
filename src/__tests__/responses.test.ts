@@ -1,6 +1,7 @@
 import {
   HttpStatusCodeEnum,
   ResponseErrorPreconditionFailed,
+  ResponseErrorUnauthorized,
   ResponseSuccessJson,
 } from "../responses";
 
@@ -32,6 +33,18 @@ describe("ResponseSuccessJson", () => {
     jsonResponse.apply(mockResponse);
 
     expect(mockResponse.json).toHaveBeenCalledWith(kindlessData);
+  });
+});
+
+describe("ResponseErrorUnauthorized", () => {
+  const anErrorDetail = "Invalid credentials";
+  it("should return the standard response", () => {
+    expect(ResponseErrorUnauthorized(anErrorDetail)).toMatchObject(
+      expect.objectContaining({
+        kind: "IResponseErrorUnauthorized",
+        detail: `Unauthorized: ${anErrorDetail}`,
+      })
+    );
   });
 });
 
