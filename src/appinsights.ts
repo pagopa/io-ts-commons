@@ -56,13 +56,14 @@ function startAppInsights(
       .setAutoCollectPerformance(false)
       .setAutoCollectDependencies(false)
       .setAutoCollectRequests(false)
+      .setSendLiveMetrics(false)
       .setAutoDependencyCorrelation(false);
   }
 
   // @see https://github.com/Azure/azure-functions-host/issues/3747
   // @see https://github.com/Azure/azure-functions-nodejs-worker/pull/244
   ai.setDistributedTracingMode(DistributedTracingModes.AI_AND_W3C)
-    .setSendLiveMetrics(false)
+    .setSendLiveMetrics(true)
     // @see https://stackoverflow.com/questions/49438235/application-insights-metric-in-aws-lambda/49441135#49441135
     .setUseDiskRetryCaching(false)
     .start();
