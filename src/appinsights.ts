@@ -56,7 +56,6 @@ function startAppInsights(
       .setAutoCollectPerformance(false)
       .setAutoCollectDependencies(false)
       .setAutoCollectRequests(false)
-      .setSendLiveMetrics(false)
       .setAutoDependencyCorrelation(false);
   }
 
