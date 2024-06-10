@@ -1,4 +1,9 @@
-import { JwkPublicKey, JwkPublicKeyFromToken, parseJwkOrError } from "../jwk";
+import {
+  JwkPrivateKey,
+  JwkPublicKey,
+  JwkPublicKeyFromToken,
+  parseJwkOrError,
+} from "../jwk";
 import * as jose from "jose";
 import * as E from "fp-ts/lib/Either";
 
@@ -14,15 +19,32 @@ const aJwkPublicKey: JwkPublicKey = {
   kty: "EC",
   crv: "crv",
   x: "x",
-  y: "y"
+  y: "y",
 };
 
 const aRsaJwkPublicKey: JwkPublicKey = {
   kty: "RSA",
   alg: "alg",
   e: "e",
-  n: "n"
+  n: "n",
 };
+
+const aJwkPrivateKey: JwkPrivateKey = {
+  kty: "EC",
+  crv: "crv",
+  x: "x",
+  y: "y",
+  d: "d",
+};
+
+const aRsaJwkPrivateKey: JwkPrivateKey = {
+  kty: "RSA",
+  alg: "alg",
+  e: "e",
+  n: "n",
+  d: "d",
+};
+
 describe("parseJwkOrError", () => {
   it("should parse a valid jwk token", async () => {
     const jwkToken = await getJwkToken();
@@ -85,8 +107,8 @@ describe("JwkPublicKeyFromToken", () => {
       expect(result.left).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            message: expect.stringContaining("is not a valid [JwkPublicKey]")
-          })
+            message: expect.stringContaining("is not a valid [JwkPublicKey]"),
+          }),
         ])
       );
     }
@@ -136,7 +158,7 @@ describe("JwkPublicKey", () => {
   it("should decode an ECKey removing extra properties", () => {
     const result = JwkPublicKey.decode({
       ...aJwkPublicKey,
-      otherProp: "other"
+      otherProp: "other",
     });
     expect(E.isRight(result)).toBeTruthy();
     if (E.isRight(result)) {
@@ -144,14 +166,84 @@ describe("JwkPublicKey", () => {
     }
   });
 
+  it("should decode an ECKey with optional kid parameter", () => {
+    const result = JwkPublicKey.decode({
+      ...aJwkPublicKey,
+      kid: "KID#1",
+    });
+    expect(E.isRight(result)).toBeTruthy();
+    if (E.isRight(result)) {
+      expect(result.right).toStrictEqual({
+        ...aJwkPublicKey,
+        kid: "KID#1",
+      });
+    }
+  });
+
   it("should decode a RSAKey removing extra properties", () => {
     const result = JwkPublicKey.decode({
       ...aRsaJwkPublicKey,
-      otherProp: "other"
+      otherProp: "other",
     });
     expect(E.isRight(result)).toBeTruthy();
     if (E.isRight(result)) {
       expect(result.right).toStrictEqual(aRsaJwkPublicKey);
+    }
+  });
+
+  it("should decode an RSAKey with optional kid parameter", () => {
+    const result = JwkPublicKey.decode({
+      ...aRsaJwkPublicKey,
+      kid: "KID#1",
+    });
+    expect(E.isRight(result)).toBeTruthy();
+    if (E.isRight(result)) {
+      expect(result.right).toStrictEqual({
+        ...aRsaJwkPublicKey,
+        kid: "KID#1",
+      });
+    }
+  });
+});
+
+describe("JwkPrivateKey", () => {
+  it("should decode an ECPrivateKey removing extra properties", () => {
+    const result = JwkPrivateKey.decode({
+      ...aJwkPrivateKey,
+      otherProp: "other",
+    });
+    expect(E.isRight(result)).toBeTruthy();
+    if (E.isRight(result)) {
+      expect(result.right).toStrictEqual(aJwkPrivateKey);
+    }
+  });
+
+  it("should decode a RSAPrivateKey removing extra properties", () => {
+    const result = JwkPrivateKey.decode({
+      ...aRsaJwkPrivateKey,
+      otherProp: "other",
+    });
+    expect(E.isRight(result)).toBeTruthy();
+    if (E.isRight(result)) {
+      expect(result.right).toStrictEqual(aRsaJwkPrivateKey);
+    }
+  });
+
+  it("should decode an RSAPrivateKey with optional p,q,u parameter", () => {
+    const result = JwkPrivateKey.decode({
+      ...aRsaJwkPrivateKey,
+      p: "p",
+      q: "q",
+      u: "u",
+    });
+    expect(E.isRight(result)).toBeTruthy();
+    if (E.isRight(result)) {
+      expect(result.right).toStrictEqual({
+        ...aRsaJwkPrivateKey,
+        p: "p",
+        q: "q",
+        u: "u",
+      });
     }
   });
 });
