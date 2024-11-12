@@ -43,4 +43,4 @@ export const HttpUrlFromString = t.refinement(
   UrlFromString,
   (o) => o.protocol === "http:"
 );
-export type HttpUrlFromString = t.Type<typeof HttpsUrlFromString>;
+export type HttpUrlFromString = t.Type<typeof HttpUrlFromString>;
