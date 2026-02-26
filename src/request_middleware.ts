@@ -1,11 +1,10 @@
 import * as express from "express";
-
 import * as E from "fp-ts/lib/Either";
-import * as TE from "fp-ts/lib/TaskEither";
 import { pipe } from "fp-ts/lib/function";
+import * as TE from "fp-ts/lib/TaskEither";
 
 import { IResponse, ResponseErrorInternal } from "./responses";
-import { Head, Tail, HasTail } from "./types";
+import { HasTail, Head, Tail } from "./types";
 
 export type RequestHandler<R> = (
   request: express.Request
@@ -50,6 +49,9 @@ export type IRequestMiddleware<R, T> = (
   request: express.Request
 ) => Promise<E.Either<IResponse<R>, T>>;
 
+export type MiddlewareFailure<M extends IRequestMiddleware<unknown, unknown>> =
+  M extends IRequestMiddleware<infer F, unknown> ? F : never;
+
 export type MiddlewareFailureResult<T> = T extends IRequestMiddleware<
   infer R,
   unknown
@@ -58,13 +60,6 @@ export type MiddlewareFailureResult<T> = T extends IRequestMiddleware<
     ? Res
     : R
   : never;
-
-export type MiddlewareResult<T> = T extends IRequestMiddleware<unknown, infer R>
-  ? R
-  : never;
-
-export type MiddlewareFailure<M extends IRequestMiddleware<unknown, unknown>> =
-  M extends IRequestMiddleware<infer F, unknown> ? F : never;
 
 export type MiddlewareFailures<
   T extends ReadonlyArray<IRequestMiddleware<unknown, unknown>>
@@ -77,6 +72,10 @@ export type MiddlewareFailures<
     ...MiddlewareFailures<Tail<T>>
   ];
 }[HasTail<T> extends true ? 1 : 0];
+
+export type MiddlewareResult<T> = T extends IRequestMiddleware<unknown, infer R>
+  ? R
+  : never;
 
 export type MiddlewareResults<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,15 +105,14 @@ export type WithRequestMiddlewaresT = <
 ) => <RH>(
   handler: (...values: MiddlewareResults<M>) => Promise<IResponse<RH>>
 ) => RequestHandler<
-  | RH
   | "IResponseErrorInternal"
+  | RH
   | TypeOfArray<MiddlewareFailures<typeof middlewares>>
 >;
 
 export const withRequestMiddlewares: WithRequestMiddlewaresT =
   (...middlewares) =>
   (handler) =>
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   (request) =>
     pipe(
       middlewares.map((middleware) =>

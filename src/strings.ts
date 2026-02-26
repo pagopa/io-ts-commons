@@ -14,13 +14,13 @@ export const NonEmptyString = tag<INonEmptyStringTag>()(
   t.refinement(t.string, (s) => s.length > 0, "non empty string")
 );
 
-export type NonEmptyString = t.TypeOf<typeof NonEmptyString>;
-
 export interface IWithinRangeStringTag<L extends number, H extends number> {
-  readonly lower: L;
   readonly higher: H;
   readonly kind: "IWithinRangeStringTag";
+  readonly lower: L;
 }
+
+export type NonEmptyString = t.TypeOf<typeof NonEmptyString>;
 
 /**
  * A string guaranteed to have a length within the range [L,H)
@@ -41,13 +41,15 @@ export const WithinRangeString = <
     )
   );
 
-export type WithinRangeString<L extends number, H extends number> = string &
-  IWithinRangeStringTag<L, H>;
-
 export interface IPatternStringTag<P extends string> {
-  readonly pattern: P;
   readonly kind: "IPatternStringTag";
+  readonly pattern: P;
 }
+
+export type WithinRangeString<
+  L extends number,
+  H extends number
+> = IWithinRangeStringTag<L, H> & string;
 
 /**
  * A string that matches a pattern.
@@ -63,11 +65,11 @@ export const PatternString = <P extends string, T extends IPatternStringTag<P>>(
     )
   );
 
-export type PatternString<P extends string> = string & IPatternStringTag<P>;
-
 export interface IEmailStringTag {
   readonly kind: "IEmailStringTag";
 }
+
+export type PatternString<P extends string> = IPatternStringTag<P> & string;
 
 /**
  * A string that represents a valid email address.

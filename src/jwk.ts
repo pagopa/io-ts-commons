@@ -1,10 +1,11 @@
-import * as t from "io-ts";
 import * as E from "fp-ts/lib/Either";
-import * as J from "fp-ts/lib/Json";
 import { flow, pipe } from "fp-ts/lib/function";
+import * as J from "fp-ts/lib/Json";
+import * as t from "io-ts";
 import * as jose from "jose";
-import { NonEmptyString } from "./strings";
+
 import { errorsToReadableMessages } from "./reporters";
+import { NonEmptyString } from "./strings";
 
 /**
  * This is the JWK JSON type for the EC keys.

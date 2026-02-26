@@ -1,5 +1,4 @@
 import * as crypto from "crypto";
-
 import * as E from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
@@ -13,12 +12,12 @@ export const EncryptedPayload = t.interface({
   // encrypted text (Base64)
   cypherText: t.string,
 
-  // random string to feed AES (Base64)
-  iv: t.string,
+  encryptedKey: t.string,
 
   // AES Key encrypted with RSA public key (Base64)
-   
-  encryptedKey: t.string,
+
+  // random string to feed AES (Base64)
+  iv: t.string,
 });
 
 export type EncryptedPayload = t.TypeOf<typeof EncryptedPayload>;

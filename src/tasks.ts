@@ -1,9 +1,10 @@
 import { right } from "fp-ts/lib/Either";
+import { pipe } from "fp-ts/lib/function";
 import { Task } from "fp-ts/lib/Task";
 import * as T from "fp-ts/lib/Task";
 import { TaskEither } from "fp-ts/lib/TaskEither";
 import * as TE from "fp-ts/lib/TaskEither";
-import { pipe } from "fp-ts/lib/function";
+
 import { Millisecond } from "./units";
 
 /**
@@ -49,7 +50,6 @@ export const withRetries =
     _: RetriableTask<E, T>,
     shouldAbort?: Promise<boolean>
   ) => TaskEither<E | MaxRetries | RetryAborted, T>) =>
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   (task, shouldAbort = Promise.resolve(false)) => {
     // Whether we must stop retrying
     // the abort process gets triggered when the shouldAbort promise resolves
@@ -67,7 +67,7 @@ export const withRetries =
     const runTaskOnce = (
       count: number,
       currentTask: RetriableTask<E, T>
-    ): TaskEither<E | TransientError | RetryAborted, T> => {
+    ): TaskEither<E | RetryAborted | TransientError, T> => {
       // on first execution, count === 0
       if (count >= maxRetries - 1) {
         // no more retries left

@@ -10,113 +10,55 @@
 
 import { left, right } from "fp-ts/lib/Either";
 import * as E from "fp-ts/lib/Either";
-import * as t from "io-ts";
 import { pipe } from "fp-ts/lib/function";
+import * as t from "io-ts";
 
 /**
- * Describes the possible methods of a request
+ * The union of the possible ApiRequest types
  */
-export type RequestMethod = "get" | "post" | "put" | "delete" | "patch";
+export type ApiRequestType<
+  P,
+  KH extends RequestHeaderKey,
+  Q extends string,
+  R
+> =
+  | IDeleteApiRequestType<P, KH, Q, R>
+  | IGetApiRequestType<P, KH, Q, R>
+  | IPatchApiRequestType<P, KH, Q, R>
+  | IPostApiRequestType<P, KH, Q, R>
+  | IPutApiRequestType<P, KH, Q, R>;
 
-/**
- * Describes the possible header keys of a request
- *
- * @deprecated This type used to enforce a contraint on a specific set of headers to be allowed. We decided to relax such constraint and to accept any string as the friction of being constrained on which header to use is not worth the little value it adds.
- */
-export type RequestHeaderKey = string;
-
-/**
- * Describes a set of headers whose keys are of type RequestHeaderKey
- */
-export type RequestHeaders<HS extends RequestHeaderKey> = Record<HS, string>;
-
-/**
- * Describes the query params for this request
- */
-export type RequestQuery<K extends string> = Record<K, string>;
-
-/**
- * Generates a set of headers with certain keys (KH) from a parameters object
- * of type P.
- */
-export type RequestHeaderProducer<P, KH extends RequestHeaderKey> = (
-  params: P
-) => RequestHeaders<KH>;
-
-/**
- * Composes two RequestHeaderProducer(s)
- */
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-export function composeHeaderProducers<
-  PI,
-  KI extends RequestHeaderKey,
-  PH,
-  KH extends RequestHeaderKey
->(
-  p0: RequestHeaderProducer<PI, KI>,
-  p1: RequestHeaderProducer<PH, KH>
-): RequestHeaderProducer<PI & PH, KI | KH> {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  return (params) => {
-    const headers0 = p0(params);
-    const headers1 = p1(params);
-    return {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(headers0 as any),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(headers1 as any),
-    };
-  };
-}
+export type ApiRequestTypeForMethod<
+  M extends RequestMethod,
+  P,
+  KH extends RequestHeaderKey,
+  Q extends string,
+  R
+> = M extends "get"
+  ? IGetApiRequestType<P, KH, Q, R>
+  : M extends "post"
+  ? IPostApiRequestType<P, KH, Q, R>
+  : M extends "put"
+  ? IPutApiRequestType<P, KH, Q, R>
+  : never;
 
 export type BasicResponseHeaderKey =
   | "Cache-Control"
   | "Content-Encoding"
-  | "Content-Type" // eslint-disable-line sonarjs/no-duplicate-string
+  | "Content-Type"
   | "Date"
   | "ETag"
   | "Expires"
   | "Transfer-Encoding";
 
-// eslint-disable-next-line functional/prefer-readonly-type
-export type ResponseHeaders<H extends string = never> = {
-  [key in BasicResponseHeaderKey | H]?: string;
-};
-
-/**
- * Describes a possible response type: when the status code is S, the response
- * type is T.
- */
-export interface IResponseType<S extends number, T, H extends string = never> {
-  readonly status: S;
-  readonly value: T;
-  readonly headers: ResponseHeaders<H>;
-}
-
-/**
- * A function that generates a typed representation of a response.
- * It should return undefined in case the response cannot be decoded (e.g.
- * in case of a parsing error).
- */
-export type ResponseDecoder<R> = (
-  response: Response
-) => Promise<t.Validation<R> | undefined>;
-
-/**
- * Composes two ResponseDecoder(s)
- */
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-export function composeResponseDecoders<R1, R2>(
-  d1: ResponseDecoder<R1>,
-  d2: ResponseDecoder<R2>
-): ResponseDecoder<R1 | R2> {
-  // TODO: make sure R1, R2 don't intersect
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  return async (response) => {
-    const r1 = await d1(response);
-    return r1 !== undefined ? r1 : await d2(response);
-  };
-}
+export type EmptyApiRequestBuilder<
+  M extends RequestMethod,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  P = {},
+  KH extends RequestHeaderKey = never,
+  Q extends string = never,
+  R = never
+> = ApiRequestBuilder<M, P, KH, Q, R, ApiRequestTypeForMethod<M, P, KH, Q, R>>;
 
 /**
  * Fully describes an API request.
@@ -133,74 +75,11 @@ export interface IBaseApiRequestType<
   Q extends string,
   R
 > {
-  readonly method: M;
-  readonly url: (params: P) => string;
-  readonly query: (params: P) => RequestQuery<Q>;
   readonly headers: RequestHeaderProducer<P, H>;
+  readonly method: M;
+  readonly query: (params: P) => RequestQuery<Q>;
   readonly response_decoder: ResponseDecoder<R>;
-}
-
-/**
- * Fully describes a GET request.
- */
-export interface IGetApiRequestType<
-  P,
-  KH extends RequestHeaderKey,
-  Q extends string,
-  R
-> extends IBaseApiRequestType<"get", P, KH, Q, R> {
-  readonly method: "get";
-}
-
-/**
- * Fully describes a POST request.
- *
- * POST requests require to provide the "Content-Type" header.
- */
-export interface IPostApiRequestType<
-  P,
-  KH extends RequestHeaderKey,
-  Q extends string,
-  R
-> extends IBaseApiRequestType<"post", P, KH | "Content-Type", Q, R> {
-  readonly method: "post";
-  readonly body: (
-    params: P
-  ) => string | FormData | ReadableStream<Uint8Array> | Buffer;
-}
-
-/**
- * Fully describes a PUT request.
- *
- * PUT requests require to provide the "Content-Type" header.
- */
-export interface IPutApiRequestType<
-  P,
-  KH extends RequestHeaderKey,
-  Q extends string,
-  R
-> extends IBaseApiRequestType<"put", P, KH | "Content-Type", Q, R> {
-  readonly method: "put";
-  readonly body: (
-    params: P
-  ) => string | FormData | ReadableStream<Uint8Array> | Buffer;
-}
-
-/**
- * Fully describes a PATCH request.
- *
- * PATCH requests require to provide the "Content-Type" header.
- */
-export interface IPatchApiRequestType<
-  P,
-  KH extends RequestHeaderKey,
-  Q extends string,
-  R
-> extends IBaseApiRequestType<"patch", P, KH | "Content-Type", Q, R> {
-  readonly method: "patch";
-  readonly body: (
-    params: P
-  ) => string | FormData | ReadableStream<Uint8Array> | Buffer;
+  readonly url: (params: P) => string;
 }
 
 /**
@@ -216,30 +95,135 @@ export interface IDeleteApiRequestType<
 }
 
 /**
- * The union of the possible ApiRequest types
+ * Fully describes a GET request.
  */
-export type ApiRequestType<
+export interface IGetApiRequestType<
   P,
   KH extends RequestHeaderKey,
   Q extends string,
   R
-> =
-  | IGetApiRequestType<P, KH, Q, R>
-  | IPostApiRequestType<P, KH, Q, R>
-  | IPutApiRequestType<P, KH, Q, R>
-  | IPatchApiRequestType<P, KH, Q, R>
-  | IDeleteApiRequestType<P, KH, Q, R>;
+> extends IBaseApiRequestType<"get", P, KH, Q, R> {
+  readonly method: "get";
+}
+
+/**
+ * Fully describes a PATCH request.
+ *
+ * PATCH requests require to provide the "Content-Type" header.
+ */
+export interface IPatchApiRequestType<
+  P,
+  KH extends RequestHeaderKey,
+  Q extends string,
+  R
+> extends IBaseApiRequestType<"patch", P, "Content-Type" | KH, Q, R> {
+  readonly body: (
+    params: P
+  ) => Buffer | FormData | ReadableStream<Uint8Array> | string;
+  readonly method: "patch";
+}
+
+/**
+ * Fully describes a POST request.
+ *
+ * POST requests require to provide the "Content-Type" header.
+ */
+export interface IPostApiRequestType<
+  P,
+  KH extends RequestHeaderKey,
+  Q extends string,
+  R
+> extends IBaseApiRequestType<"post", P, "Content-Type" | KH, Q, R> {
+  readonly body: (
+    params: P
+  ) => Buffer | FormData | ReadableStream<Uint8Array> | string;
+  readonly method: "post";
+}
+
+/**
+ * Fully describes a PUT request.
+ *
+ * PUT requests require to provide the "Content-Type" header.
+ */
+export interface IPutApiRequestType<
+  P,
+  KH extends RequestHeaderKey,
+  Q extends string,
+  R
+> extends IBaseApiRequestType<"put", P, "Content-Type" | KH, Q, R> {
+  readonly body: (
+    params: P
+  ) => Buffer | FormData | ReadableStream<Uint8Array> | string;
+  readonly method: "put";
+}
+
+/**
+ * Describes a possible response type: when the status code is S, the response
+ * type is T.
+ */
+export interface IResponseType<S extends number, T, H extends string = never> {
+  readonly headers: ResponseHeaders<H>;
+  readonly status: S;
+  readonly value: T;
+}
+
+/**
+ * Describes the possible header keys of a request
+ *
+ * @deprecated This type used to enforce a contraint on a specific set of headers to be allowed. We decided to relax such constraint and to accept any string as the friction of being constrained on which header to use is not worth the little value it adds.
+ */
+export type RequestHeaderKey = string;
+
+/**
+ * Generates a set of headers with certain keys (KH) from a parameters object
+ * of type P.
+ */
+export type RequestHeaderProducer<P, KH extends RequestHeaderKey> = (
+  params: P
+) => RequestHeaders<KH>;
+
+/**
+ * Describes a set of headers whose keys are of type RequestHeaderKey
+ */
+export type RequestHeaders<HS extends RequestHeaderKey> = Record<HS, string>;
+
+/**
+ * Describes the possible methods of a request
+ */
+export type RequestMethod = "delete" | "get" | "patch" | "post" | "put";
+
+/**
+ * Describes the query params for this request
+ */
+export type RequestQuery<K extends string> = Record<K, string>;
+
+/**
+ * A function that generates a typed representation of a response.
+ * It should return undefined in case the response cannot be decoded (e.g.
+ * in case of a parsing error).
+ */
+export type ResponseDecoder<R> = (
+  response: Response
+) => Promise<t.Validation<R> | undefined>;
+
+export type ResponseHeaders<H extends string = never> = Partial<
+  Record<BasicResponseHeaderKey | H, string>
+>;
+
+/**
+ * The type of the method that runs an ApiRequestType
+ */
+export type TypeofApiCall<T> = (
+  params: TypeofApiParams<T>
+) => Promise<t.Validation<TypeofApiResponse<T>>>;
 
 /**
  * The type of the Params of an ApiRequestType
  */
 export type TypeofApiParams<T> = T extends ApiRequestType<
   infer P,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _KH,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _Q,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _R
 >
   ? P
@@ -249,11 +233,8 @@ export type TypeofApiParams<T> = T extends ApiRequestType<
  * The type of the Response of an ApiRequestType
  */
 export type TypeofApiResponse<T> = T extends ApiRequestType<
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _P,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _KH,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   infer _Q,
   infer R
 >
@@ -268,38 +249,49 @@ export type TypeOfApiResponseStatus<T> =
   TypeofApiResponse<T> extends IResponseType<infer S, any> ? S : never;
 
 /**
- * The type of the method that runs an ApiRequestType
+ * Composes two RequestHeaderProducer(s)
  */
-export type TypeofApiCall<T> = (
-  params: TypeofApiParams<T>
-) => Promise<t.Validation<TypeofApiResponse<T>>>;
-
-export type ApiRequestTypeForMethod<
-  M extends RequestMethod,
-  P,
-  KH extends RequestHeaderKey,
-  Q extends string,
-  R
-> = M extends "get"
-  ? IGetApiRequestType<P, KH, Q, R>
-  : M extends "post"
-  ? IPostApiRequestType<P, KH, Q, R>
-  : M extends "put"
-  ? IPutApiRequestType<P, KH, Q, R>
-  : never;
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function composeHeaderProducers<
+  PI,
+  KI extends RequestHeaderKey,
+  PH,
+  KH extends RequestHeaderKey
+>(
+  p0: RequestHeaderProducer<PI, KI>,
+  p1: RequestHeaderProducer<PH, KH>
+): RequestHeaderProducer<PH & PI, KH | KI> {
+  return (params) => {
+    const headers0 = p0(params);
+    const headers1 = p1(params);
+    return {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(headers0 as any),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(headers1 as any),
+    };
+  };
+}
 
 //
 // builder
 //
 
-export type EmptyApiRequestBuilder<
-  M extends RequestMethod,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P = {},
-  KH extends RequestHeaderKey = never,
-  Q extends string = never,
-  R = never
-> = ApiRequestBuilder<M, P, KH, Q, R, ApiRequestTypeForMethod<M, P, KH, Q, R>>;
+/**
+ * Composes two ResponseDecoder(s)
+ */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function composeResponseDecoders<R1, R2>(
+  d1: ResponseDecoder<R1>,
+  d2: ResponseDecoder<R2>
+): ResponseDecoder<R1 | R2> {
+  // TODO: make sure R1, R2 don't intersect
+
+  return async (response) => {
+    const r1 = await d1(response);
+    return r1 !== undefined ? r1 : await d2(response);
+  };
+}
 
 const emptyBaseRequest = {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -371,7 +363,7 @@ export class ApiRequestBuilder<
   /**
    * Creates a new empty request with the PUT method.
    */
-  /* eslint-disable-next-line sonarjs/no-identical-functions */
+
   // eslint-disable-next-line @typescript-eslint/ban-types
   public static ofPut(): EmptyApiRequestBuilder<"put", {}, "Content-Type"> {
     return new ApiRequestBuilder<
@@ -390,35 +382,7 @@ export class ApiRequestBuilder<
   }
 
   public get(): T {
-     
     return this._request;
-  }
-
-  /**
-   * Adds query parameters
-   */
-  public withQuery<P1, Q1 extends string>(
-    query: (params: P1) => RequestQuery<Q1>
-  ): ApiRequestBuilder<
-    M,
-    P & P1,
-    KH,
-    Q | Q1,
-    R,
-    ApiRequestTypeForMethod<M, P & P1, KH, Q | Q1, R>
-  > {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const newQuery = (p: P & P1) => ({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(this._request.query(p) as any),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(query(p) as any),
-    });
-    return new ApiRequestBuilder({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(this._request as any),
-      query: newQuery,
-    });
   }
 
   /**
@@ -449,6 +413,33 @@ export class ApiRequestBuilder<
   }
 
   /**
+   * Adds query parameters
+   */
+  public withQuery<P1, Q1 extends string>(
+    query: (params: P1) => RequestQuery<Q1>
+  ): ApiRequestBuilder<
+    M,
+    P & P1,
+    KH,
+    Q | Q1,
+    R,
+    ApiRequestTypeForMethod<M, P & P1, KH, Q | Q1, R>
+  > {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const newQuery = (p: P & P1) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(this._request.query(p) as any),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(query(p) as any),
+    });
+    return new ApiRequestBuilder({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(this._request as any),
+      query: newQuery,
+    });
+  }
+
+  /**
    * Adds response decoder
    */
   public withResponseDecoder<R1>(
@@ -473,26 +464,11 @@ export class ApiRequestBuilder<
 // helpers
 //
 
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-function queryStringFromParams<P extends string>(
-  params: RequestQuery<P>
-): string | undefined {
-  const keys = Object.getOwnPropertyNames(params);
-  if (keys.length === 0) {
-    return undefined;
-  }
-  return keys
-    .map(
-      (k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k as P])}`
-    )
-    .join("&");
-}
-
 /**
  * Returns an async method that implements the provided ApiRequestType backed
  * by the "fetch" API.
  */
-// eslint-disable-next-line sonarjs/cognitive-complexity, prefer-arrow/prefer-arrow-functions
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function createFetchRequestForApi<
   P,
   KH extends RequestHeaderKey,
@@ -507,7 +483,7 @@ export function createFetchRequestForApi<
 ): (params: P) => Promise<t.Validation<R>> {
   // TODO: handle unsuccessful fetch and HTTP errors
   // @see https://www.pivotaltracker.com/story/show/154661120
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
   return async (params) => {
     // Build operationUrl from the params
     const operationUrl = requestType.url(params);
@@ -573,6 +549,21 @@ export function createFetchRequestForApi<
   };
 }
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+function queryStringFromParams<P extends string>(
+  params: RequestQuery<P>
+): string | undefined {
+  const keys = Object.getOwnPropertyNames(params);
+  if (keys.length === 0) {
+    return undefined;
+  }
+  return keys
+    .map(
+      (k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k as P])}`
+    )
+    .join("&");
+}
+
 /**
  * An header producer that sets the Content-Type to application/json
  */
@@ -600,10 +591,9 @@ export function ioResponseDecoder<
 >(
   status: S,
   type: t.Type<R, O>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   preprocessor: (i: any) => any = (_) => _
 ): ResponseDecoder<IResponseType<S, R, H>> {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return async (response: Response) => {
     if (response.status !== status) {
       // skip this decoder if status doesn't match
@@ -656,6 +646,135 @@ export const bufferArrayResponseDecoder =
   };
 
 /**
+ * Adds the status S with response type A to the responses of the request
+ */
+export type AddResponseType<
+  T,
+  S extends number,
+  A
+> = T extends IGetApiRequestType<infer P1, infer H1, infer Q1, infer R1>
+  ? IGetApiRequestType<P1, H1, Q1, IResponseType<S, A> | R1>
+  : T extends IPostApiRequestType<infer P2, infer H2, infer Q2, infer R2>
+  ? IPostApiRequestType<P2, H2, Q2, IResponseType<S, A> | R2>
+  : T extends IPutApiRequestType<infer P3, infer H3, infer Q3, infer R3>
+  ? IPutApiRequestType<P3, H3, Q3, IResponseType<S, A> | R3>
+  : T extends IDeleteApiRequestType<infer P4, infer H4, infer Q4, infer R4>
+  ? IDeleteApiRequestType<P4, H4, Q4, IResponseType<S, A> | R4>
+  : T extends IPatchApiRequestType<infer P5, infer H5, infer Q5, infer R5>
+  ? IPatchApiRequestType<P5, H5, Q5, IResponseType<S, A> | R5>
+  : never;
+
+/**
+ * A basic set of responses where the 200 status corresponds to a payload of
+ * type R and 404 and 500 to an Error
+ */
+export type BasicResponseType<R, H extends string = never> =
+  | IResponseType<200, R, H>
+  | IResponseType<404, string, H>
+  | IResponseType<500, string, H>;
+
+/**
+ * Changes the response with status S to have type B
+ */
+export type MapResponseType<
+  T,
+  S extends number,
+  B
+> = T extends IGetApiRequestType<infer P1, infer H1, infer Q1, infer R1>
+  ? IGetApiRequestType<P1, H1, Q1, MapTypeInApiResponse<R1, S, B>>
+  : T extends IPostApiRequestType<infer P2, infer H2, infer Q2, infer R2>
+  ? IPostApiRequestType<P2, H2, Q2, MapTypeInApiResponse<R2, S, B>>
+  : T extends IPutApiRequestType<infer P3, infer H3, infer Q3, infer R3>
+  ? IPutApiRequestType<P3, H3, Q3, MapTypeInApiResponse<R3, S, B>>
+  : T extends IDeleteApiRequestType<infer P4, infer H4, infer Q4, infer R4>
+  ? IDeleteApiRequestType<P4, H4, Q4, MapTypeInApiResponse<R4, S, B>>
+  : T extends IPatchApiRequestType<infer P5, infer H5, infer Q5, infer R5>
+  ? IPatchApiRequestType<P5, H5, Q5, MapTypeInApiResponse<R5, S, B>>
+  : never;
+
+/**
+ * Removes a status from the union of IResponseType(s)
+ */
+export type OmitStatusFromResponse<
+  T,
+  S extends number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+> = T extends IResponseType<S, any> ? never : T;
+
+/**
+ * Replaces the parameters of the request T with the type P
+ */
+export type ReplaceRequestParams<T, P> = T extends IGetApiRequestType<
+  infer _P1,
+  infer H1,
+  infer Q1,
+  infer R1
+>
+  ? IGetApiRequestType<P, H1, Q1, R1>
+  : T extends IPostApiRequestType<infer _P2, infer H2, infer Q2, infer R2>
+  ? IPostApiRequestType<P, H2, Q2, R2>
+  : T extends IPutApiRequestType<infer _P3, infer H3, infer Q3, infer R3>
+  ? IPutApiRequestType<P, H3, Q3, R3>
+  : T extends IDeleteApiRequestType<infer _P4, infer H4, infer Q4, infer R4>
+  ? IDeleteApiRequestType<P, H4, Q4, R4>
+  : T extends IPatchApiRequestType<infer _P4, infer H5, infer Q5, infer R5>
+  ? IPatchApiRequestType<P, H5, Q5, R5>
+  : never;
+
+/**
+ * The parameters of the request T
+ */
+export type RequestParams<T> = T extends IGetApiRequestType<
+  infer P1,
+  infer _H1,
+  infer _Q1,
+  infer _R1
+>
+  ? P1
+  : T extends IPostApiRequestType<infer P2, infer _H2, infer _Q2, infer _R2>
+  ? P2
+  : T extends IPutApiRequestType<infer P3, infer _H3, infer _Q3, infer _R3>
+  ? P3
+  : T extends IDeleteApiRequestType<infer P4, infer _H4, infer _Q4, infer _R4>
+  ? P4
+  : T extends IPatchApiRequestType<infer P5, infer _H5, infer _Q5, infer _R5>
+  ? P5
+  : never;
+
+/**
+ * The IResponseType of the request T
+ */
+export type RequestResponseTypes<T> = T extends IBaseApiRequestType<
+  infer _M,
+  infer _P,
+  infer _H,
+  infer _Q,
+  infer R
+>
+  ? R
+  : never;
+
+type MapTypeInApiResponse<T, S extends number, B> = T extends IResponseType<
+  S,
+  infer _R
+>
+  ? IResponseType<S, B>
+  : T;
+
+/**
+ * Returns a RequestHeaderProducer that produces an Authorization header of type
+ * "bearer token" with a fixed token value.
+ */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function AuthorizationBearerHeaderProducer<P>(
+  token: string
+): RequestHeaderProducer<P, "Authorization"> {
+  return () => ({
+    Authorization: `Bearer ${token}`,
+  });
+}
+
+/**
  * A basic ResponseDecoder that returns an Error with the status text if the
  * response status is S.
  */
@@ -664,7 +783,6 @@ export function basicErrorResponseDecoder<
   S extends number,
   H extends string = never
 >(status: S): ResponseDecoder<IResponseType<S, string, H>> {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return async (response) => {
     if (response.status !== status) {
       // skip this decoder if status doesn't match
@@ -678,15 +796,6 @@ export function basicErrorResponseDecoder<
     });
   };
 }
-
-/**
- * A basic set of responses where the 200 status corresponds to a payload of
- * type R and 404 and 500 to an Error
- */
-export type BasicResponseType<R, H extends string = never> =
-  | IResponseType<200, R, H>
-  | IResponseType<404, string, H>
-  | IResponseType<500, string, H>;
 
 /**
  * Returns a ResponseDecoder for BasicResponseType<R>
@@ -715,7 +824,6 @@ export function constantResponseDecoder<
   S extends number,
   H extends string = never
 >(status: S, value: T): ResponseDecoder<IResponseType<S, T, H>> {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return async (response) => {
     if (response.status !== status) {
       return undefined;
@@ -741,133 +849,3 @@ export function ParamAuthorizationBearerHeaderProducer<
     Authorization: `Bearer ${p.token}`,
   });
 }
-
-/**
- * Returns a RequestHeaderProducer that produces an Authorization header of type
- * "bearer token" with a fixed token value.
- */
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-export function AuthorizationBearerHeaderProducer<P>(
-  token: string
-): RequestHeaderProducer<P, "Authorization"> {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  return () => ({
-    Authorization: `Bearer ${token}`,
-  });
-}
-
-type MapTypeInApiResponse<T, S extends number, B> = T extends IResponseType<
-  S,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  infer _R
->
-  ? IResponseType<S, B>
-  : T;
-
-/**
- * Changes the response with status S to have type B
- */
-export type MapResponseType<
-  T,
-  S extends number,
-  B
-> = T extends IGetApiRequestType<infer P1, infer H1, infer Q1, infer R1>
-  ? IGetApiRequestType<P1, H1, Q1, MapTypeInApiResponse<R1, S, B>>
-  : T extends IPostApiRequestType<infer P2, infer H2, infer Q2, infer R2>
-  ? IPostApiRequestType<P2, H2, Q2, MapTypeInApiResponse<R2, S, B>>
-  : T extends IPutApiRequestType<infer P3, infer H3, infer Q3, infer R3>
-  ? IPutApiRequestType<P3, H3, Q3, MapTypeInApiResponse<R3, S, B>>
-  : T extends IDeleteApiRequestType<infer P4, infer H4, infer Q4, infer R4>
-  ? IDeleteApiRequestType<P4, H4, Q4, MapTypeInApiResponse<R4, S, B>>
-  : T extends IPatchApiRequestType<infer P5, infer H5, infer Q5, infer R5>
-  ? IPatchApiRequestType<P5, H5, Q5, MapTypeInApiResponse<R5, S, B>>
-  : never;
-
-/**
- * The parameters of the request T
- */
-export type RequestParams<T> = T extends IGetApiRequestType<
-  infer P1,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  infer _H1,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  infer _Q1,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  infer _R1
->
-  ? P1 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IPostApiRequestType<infer P2, infer _H2, infer _Q2, infer _R2>
-  ? P2 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IPutApiRequestType<infer P3, infer _H3, infer _Q3, infer _R3>
-  ? P3 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IDeleteApiRequestType<infer P4, infer _H4, infer _Q4, infer _R4>
-  ? P4 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IPatchApiRequestType<infer P5, infer _H5, infer _Q5, infer _R5>
-  ? P5
-  : never;
-
-/**
- * The IResponseType of the request T
- */
-export type RequestResponseTypes<T> = T extends IBaseApiRequestType<
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  infer _M,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  infer _P,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  infer _H,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  infer _Q,
-  infer R
->
-  ? R
-  : never;
-
-/**
- * Replaces the parameters of the request T with the type P
- */
-export type ReplaceRequestParams<T, P> = T extends IGetApiRequestType<
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  infer _P1,
-  infer H1,
-  infer Q1,
-  infer R1
->
-  ? IGetApiRequestType<P, H1, Q1, R1> // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IPostApiRequestType<infer _P2, infer H2, infer Q2, infer R2>
-  ? IPostApiRequestType<P, H2, Q2, R2> // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IPutApiRequestType<infer _P3, infer H3, infer Q3, infer R3>
-  ? IPutApiRequestType<P, H3, Q3, R3> // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IDeleteApiRequestType<infer _P4, infer H4, infer Q4, infer R4>
-  ? IDeleteApiRequestType<P, H4, Q4, R4> // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  : T extends IPatchApiRequestType<infer _P4, infer H5, infer Q5, infer R5>
-  ? IPatchApiRequestType<P, H5, Q5, R5>
-  : never;
-
-/**
- * Adds the status S with response type A to the responses of the request
- */
-export type AddResponseType<
-  T,
-  S extends number,
-  A
-> = T extends IGetApiRequestType<infer P1, infer H1, infer Q1, infer R1>
-  ? IGetApiRequestType<P1, H1, Q1, R1 | IResponseType<S, A>>
-  : T extends IPostApiRequestType<infer P2, infer H2, infer Q2, infer R2>
-  ? IPostApiRequestType<P2, H2, Q2, R2 | IResponseType<S, A>>
-  : T extends IPutApiRequestType<infer P3, infer H3, infer Q3, infer R3>
-  ? IPutApiRequestType<P3, H3, Q3, R3 | IResponseType<S, A>>
-  : T extends IDeleteApiRequestType<infer P4, infer H4, infer Q4, infer R4>
-  ? IDeleteApiRequestType<P4, H4, Q4, R4 | IResponseType<S, A>>
-  : T extends IPatchApiRequestType<infer P5, infer H5, infer Q5, infer R5>
-  ? IPatchApiRequestType<P5, H5, Q5, R5 | IResponseType<S, A>>
-  : never;
-
-/**
- * Removes a status from the union of IResponseType(s)
- */
-export type OmitStatusFromResponse<
-  T,
-  S extends number
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-> = T extends IResponseType<S, any> ? never : T;

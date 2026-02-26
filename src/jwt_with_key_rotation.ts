@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
+import * as E from "fp-ts/Either";
+import { pipe } from "fp-ts/lib/function";
+import * as O from "fp-ts/Option";
+import * as TE from "fp-ts/TaskEither";
 import * as jwt from "jsonwebtoken";
 import { ulid } from "ulid";
 
-import { pipe } from "fp-ts/lib/function";
-import * as TE from "fp-ts/TaskEither";
-import * as E from "fp-ts/Either";
-import * as O from "fp-ts/Option";
-
-import { Second } from "./units";
 import { NonEmptyString } from "./strings";
+import { Second } from "./units";
 
 // --------------------
 

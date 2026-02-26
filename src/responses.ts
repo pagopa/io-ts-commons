@@ -84,21 +84,15 @@ export const ProblemJson = t.partial({
   title: t.string,
   type: withDefault(t.string, "about:blank"),
 });
-export type ProblemJson = t.TypeOf<typeof ProblemJson>;
-
 /**
  * Interface for a Response that can be returned by a middleware or
  * by the handlers.
  */
 export interface IResponse<T> {
-  readonly kind: T;
   readonly apply: (response: express.Response) => void;
   readonly detail?: string;
+  readonly kind: T;
 }
-
-//
-// Success reponses
-//
 
 /**
  * Interface for a successful response returning a json object.
@@ -107,6 +101,12 @@ export interface IResponseSuccessJson<T>
   extends IResponse<"IResponseSuccessJson"> {
   readonly value: T; // needed to discriminate from other T subtypes
 }
+
+//
+// Success reponses
+//
+
+export type ProblemJson = t.TypeOf<typeof ProblemJson>;
 
 /**
  * Returns a successful json response.
@@ -118,7 +118,6 @@ export const ResponseSuccessJson = <T>(o: T): IResponseSuccessJson<T> => {
     kind: undefined,
   });
   return {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     apply: (res) =>
       res.status(HttpStatusCodeEnum.HTTP_STATUS_200).json(kindlessObject),
     kind: "IResponseSuccessJson",
@@ -140,7 +139,6 @@ export interface IResponseSuccessXml<T>
  * @param o The object to return to the client
  */
 export const ResponseSuccessXml = <T>(o: T): IResponseSuccessXml<T> => ({
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: (res) =>
     res
       .status(HttpStatusCodeEnum.HTTP_STATUS_200)
@@ -165,7 +163,6 @@ export const ResponseSuccessAccepted = <V>(
   detail?: string,
   payload?: V
 ): IResponseSuccessAccepted<V> => ({
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: (res) =>
     payload === undefined
       ? res.send(HttpStatusCodeEnum.HTTP_STATUS_202)
@@ -189,7 +186,6 @@ export type IResponsePermanentRedirect =
 export const ResponsePermanentRedirect = (
   location: UrlFromString
 ): IResponsePermanentRedirect => ({
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: (res) =>
     res.redirect(HttpStatusCodeEnum.HTTP_STATUS_301, location.href),
   detail: location.href,
@@ -209,7 +205,6 @@ export type IResponseSeeOtherRedirect = IResponse<"IResponseSeeOtherRedirect">;
 export const ResponseSeeOtherRedirect = (
   location: UrlFromString
 ): IResponseSeeOtherRedirect => ({
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: (res) =>
     res.redirect(HttpStatusCodeEnum.HTTP_STATUS_303, location.href),
   detail: location.href,
@@ -221,8 +216,8 @@ export const ResponseSeeOtherRedirect = (
  */
 export interface IResponseSuccessRedirectToResource<T, V>
   extends IResponse<"IResponseSuccessRedirectToResource"> {
-  readonly resource: T; // type checks the right kind of resource
   readonly payload: V;
+  readonly resource: T; // type checks the right kind of resource
 }
 
 /**
@@ -233,7 +228,6 @@ export const ResponseSuccessRedirectToResource = <T, V>(
   url: string,
   payload: V
 ): IResponseSuccessRedirectToResource<T, V> => ({
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   apply: (res) =>
     res
       .set("Location", url)
@@ -255,7 +249,6 @@ export type IResponseSuccessNoContent = IResponse<"IResponseSuccessNoContent">;
  */
 export const ResponseSuccessNoContent =
   (): IResponse<"IResponseSuccessNoContent"> => ({
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     apply: (res) => res.status(HttpStatusCodeEnum.HTTP_STATUS_204).send(),
     kind: "IResponseSuccessNoContent",
   });
@@ -289,7 +282,6 @@ export const ResponseErrorGeneric = (
     type: problemType,
   };
   return {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     apply: (res) =>
       res
         .status(status)
@@ -342,10 +334,7 @@ export const ResponseErrorValidation = (
 export const ResponseErrorFromValidationErrors =
   <S, A>(
     type: t.Type<A, S>
-  ): ((
-    errors: ReadonlyArray<t.ValidationError>
-  ) => // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  IResponseErrorValidation) =>
+  ): ((errors: ReadonlyArray<t.ValidationError>) => IResponseErrorValidation) =>
   (errors) => {
     const detail = errorsToReadableMessages(errors).join("\n");
     return ResponseErrorValidation(`Invalid ${type.name}`, detail);
@@ -501,9 +490,69 @@ export const ResponseErrorForbiddenNoAuthorizationGroups: IResponseErrorForbidde
   getResponseErrorForbiddenNoAuthorizationGroups();
 
 /**
+ * Interface for a response describing a bad gateway.
+ */
+export type IResponseErrorBadGateway = IResponse<"IResponseErrorBadGateway">;
+
+/**
  * Interface for a response describing a conflict error (409).
  */
 export type IResponseErrorConflict = IResponse<"IResponseErrorConflict">;
+
+/**
+ * Interface for a response describing a gateway timeout.
+ */
+export type IResponseErrorGatewayTimeout =
+  IResponse<"IResponseErrorGatewayTimeout">;
+
+/**
+ * Returns a response describing a resource that is no more available.
+ */
+export interface IResponseErrorGone extends IResponse<"IResponseErrorGone"> {
+  readonly value: { readonly detail: string };
+}
+
+/**
+ * Interface for a response describing an internal server error.
+ */
+export type IResponseErrorInternal = IResponse<"IResponseErrorInternal">;
+
+/**
+ * Interface for a response describing a precondition failed error (412).
+ */
+export type IResponseErrorPreconditionFailed =
+  IResponse<"IResponseErrorPreconditionFailed">;
+
+/**
+ * Interface for a response describing a service unavailable error.
+ */
+export type IResponseErrorServiceUnavailable =
+  IResponse<"IResponseErrorServiceUnavailable">;
+
+/**
+ * Interface for a response describing a too many requests error (429).
+ */
+export type IResponseErrorTooManyRequests =
+  IResponse<"IResponseErrorTooManyRequests">;
+
+/**
+ * Returns a response describing a bad gateway error.
+ *
+ * @param detail The error message
+ */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function ResponseErrorBadGateway(
+  detail: string
+): IResponseErrorBadGateway {
+  return {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_502,
+      "Bad Gateway",
+      detail
+    ),
+    kind: "IResponseErrorBadGateway",
+  };
+}
 
 /**
  * Returns a response describing an conflict error (409).
@@ -523,10 +572,52 @@ export function ResponseErrorConflict(detail: string): IResponseErrorConflict {
 }
 
 /**
- * Interface for a response describing a precondition failed error (412).
+ * Returns a response describing a gateway timeout error.
+ *
+ * @param detail The error message
  */
-export type IResponseErrorPreconditionFailed =
-  IResponse<"IResponseErrorPreconditionFailed">;
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function ResponseErrorGatewayTimeout(
+  detail: string
+): IResponseErrorGatewayTimeout {
+  return {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_504,
+      "Gateway Timeout",
+      detail
+    ),
+    kind: "IResponseErrorGatewayTimeout",
+  };
+}
+
+/**
+ * Returns a response with status 410 and a detail msg.
+ */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function ResponseErrorGone(detail: string): IResponseErrorGone {
+  return {
+    apply: (res: express.Response) => res.status(410).json({ detail }),
+    kind: "IResponseErrorGone",
+    value: { detail },
+  };
+}
+
+/**
+ * Returns a response describing an internal server error.
+ *
+ * @param detail The error message
+ */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function ResponseErrorInternal(detail: string): IResponseErrorInternal {
+  return {
+    ...ResponseErrorGeneric(
+      HttpStatusCodeEnum.HTTP_STATUS_500,
+      "Internal server error",
+      detail
+    ),
+    kind: "IResponseErrorInternal",
+  };
+}
 
 /**
  * Returns a response describing an precondition failed error (412).
@@ -550,81 +641,34 @@ export function ResponseErrorPreconditionFailed(
 }
 
 /**
- * Interface for a response describing a too many requests error (429).
- */
-export type IResponseErrorTooManyRequests =
-  IResponse<"IResponseErrorTooManyRequests">;
-
-/**
- * Returns a response describing a too many requests error (429).
+ * Returns a response describing a service temporarily unavailable error.
  *
  * @param detail The error message
+ * @param retryAfter seconds to wait for the Retry-After header
  */
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-export function ResponseErrorTooManyRequests(
-  detail?: string
-): IResponseErrorTooManyRequests {
+export function ResponseErrorServiceTemporarilyUnavailable(
+  detail: string,
+  retryAfter: string
+): IResponseErrorServiceUnavailable {
+  const title = "Service temporarily unavailable";
+  const status = HttpStatusCodeEnum.HTTP_STATUS_503;
+  const problem: ProblemJson = {
+    detail,
+    status,
+    title,
+  };
   return {
-    ...ResponseErrorGeneric(
-      HttpStatusCodeEnum.HTTP_STATUS_429,
-      "Too many requests",
-      detail === undefined ? "" : detail
-    ),
-    kind: "IResponseErrorTooManyRequests",
+    apply: (res) =>
+      res
+        .status(status)
+        .set("Content-Type", "application/problem+json")
+        .set("Retry-After", retryAfter)
+        .json(problem),
+    detail: `${title}: ${detail}`,
+    kind: "IResponseErrorServiceUnavailable",
   };
 }
-
-/**
- * Interface for a response describing an internal server error.
- */
-export type IResponseErrorInternal = IResponse<"IResponseErrorInternal">;
-
-/**
- * Returns a response describing an internal server error.
- *
- * @param detail The error message
- */
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-export function ResponseErrorInternal(detail: string): IResponseErrorInternal {
-  return {
-    ...ResponseErrorGeneric(
-      HttpStatusCodeEnum.HTTP_STATUS_500,
-      "Internal server error",
-      detail
-    ),
-    kind: "IResponseErrorInternal",
-  };
-}
-
-/**
- * Interface for a response describing a bad gateway.
- */
-export type IResponseErrorBadGateway = IResponse<"IResponseErrorBadGateway">;
-
-/**
- * Returns a response describing a bad gateway error.
- *
- * @param detail The error message
- */
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-export function ResponseErrorBadGateway(
-  detail: string
-): IResponseErrorBadGateway {
-  return {
-    ...ResponseErrorGeneric(
-      HttpStatusCodeEnum.HTTP_STATUS_502,
-      "Bad Gateway",
-      detail
-    ),
-    kind: "IResponseErrorBadGateway",
-  };
-}
-
-/**
- * Interface for a response describing a service unavailable error.
- */
-export type IResponseErrorServiceUnavailable =
-  IResponse<"IResponseErrorServiceUnavailable">;
 
 /**
  * Returns a response describing a service unavailable error.
@@ -644,78 +688,21 @@ export function ResponseErrorServiceUnavailable(
     kind: "IResponseErrorServiceUnavailable",
   };
 }
-
 /**
- * Returns a response describing a service temporarily unavailable error.
- *
- * @param detail The error message
- * @param retryAfter seconds to wait for the Retry-After header
- */
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-export function ResponseErrorServiceTemporarilyUnavailable(
-  detail: string,
-  retryAfter: string
-): IResponseErrorServiceUnavailable {
-  const title = "Service temporarily unavailable";
-  const status = HttpStatusCodeEnum.HTTP_STATUS_503;
-  const problem: ProblemJson = {
-    detail,
-    status,
-    title,
-  };
-  return {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    apply: (res) =>
-      res
-        .status(status)
-        .set("Content-Type", "application/problem+json")
-        .set("Retry-After", retryAfter)
-        .json(problem),
-    detail: `${title}: ${detail}`,
-    kind: "IResponseErrorServiceUnavailable",
-  };
-}
-
-/**
- * Interface for a response describing a gateway timeout.
- */
-export type IResponseErrorGatewayTimeout =
-  IResponse<"IResponseErrorGatewayTimeout">;
-
-/**
- * Returns a response describing a gateway timeout error.
+ * Returns a response describing a too many requests error (429).
  *
  * @param detail The error message
  */
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-export function ResponseErrorGatewayTimeout(
-  detail: string
-): IResponseErrorGatewayTimeout {
+export function ResponseErrorTooManyRequests(
+  detail?: string
+): IResponseErrorTooManyRequests {
   return {
     ...ResponseErrorGeneric(
-      HttpStatusCodeEnum.HTTP_STATUS_504,
-      "Gateway Timeout",
-      detail
+      HttpStatusCodeEnum.HTTP_STATUS_429,
+      "Too many requests",
+      detail === undefined ? "" : detail
     ),
-    kind: "IResponseErrorGatewayTimeout",
-  };
-}
-
-/**
- * Returns a response describing a resource that is no more available.
- */
-export interface IResponseErrorGone extends IResponse<"IResponseErrorGone"> {
-  readonly value: { readonly detail: string };
-}
-/**
- * Returns a response with status 410 and a detail msg.
- */
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-export function ResponseErrorGone(detail: string): IResponseErrorGone {
-  return {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    apply: (res: express.Response) => res.status(410).json({ detail }),
-    kind: "IResponseErrorGone",
-    value: { detail },
+    kind: "IResponseErrorTooManyRequests",
   };
 }

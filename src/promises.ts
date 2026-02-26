@@ -1,4 +1,5 @@
 import { Either, left, right } from "fp-ts/lib/Either";
+
 import { ITuple3, Tuple3 } from "./tuples";
 import { Millisecond } from "./units";
 
@@ -51,7 +52,7 @@ export const DeferredPromise = <T>(): ITuple3<
   let rejectPromise: (e: Error) => void = () => {
     throw new Error("Promise.reject not yet initialized");
   };
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
   const promise = new Promise<T>((resolve, reject) => {
     resolvePromise = resolve;
     rejectPromise = reject;

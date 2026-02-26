@@ -2,9 +2,10 @@
  * Helpers for dealing with fetch requests
  */
 
-import { TaskEither, tryCatch } from "fp-ts/lib/TaskEither";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
+import { TaskEither, tryCatch } from "fp-ts/lib/TaskEither";
+
 import { timeoutPromise } from "./promises";
 import {
   MaxRetries,
@@ -15,7 +16,6 @@ import {
 import { ITuple2, Tuple2 } from "./tuples";
 import { Millisecond } from "./units";
 
-// eslint-disable-next-line import/no-internal-modules
 import "abort-controller/polyfill";
 
 /**
@@ -39,7 +39,7 @@ export function AbortableFetch(
 ): AbortableFetch {
   // a fetch-like function that for each request, returns a tuple with the
   // response and the instance of the abortController associated to the request
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
   return (input, init) => {
     // instantiate an abort controller
     const abortController = new AbortController();
@@ -76,7 +76,6 @@ export function setFetchTimeout(
   timeout: Millisecond,
   abortableFetch: AbortableFetch
 ): AbortableFetch {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return (input, init) => {
     const result = abortableFetch(input, init);
     // abort the fetch request on timeout
@@ -101,11 +100,7 @@ export const retriableFetch: (
   ) => TaskEither<Error | MaxRetries | RetryAborted, Response>,
   shouldAbort?: Promise<boolean>
 ) => (f: typeof fetch) => typeof fetch =
-  (
-    retryWrapper,
-    shouldAbort = Promise.resolve(false)
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  ) =>
+  (retryWrapper, shouldAbort = Promise.resolve(false)) =>
   (f) =>
   (input: RequestInfo | URL, init?: RequestInit) => {
     // wraps the fetch call with a TaskEither type, mapping certain promise

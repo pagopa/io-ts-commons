@@ -1,6 +1,7 @@
-import * as t from "io-ts";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
+import * as t from "io-ts";
+
 import { PatternString } from "./strings";
 
 const isDate = (v: t.mixed): v is Date => v instanceof Date;

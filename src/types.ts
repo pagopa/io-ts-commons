@@ -1,8 +1,7 @@
-import * as t from "io-ts";
 import * as E from "fp-ts/lib/Either";
-
-import { Set as SerializableSet } from "json-set-map";
 import { pipe } from "fp-ts/lib/function";
+import * as t from "io-ts";
+import { Set as SerializableSet } from "json-set-map";
 
 /**
  * Returns a subset of the input objects fields.
@@ -98,7 +97,7 @@ export const readonlySetType = <E>(
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export interface ReadOnlyNonEmptySet<T> extends ReadonlySet<T> {}
 
 /**
@@ -126,8 +125,8 @@ export const isObject = (o: {}): boolean =>
 /**
  * Return an object filtering out keys that point to undefined values.
  */
- 
-export const withoutUndefinedValues = <T extends Object, K extends keyof T>(
+
+export const withoutUndefinedValues = <T extends object, K extends keyof T>(
   obj: T
 ): T => {
   // note that T has been already validated by the type system and we can
@@ -166,17 +165,17 @@ export const strictInterfaceWithOptionals = <
   optional: O,
   name: string
 ): t.Type<
-  t.TypeOfProps<R> & t.TypeOfPartialProps<O>,
-  t.OutputOfProps<R> & t.OutputOfPartialProps<O>
+  t.TypeOfPartialProps<O> & t.TypeOfProps<R>,
+  t.OutputOfPartialProps<O> & t.OutputOfProps<R>
 > => {
   const loose = t.intersection([t.interface(required), t.partial(optional)]);
   const props = Object.assign({}, required, optional);
   return new t.Type(
     name,
-    (m): m is t.TypeOfProps<R> & t.TypeOfPartialProps<O> =>
+    (m): m is t.TypeOfPartialProps<O> & t.TypeOfProps<R> =>
       loose.is(m) &&
       // check if all object properties belong to the strict interface
-       
+
       Object.getOwnPropertyNames(m).every((k) => props.hasOwnProperty(k)),
     (m, c) =>
       pipe(
@@ -184,7 +183,6 @@ export const strictInterfaceWithOptionals = <
         E.chain((o) => {
           const errors: t.Errors = Object.getOwnPropertyNames(o)
             .map((key) =>
-               
               !props.hasOwnProperty(key)
                 ? t.getValidationError(o[key], t.appendContext(c, key, t.never))
                 : undefined
@@ -201,7 +199,7 @@ export const strictInterfaceWithOptionals = <
  * Sets properties default values when calling t.validate() method on models
  * see https://github.com/gcanti/io-ts/issues/8
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export const withDefault = <T extends t.Any>(
   type: T,
   defaultValue: t.TypeOf<T>
@@ -223,15 +221,20 @@ export const withDefault = <T extends t.Any>(
  */
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-// eslint-disable-next-line functional/prefer-readonly-type
-export type ReplaceProp1<T, P1 extends keyof T, A> = {
-  [K in P1]: A;
-} & Pick<T, Exclude<keyof T, P1>>;
+export type ReplaceProp1<T, P1 extends keyof T, A> = Pick<
+  T,
+  Exclude<keyof T, P1>
+> &
+  Record<P1, A>;
 
-// eslint-disable-next-line functional/prefer-readonly-type
-export type ReplaceProp2<T, P1 extends keyof T, P2 extends keyof T[P1], A> = {
-  [K in P1]: ReplaceProp1<T[K], P2, A>;
-} & Pick<T, Exclude<keyof T, P1>>;
+export type ReplaceProp2<
+  T,
+  P1 extends keyof T,
+  P2 extends keyof T[P1],
+  A
+> = Pick<T, Exclude<keyof T, P1>> & {
+  readonly [K in P1]: ReplaceProp1<T[K], P2, A>;
+};
 
 /**
  * Removes null/undefined types from T[P1]
@@ -277,14 +280,23 @@ export const replaceProp1 = <
   t.refinement(type, (o) => typeB.is(o[p]), name) as any;
 
 /**
- * Returns the type `A` if `T` is a `Promise<A>`, or else returns `never`
+ * Whether an array is empty or has only one element
  */
-export type PromiseType<T> = T extends Promise<infer A> ? A : never;
+export type HasTail<T extends ReadonlyArray<unknown>> = T extends
+  | readonly []
+  | readonly [unknown]
+  ? false
+  : true;
 
 /**
  * Extract the type of the first element of an array
  */
 export type Head<T extends ReadonlyArray<unknown>> = T[0];
+
+/**
+ * Returns the type `A` if `T` is a `Promise<A>`, or else returns `never`
+ */
+export type PromiseType<T> = T extends Promise<infer A> ? A : never;
 
 /**
  * Extract the type of the sub-array of the tail of an array
@@ -295,12 +307,3 @@ export type Tail<T extends ReadonlyArray<unknown>> = T extends readonly [
 ]
   ? Rest
   : readonly [];
-
-/**
- * Whether an array is empty or has only one element
- */
-export type HasTail<T extends ReadonlyArray<unknown>> = T extends
-  | readonly []
-  | readonly [unknown]
-  ? false
-  : true;

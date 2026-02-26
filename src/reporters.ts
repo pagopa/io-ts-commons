@@ -1,8 +1,8 @@
-import { Context, ContextEntry, ValidationError } from "io-ts";
-import { Reporter } from "io-ts/lib/Reporter";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { includes } from "fp-ts/lib/string";
+import { Context, ContextEntry, ValidationError } from "io-ts";
+import { Reporter } from "io-ts/lib/Reporter";
 
 /**
  * Translate a context to a more readable path.

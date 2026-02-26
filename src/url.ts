@@ -1,7 +1,7 @@
-import * as url from "url";
-import * as t from "io-ts";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
+import * as t from "io-ts";
+import * as url from "url";
 
 export type ValidUrl = url.Url & { readonly href: string };
 

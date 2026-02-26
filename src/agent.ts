@@ -59,7 +59,6 @@ const getKeepaliveHttpFetch: (_: agentkeepalive.HttpOptions) => typeof fetch = (
   // see https://github.com/node-modules/agentkeepalive#new-agentoptions
   const httpAgent = newHttpAgent(httpOptions);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return (input, init) => {
     const initWithKeepalive = {
       ...(init === undefined ? {} : init),
@@ -81,7 +80,6 @@ const getKeepaliveHttpsFetch: (
   // see https://github.com/node-modules/agentkeepalive#new-agentoptions
   const httpAgent = newHttpsAgent(httpsOptions);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, sonarjs/no-identical-functions
   return (input, init) => {
     const initWithKeepalive = {
       ...(init === undefined ? {} : init),
@@ -131,7 +129,7 @@ export const getFetch = (
 ): typeof fetch => {
   const httpAgent = getHttpFetch(env, extraOptions);
   const httpsAgent = getHttpsFetch(env, extraOptions);
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
   return (input, init) => {
     const url =
       input instanceof URL

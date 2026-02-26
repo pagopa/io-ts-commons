@@ -1,4 +1,5 @@
 import * as t from "io-ts";
+
 import { enumType } from "./types";
 
 export enum NodeEnvironmentEnum {

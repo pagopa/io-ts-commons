@@ -50,8 +50,8 @@ export const noneUpdating = <T>(newValue: T): NoneUpdating<T> => ({
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 interface NoneError<E> {
-  readonly kind: "PotNoneError";
   readonly error: E;
+  readonly kind: "PotNoneError";
 }
 
 export const noneError = <E>(error: E): NoneError<E> => ({
@@ -93,8 +93,8 @@ export const someLoading = <T>(value: T): SomeLoading<T> => ({
 // eslint-disable-next-line @typescript-eslint/naming-convention
 interface SomeUpdating<T> {
   readonly kind: "PotSomeUpdating";
-  readonly value: T;
   readonly newValue: T;
+  readonly value: T;
 }
 
 export const someUpdating = <T>(value: T, newValue: T): SomeUpdating<T> => ({
@@ -108,9 +108,9 @@ export const someUpdating = <T>(value: T, newValue: T): SomeUpdating<T> => ({
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 interface SomeError<T, E> {
+  readonly error: E;
   readonly kind: "PotSomeError";
   readonly value: T;
-  readonly error: E;
 }
 
 export const someError = <T, E>(value: T, error: E): SomeError<T, E> => ({
@@ -121,13 +121,19 @@ export const someError = <T, E>(value: T, error: E): SomeError<T, E> => ({
 
 export type Pot<T, E> =
   | None
+  | NoneError<E>
   | NoneLoading
   | NoneUpdating<T>
-  | NoneError<E>
   | Some<T>
+  | SomeError<T, E>
   | SomeLoading<T>
-  | SomeUpdating<T>
-  | SomeError<T, E>;
+  | SomeUpdating<T>;
+
+export type PotErrorType<T> = T extends NoneError<infer E0>
+  ? E0 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  : T extends SomeError<any, infer E1>
+  ? E1
+  : never;
 
 export type PotType<T> = T extends Some<infer A0>
   ? A0
@@ -137,19 +143,13 @@ export type PotType<T> = T extends Some<infer A0>
   ? A2
   : never;
 
-export type PotErrorType<T> = T extends NoneError<infer E0>
-  ? E0 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  : T extends SomeError<any, infer E1>
-  ? E1
-  : never;
-
 export const toSomeLoading = <T>( // eslint-disable-next-line @typescript-eslint/no-explicit-any
   p: Some<T> | SomeError<T, any>
 ): SomeLoading<T> => someLoading(p.value);
 
 export const isSome = <A, E = unknown>(
   p: Pot<A, E>
-): p is Some<A> | SomeLoading<A> | SomeUpdating<A> | SomeError<A, E> =>
+): p is Some<A> | SomeError<A, E> | SomeLoading<A> | SomeUpdating<A> =>
   p.kind === "PotSome" ||
   p.kind === "PotSomeLoading" ||
   p.kind === "PotSomeUpdating" ||
@@ -157,7 +157,7 @@ export const isSome = <A, E = unknown>(
 
 export const isNone = <A, E = unknown>(
   p: Pot<A, E>
-): p is None | NoneLoading | NoneUpdating<A> | NoneError<E> =>
+): p is None | NoneError<E> | NoneLoading | NoneUpdating<A> =>
   p.kind === "PotNone" ||
   p.kind === "PotNoneLoading" ||
   p.kind === "PotNoneUpdating" ||
@@ -170,7 +170,7 @@ export const isLoading = <A>( // eslint-disable-next-line @typescript-eslint/no-
 
 export const isUpdating = <A>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  p: Pot<A, any> // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  p: Pot<A, any>
 ): p is NoneUpdating<A> | SomeUpdating<A> =>
   p.kind === "PotNoneUpdating" || p.kind === "PotSomeUpdating";
 
@@ -182,13 +182,13 @@ export const isError = <A, E = unknown>(
 export const toLoading = <T>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   p: Pot<T, any>
-): SomeLoading<T> | NoneLoading => // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): NoneLoading | SomeLoading<T> =>
   isSome(p) ? someLoading(p.value) : noneLoading;
 
 export const toUpdating = <T>( // eslint-disable-next-line @typescript-eslint/no-explicit-any
   p: Pot<T, any>,
   newValue: T
-): SomeUpdating<T> | NoneUpdating<T> =>
+): NoneUpdating<T> | SomeUpdating<T> =>
   isSome(p) ? someUpdating(p.value, newValue) : noneUpdating(newValue);
 
 export const toError = <T, E = unknown>(
@@ -207,26 +207,24 @@ export const fold = <A, E, O>(
   foldSomeLoading: (value: A) => O,
   foldSomeUpdating: (value: A, newValue: A) => O,
   foldSomeError: (value: A, error: E) => O
-   
 ): O => {
-   
   switch (p.kind) {
     case "PotNone":
       return foldNone();
+    case "PotNoneError":
+      return foldNoneError(p.error);
     case "PotNoneLoading":
       return foldNoneLoading();
     case "PotNoneUpdating":
       return foldNoneUpdating(p.newValue);
-    case "PotNoneError":
-      return foldNoneError(p.error);
     case "PotSome":
       return foldSome(p.value);
+    case "PotSomeError":
+      return foldSomeError(p.value, p.error);
     case "PotSomeLoading":
       return foldSomeLoading(p.value);
     case "PotSomeUpdating":
       return foldSomeUpdating(p.value, p.newValue);
-    case "PotSomeError":
-      return foldSomeError(p.value, p.error);
   }
 };
 
@@ -264,7 +262,7 @@ export const filter = <A, E = unknown>(
 
 export const mapNullable = <A, B, E = unknown>(
   p: Pot<A, E>,
-  f: (_: A) => B | undefined | null
+  f: (_: A) => B | null | undefined
 ): Pot<B, E> => {
   const mapped = map(p, f);
   return filter(mapped, (_) => _ !== undefined && _ !== null) as Pot<B, E>;
@@ -290,7 +288,7 @@ export const toOption = <A>(p: Pot<A, any>): option.Option<A> =>
   option.fromNullable(toUndefined(p));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PotKinds = { readonly [index in Pot<any, any>["kind"]]: 0 };
+type PotKinds = Readonly<Record<Pot<any, any>["kind"], 0>>;
 
 const PotKinds: PotKinds = {
   PotNone: 0,

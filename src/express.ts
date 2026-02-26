@@ -1,4 +1,5 @@
 import * as express from "express";
+
 import { IResponse, ResponseErrorInternal } from "./responses";
 
 /**
@@ -10,7 +11,6 @@ import { IResponse, ResponseErrorInternal } from "./responses";
 export function toExpressHandler<T>(
   handler: (req: express.Request) => Promise<IResponse<T>>
 ): <P>(req: express.Request, res: express.Response, object?: P) => void {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   return async (req, res, object) => {
     try {
       const response = await handler.call(object, req);

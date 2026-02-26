@@ -1,9 +1,10 @@
-import { flow, pipe } from "fp-ts/lib/function";
 import * as E from "fp-ts/lib/Either";
+import { flow, pipe } from "fp-ts/lib/function";
 import * as t from "io-ts";
 import * as semver from "semver";
-import { NonEmptyString, Semver } from "./strings";
+
 import { errorsToReadableMessages } from "./reporters";
+import { NonEmptyString, Semver } from "./strings";
 
 export const UserAgentSemver = t.type({
   clientName: NonEmptyString,

@@ -2,16 +2,16 @@
  * Declares common unit types
  */
 
+export type Day = IUnitTag<"Day"> & number;
+
+export type Hour = IUnitTag<"Hour"> & number;
+
 export interface IUnitTag<T> {
   readonly kind: T;
 }
 
-export type Millisecond = number & IUnitTag<"Millisecond">;
+export type Millisecond = IUnitTag<"Millisecond"> & number;
 
-export type Second = number & IUnitTag<"Second">;
+export type Minute = IUnitTag<"Minute"> & number;
 
-export type Minute = number & IUnitTag<"Minute">;
-
-export type Hour = number & IUnitTag<"Hour">;
-
-export type Day = number & IUnitTag<"Day">;
+export type Second = IUnitTag<"Second"> & number;

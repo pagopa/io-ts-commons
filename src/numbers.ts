@@ -2,16 +2,16 @@
  * Useful tagged types for numbers
  */
 
-import * as t from "io-ts";
 import * as E from "fp-ts/lib/Either";
-
 import { pipe } from "fp-ts/lib/function";
+import * as t from "io-ts";
+
 import { tag, Tagged } from "./types";
 
 export interface IWithinRangeNumberTag<L extends number, H extends number> {
-  readonly lower: L;
   readonly higher: H;
   readonly kind: "IWithinRangeNumberTag";
+  readonly lower: L;
 }
 
 /**
@@ -29,12 +29,14 @@ export const WithinRangeNumber = <
     t.refinement(t.number, (s) => s >= l && s < h, `number >= ${l} and < ${h}`)
   );
 
-export type WithinRangeNumber<L extends number, H extends number> = number &
-  IWithinRangeNumberTag<L, H>;
-
 export interface INonNegativeNumberTag {
   readonly kind: "INonNegativeNumberTag";
 }
+
+export type WithinRangeNumber<
+  L extends number,
+  H extends number
+> = IWithinRangeNumberTag<L, H> & number;
 
 /**
  * A non negative number
@@ -43,18 +45,18 @@ export const NonNegativeNumber = tag<INonNegativeNumberTag>()(
   t.refinement(t.number, (s) => s >= 0, "number >= 0")
 );
 
-export type NonNegativeNumber = t.TypeOf<typeof NonNegativeNumber>;
-
 //
 //  Integers
 //
 export type Integer = typeof t.Integer;
 
 export interface IWithinRangeIntegerTag<L extends number, H extends number> {
-  readonly lower: L;
   readonly higher: H;
   readonly kind: "IWithinRangeIntegerTag";
+  readonly lower: L;
 }
+
+export type NonNegativeNumber = t.TypeOf<typeof NonNegativeNumber>;
 
 /**
  * An integer guaranteed to be within the range [L,H)
@@ -70,17 +72,17 @@ export const WithinRangeInteger = <
   tag<T>()(
     t.refinement(
       t.Integer,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       (s) => s >= l && s < h,
       `integer >= ${l} and < ${h}`
     )
   );
-export type WithinRangeInteger<L extends number, H extends number> = Integer &
-  IWithinRangeIntegerTag<L, H>;
-
 export interface INonNegativeIntegerTag {
   readonly kind: "INonNegativeIntegerTag";
 }
+
+export type WithinRangeInteger<L extends number, H extends number> = Integer &
+  IWithinRangeIntegerTag<L, H>;
 
 /**
  * A non negative integer
