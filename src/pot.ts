@@ -207,9 +207,9 @@ export const fold = <A, E, O>(
   foldSomeLoading: (value: A) => O,
   foldSomeUpdating: (value: A, newValue: A) => O,
   foldSomeError: (value: A, error: E) => O
-  // eslint-disable-next-line max-params
+   
 ): O => {
-  // eslint-disable-next-line default-case
+   
   switch (p.kind) {
     case "PotNone":
       return foldNone();

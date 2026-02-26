@@ -17,7 +17,7 @@ export const EncryptedPayload = t.interface({
   iv: t.string,
 
   // AES Key encrypted with RSA public key (Base64)
-  // eslint-disable-next-line sort-keys
+   
   encryptedKey: t.string,
 });
 

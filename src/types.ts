@@ -126,7 +126,7 @@ export const isObject = (o: {}): boolean =>
 /**
  * Return an object filtering out keys that point to undefined values.
  */
-// eslint-disable-next-line
+ 
 export const withoutUndefinedValues = <T extends Object, K extends keyof T>(
   obj: T
 ): T => {
@@ -176,7 +176,7 @@ export const strictInterfaceWithOptionals = <
     (m): m is t.TypeOfProps<R> & t.TypeOfPartialProps<O> =>
       loose.is(m) &&
       // check if all object properties belong to the strict interface
-      // eslint-disable-next-line no-prototype-builtins
+       
       Object.getOwnPropertyNames(m).every((k) => props.hasOwnProperty(k)),
     (m, c) =>
       pipe(
@@ -184,7 +184,7 @@ export const strictInterfaceWithOptionals = <
         E.chain((o) => {
           const errors: t.Errors = Object.getOwnPropertyNames(o)
             .map((key) =>
-              // eslint-disable-next-line no-prototype-builtins
+               
               !props.hasOwnProperty(key)
                 ? t.getValidationError(o[key], t.appendContext(c, key, t.never))
                 : undefined

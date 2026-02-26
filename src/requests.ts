@@ -390,7 +390,7 @@ export class ApiRequestBuilder<
   }
 
   public get(): T {
-    // eslint-disable-next-line no-underscore-dangle
+     
     return this._request;
   }
 
@@ -409,13 +409,13 @@ export class ApiRequestBuilder<
   > {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const newQuery = (p: P & P1) => ({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(this._request.query(p) as any),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(query(p) as any),
     });
     return new ApiRequestBuilder({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(this._request as any),
       query: newQuery,
     });
@@ -436,13 +436,13 @@ export class ApiRequestBuilder<
   > {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const newHeaders = (p: P & P1) => ({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(this._request.headers(p) as any),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(headers(p) as any),
     });
     return new ApiRequestBuilder({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(this._request as any),
       headers: newHeaders,
     });
@@ -462,7 +462,7 @@ export class ApiRequestBuilder<
     ApiRequestTypeForMethod<M, P, KH, Q, R1>
   > {
     return new ApiRequestBuilder({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(this._request as any),
       response_decoder,
     });
