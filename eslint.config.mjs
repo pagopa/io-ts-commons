@@ -184,7 +184,6 @@ export default defineConfig([
       ],
       "id-match": "error",
       "import/no-internal-modules": "off",
-      "import/order": "error",
       "jsdoc/check-alignment": "error",
       "max-classes-per-file": ["error", 1],
       "max-lines-per-function": ["error", 200],
