@@ -1,6 +1,6 @@
+import pagopaConfig from "@pagopa/eslint-config";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
-import pagopaConfig from "@pagopa/eslint-config";
 
 export default defineConfig([
   globalIgnores([
@@ -14,7 +14,7 @@ export default defineConfig([
     "coverage/**",
     "docs/**",
     "lib/**",
-    ".eslintrc.js",
+    "eslintrc.config.mjs",
   ]),
   {
     languageOptions: {
