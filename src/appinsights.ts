@@ -1,5 +1,6 @@
 import * as appInsights from "applicationinsights";
 import { DistributedTracingModes } from "applicationinsights";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 import Config = require("applicationinsights/out/Library/Config");
 
 import {
@@ -27,10 +28,10 @@ interface IInsightsRequestData {
   readonly baseData: {
     readonly duration: string;
     readonly id: string;
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     readonly measurements: {};
     readonly name: string;
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     readonly properties: {};
     readonly responseCode: string;
     readonly source?: string;
@@ -93,6 +94,7 @@ export function initAppInsights(
   // defaults to the name of the function app if not set in config
   const cloudRole = config?.cloudRole || env.WEBSITE_SITE_NAME;
 
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   return startAppInsights(aiConnectionString, {
     cloudRole,
     ...config,

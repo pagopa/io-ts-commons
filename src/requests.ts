@@ -53,7 +53,7 @@ export type BasicResponseHeaderKey =
 
 export type EmptyApiRequestBuilder<
   M extends RequestMethod,
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   P = {},
   KH extends RequestHeaderKey = never,
   Q extends string = never,
@@ -308,7 +308,7 @@ const emptyBasePutOrPostRequest = {
   ...emptyBaseRequest,
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   body: () => JSON.stringify({}),
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/naming-convention
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   headers: () => ({ "Content-Type": "application/json" }),
 };
 
@@ -330,12 +330,12 @@ export class ApiRequestBuilder<
   public static ofGet(): EmptyApiRequestBuilder<"get"> {
     return new ApiRequestBuilder<
       "get",
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
       {},
       never,
       never,
       never,
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
       ApiRequestTypeForMethod<"get", {}, never, never, never>
     >({ ...emptyBaseRequest, method: "get" });
   }
@@ -343,16 +343,16 @@ export class ApiRequestBuilder<
   /**
    * Creates a new empty request with the POST method.
    */
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   public static ofPost(): EmptyApiRequestBuilder<"post", {}, "Content-Type"> {
     return new ApiRequestBuilder<
       "post",
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
       {},
       "Content-Type",
       never,
       never,
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
       ApiRequestTypeForMethod<"post", {}, "Content-Type", never, never>
     >({
       ...emptyBasePutOrPostRequest,
@@ -364,16 +364,16 @@ export class ApiRequestBuilder<
    * Creates a new empty request with the PUT method.
    */
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   public static ofPut(): EmptyApiRequestBuilder<"put", {}, "Content-Type"> {
     return new ApiRequestBuilder<
       "put",
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
       {},
       "Content-Type",
       never,
       never,
-      // eslint-disable-next-line @typescript-eslint/ban-types
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
       ApiRequestTypeForMethod<"put", {}, "Content-Type", never, never>
     >({
       ...emptyBasePutOrPostRequest,
@@ -382,6 +382,7 @@ export class ApiRequestBuilder<
   }
 
   public get(): T {
+    // eslint-disable-next-line no-underscore-dangle
     return this._request;
   }
 
@@ -400,13 +401,13 @@ export class ApiRequestBuilder<
   > {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const newHeaders = (p: P & P1) => ({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request.headers(p) as any),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(headers(p) as any),
     });
     return new ApiRequestBuilder({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request as any),
       headers: newHeaders,
     });
@@ -427,13 +428,13 @@ export class ApiRequestBuilder<
   > {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const newQuery = (p: P & P1) => ({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request.query(p) as any),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(query(p) as any),
     });
     return new ApiRequestBuilder({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request as any),
       query: newQuery,
     });
@@ -453,7 +454,7 @@ export class ApiRequestBuilder<
     ApiRequestTypeForMethod<M, P, KH, Q, R1>
   > {
     return new ApiRequestBuilder({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
       ...(this._request as any),
       response_decoder,
     });
@@ -499,6 +500,7 @@ export function createFetchRequestForApi<
 
     // Generate the query params
     const queryParams = requestType.query(params);
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const queryString = queryStringFromParams(queryParams);
 
     // Append the query params to the URL
@@ -567,9 +569,8 @@ function queryStringFromParams<P extends string>(
 /**
  * An header producer that sets the Content-Type to application/json
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export const ApiHeaderJson: RequestHeaderProducer<{}, "Content-Type"> = () => ({
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   "Content-Type": "application/json",
 });
 

@@ -64,9 +64,7 @@ export type MiddlewareFailureResult<T> = T extends IRequestMiddleware<
 export type MiddlewareFailures<
   T extends ReadonlyArray<IRequestMiddleware<unknown, unknown>>
 > = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 0: readonly [MiddlewareFailure<Head<T>>];
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 1: readonly [
     MiddlewareFailure<Head<T>>,
     ...MiddlewareFailures<Tail<T>>
@@ -81,9 +79,7 @@ export type MiddlewareResults<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends ReadonlyArray<IRequestMiddleware<any, any>>
 > = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 0: readonly [MiddlewareResult<Head<T>>];
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 1: readonly [
     MiddlewareResult<Head<T>>,
     ...MiddlewareResults<Tail<T>>
@@ -91,9 +87,7 @@ export type MiddlewareResults<
 }[HasTail<T> extends true ? 1 : 0];
 
 export type TypeOfArray<T extends ReadonlyArray<unknown>> = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 0: Head<T>;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly 1: Head<T> | TypeOfArray<Tail<T>>;
 }[HasTail<T> extends true ? 1 : 0];
 

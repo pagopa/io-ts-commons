@@ -57,7 +57,6 @@ export const untag = <T>(a: T): UntagBasicType<T> =>
  * Returns an object where the keys are the values
  * of the object passed as input and all values are undefined
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 const getObjectValues = (e: object): Record<string, undefined> =>
   Object.keys(e).reduce(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,7 +67,6 @@ const getObjectValues = (e: object): Record<string, undefined> =>
 /**
  * Creates an io-ts Type from an enum
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 export const enumType = <E>(e: object, name: string): t.Type<E> =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t.keyof(getObjectValues(e), name) as any;
@@ -97,7 +95,7 @@ export const readonlySetType = <E>(
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-empty-object-type
 export interface ReadOnlyNonEmptySet<T> extends ReadonlySet<T> {}
 
 /**
@@ -118,7 +116,7 @@ export type LimitedFields<T, F extends keyof T> = { [P in F]: T[P] };
 /**
  *  True when the input is an object (and not array).
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export const isObject = (o: {}): boolean =>
   o instanceof Object && o.constructor === Object;
 
@@ -176,14 +174,16 @@ export const strictInterfaceWithOptionals = <
       loose.is(m) &&
       // check if all object properties belong to the strict interface
 
-      Object.getOwnPropertyNames(m).every((k) => props.hasOwnProperty(k)),
+      Object.getOwnPropertyNames(m).every((k) =>
+        Object.prototype.hasOwnProperty.call(props, k)
+      ),
     (m, c) =>
       pipe(
         loose.validate(m, c),
         E.chain((o) => {
           const errors: t.Errors = Object.getOwnPropertyNames(o)
             .map((key) =>
-              !props.hasOwnProperty(key)
+              !Object.prototype.hasOwnProperty.call(props, key)
                 ? t.getValidationError(o[key], t.appendContext(c, key, t.never))
                 : undefined
             )

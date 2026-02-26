@@ -92,6 +92,11 @@ export default defineConfig([
           trailingUnderscore: "forbid",
         },
         {
+          format: null,
+          modifiers: ["requiresQuotes"],
+          selector: "property",
+        },
+        {
           format: ["PascalCase"],
           prefix: ["I"],
           selector: "interface",

@@ -34,7 +34,6 @@ export function calculateExponentialBackoffInterval(
     // waves.
     const jitter = Math.random() * maxJitter;
     // The wait time is:
-    // eslint-disable-next-line extra-rules/no-commented-out-code
     // min((b*(m^n)+random_number_milliseconds), maximum_backoff)
     // with n incremented by 1 for each iteration (request).
     const delayInterval = baseInterval * Math.pow(multiplier, count) + jitter;
