@@ -34,7 +34,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "fp-ts": "^2.16.5",
     "io-ts": "^2.2.21",
-    "jest": "^29.5.0",
+    "jest": "^29.7.0",
     "mock-http-server": "^1.4.4",
     "patch-package": "^6.4.7",
     "prettier": "^2.8.8",
