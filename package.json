@@ -26,10 +26,11 @@
     "@types/express": "4.17.6",
     "@types/jest": "^29.5.1",
     "@types/jsonwebtoken": "^9.0.2",
-    "@types/node": "~18.13.0",
+    "@types/node": "^22.19.11",
     "@types/node-fetch": "^2.1.7",
     "@types/semver": "^7.3.10",
     "@types/validator": "^10.11.0",
+    "eslint": "^8.12.0",
     "eslint-plugin-prettier": "^4.2.1",
     "fp-ts": "^2.16.5",
     "io-ts": "^2.2.21",
@@ -80,5 +81,6 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
-  }
+  },
+  "packageManager": "yarn@4.13.0+sha512.5c20ba010c99815433e5c8453112165e673f1c7948d8d2b267f4b5e52097538658388ebc9f9580656d9b75c5cc996f990f611f99304a2197d4c56d21eea370e7"
 }

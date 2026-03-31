@@ -9,3 +9,18 @@ coverage
 # eslint section
 !.eslintrc.js
 .eslintcache
+
+# Yarn 4
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+__integrations__/.yarn/*
+!__integrations__/.yarn/patches
+!__integrations__/.yarn/plugins
+!__integrations__/.yarn/releases
+!__integrations__/.yarn/sdks
+!__integrations__/.yarn/versions
