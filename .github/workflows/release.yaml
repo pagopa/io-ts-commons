@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write       # Required for creating releases and tags
+  id-token: write       # Required for OIDC/Provenance
+  pull-requests: write  # Required for creating PRs
+
+jobs:
+  release:
+    name: Release
+    environment: prod-cd
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-tags: "true"
+          fetch-depth: 0
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .node-version
+          cache: yarn
+
+      # Upgrade npm since trusted publishing requires npm CLI version 11.5.1 or later
+      - name: Update npm (for provenance support)
+        shell: bash
+        run: npm install -g npm@11.8.0
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@c48e67d110a68bc90ccf1098e9646092baacaa87 # v1.6.0
+        with:
+          version: yarn run version
+          publish: yarn run release
+          commit: 'ci(changesets): version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
+
